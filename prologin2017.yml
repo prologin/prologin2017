@@ -1,0 +1,204 @@
+name: prologin2017
+rules_type: turnbased
+
+constant:
+  -
+    cst_name: TAILLE_TERRAIN
+    cst_val: 6
+    cst_comment: Taille du terrain (longueur et largeur).
+
+  -
+    cst_name: NB_TOURS
+    cst_val: 100
+    cst_comment: Nombre de tours à jouer avant la fin de la partie.
+
+  -
+    cst_name: NB_TTYPES_CASES
+    cst_val: 5
+    cst_comment: 3 qui rapportent des points, 1 destruction, 
+                 1 changement de couleur
+
+
+enum:
+  -
+    enum_name: erreur
+    enum_summary: "Erreurs possibles"
+    enum_field:
+      - [ok, "L'action a été exécutée avec succès."]
+      - [position_invalide, "La position spécifiée est hors de la carte."]
+      - [placement_invalide, "Les deux positions ne correspondent pas à des
+                               cases adjacentes."]
+      - [placement_impossible, "Les case ciblées ne sont pas vides."]
+      - [case_vide, "La case ciblée est vide."]
+      - [domino_creux, "Le domino ne peut pas contenir de case vide"]
+      - [domino_invalide, "Le domino doit contenir au moins un des terrains
+                           du domino reçu."]
+
+  -
+    enum_name: case_type
+    enum_summary: "Types de cases"
+    enum_field:
+      - [vide, "Case vide"]
+      - [point1, "Terrain à points de type 1"]
+      - [point2, "Terrain à points de type 2"]
+      - [point3, "Terrain à points de type 3"]
+      - [destruction, "Terrain à destruction"]
+      - [changement, "Terrain à changement de couleur"]
+
+struct:
+  -
+    str_name: position
+    str_summary: Position sur la carte, donnée par deux coordonnées.
+    str_tuple: yes
+    str_field:
+      - [x, int, "Coordonnée en X"]
+      - [y, int, "Coordonnée en Y"]
+  -
+    str_name: domino
+    str_summary: Domino, défini par deux types de terrains.
+    str_tuple: yes
+    str_field:
+      - [terrain1, case_type, "Type de terrain 1"]
+      - [terrain2, case_type, "Type de terrain 2"]
+
+function:
+
+# Actions
+
+  -
+    fct_name: placer_domino
+    fct_summary: Place le domino du tour sur la carte, 
+                 avec les coordonnées de deux cases adjacentes.
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [pos1, position, "Case du terrain où est posée 
+                          la première moitié du domino"]
+      - [pos2, position, "Case du terrain où est posée 
+                          la deuxième moitié du domino"]
+
+  -
+    fct_name: activer_region
+    fct_summary: Fait disparaître le terrain de la case ciblée, 
+                 ainsi que tous ceux de toutes les cases de la région 
+                 à laquelle il appartient. Cela enclenche l'effet de ce terrain 
+                 dans les proportions adaptées.
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [pos, position, "Case du terrain dont la région doit être activée"]
+
+  -
+    fct_name: changer_terrain
+    fct_summary: Utilise un point de changement de terrain sur la case ciblée 
+                 du joueur indiqué. 
+                 Remplace l'ancien terrain par le terrain indiqué.
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [pos, position, "Case du terrain qui doit être changée"]
+      - [id_joueur, int, "Identifiant du joueur dont le terrain est ciblé"]
+      - [terrain, case_type, "Type de terrain qui doit remplacer l'ancien"]
+
+  -
+    fct_name: detruire_terrain
+    fct_summary: Utilise un point de destruction sur la case ciblée 
+                 du joueur indiqué. Détruit le terrain de la case.
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [pos, position, "Case du terrain qui doit être changée"]
+      - [id_joueur, int, "Identifiant du joueur dont le terrain est ciblé"]
+
+  -
+    fct_name: donner_domino
+    fct_summary: Définit le domino que l'adversaire recevra à son prochain tour.
+    fct_ret_type: erreur
+    fct_action: yes
+    fct_arg:
+      - [domino, domino, "Domino que l'adversaire recevra à son prochain tour"]
+
+# Fonctions de requête sur le terrain
+
+  -
+    fct_name: type_case
+    fct_summary: Renvoie le type d'une case donnée.
+    fct_ret_type: case_type
+    fct_arg:
+      - [pos, position, "Case choisie."]
+      - [id_joueur, int, "Joueur choisi."]
+
+  -
+    fct_name: est_vide
+    fct_summary: Indique si une case donnée est vide ou est un terrain.
+    fct_ret_type: bool
+    fct_arg:
+      - [pos, position, "Case choisie."]
+      - [id_joueur, int, "Joueur choisi."]
+
+# Historique (actions de l'adversaire le tour précédent)
+# TODO: fill this
+
+# Autre
+
+  -
+    fct_name: moi
+    fct_summary: Renvoie votre numéro de joueur.
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: adversaire
+    fct_summary: Renvoie le numéro de votre adversaire.
+    fct_ret_type: int
+    fct_arg: []
+ -
+    fct_name: score
+    fct_summary: Renvoie le score du joueur désigné par le numéro ``id_joueur``.
+                 Renvoie -1 si ``id_joueur`` est invalide.
+    fct_ret_type: int
+    fct_arg:
+      - [id_joueur, int, "Identifiant du joueur"]
+  -
+    fct_name: tour_actuel
+    fct_summary: Renvoie le numéro du tour actuel.
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: annuler
+    fct_summary: "Annule la dernière action.
+         Renvoie ``false`` quand il n'y a pas d'action à annuler ce tour-ci."
+    fct_ret_type: bool
+    fct_arg: []
+  -
+    fct_name: points_changement
+    fct_summary: "Indique votre nombre de points de changement de terrain pour ce tour."
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: points_destruction
+    fct_summary: "Indique votre nombre de points de destruction pour ce tour."
+    fct_ret_type: int
+    fct_arg: []
+  -
+    fct_name: domino_tour
+    fct_summary: "Indique le domino reçu pour ce tour."
+    fct_ret_type: domino
+    fct_arg: []
+
+
+user_function:
+  -
+    fct_name: partie_init
+    fct_summary: Fonction appelée au début de la partie.
+    fct_ret_type: void
+    fct_arg: []
+  -
+    fct_name: jouer_tour
+    fct_summary: Fonction appelée à chaque tour.
+    fct_ret_type: void
+    fct_arg: []
+  -
+    fct_name: partie_fin
+    fct_summary: Fonction appelée à la fin de la partie.
+    fct_ret_type: void
+    fct_arg: []
