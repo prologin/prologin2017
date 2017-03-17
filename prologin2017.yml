@@ -13,10 +13,9 @@ constant:
     cst_comment: Nombre de tours à jouer avant la fin de la partie.
 
   -
-    cst_name: NB_TTYPES_CASES
+    cst_name: NB_TYPES_CASES
     cst_val: 5
-    cst_comment: 3 qui rapportent des points, 1 destruction, 
-                 1 changement de couleur
+    cst_comment: 3 qui rapportent des points, 1 changement de couleur, 1 aimant
 
 
 enum:
@@ -28,7 +27,7 @@ enum:
       - [position_invalide, "La position spécifiée est hors de la carte."]
       - [placement_invalide, "Les deux positions ne correspondent pas à des
                                cases adjacentes."]
-      - [placement_impossible, "Les case ciblées ne sont pas vides."]
+      - [placement_impossible, "Les cases ciblées ne sont pas vides."]
       - [case_vide, "La case ciblée est vide."]
       - [domino_creux, "Le domino ne peut pas contenir de case vide"]
       - [domino_invalide, "Le domino doit contenir au moins un des terrains
@@ -51,8 +50,8 @@ struct:
     str_summary: Position sur la carte, donnée par deux coordonnées.
     str_tuple: yes
     str_field:
-      - [x, int, "Coordonnée en X"]
-      - [y, int, "Coordonnée en Y"]
+      - [colonne, int, "Coordonnée : colonne"]
+      - [ligne, int, "Coordonnée : ligne"]
   -
     str_name: domino
     str_summary: Domino, défini par deux types de terrains.
@@ -72,9 +71,9 @@ function:
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos1, position, "Case du terrain où est posée 
+      - [pos1, position, "Case du terrain où est doit être posée
                           la première moitié du domino"]
-      - [pos2, position, "Case du terrain où est posée 
+      - [pos2, position, "Case du terrain où est doit être posée
                           la deuxième moitié du domino"]
 
   -
@@ -107,7 +106,7 @@ function:
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case du terrain qui doit être changée"]
+      - [pos, position, "Case du terrain qui doit être détruit"]
       - [id_joueur, int, "Identifiant du joueur dont le terrain est ciblé"]
 
   -
