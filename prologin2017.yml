@@ -3,19 +3,19 @@ rules_type: turnbased
 
 constant:
   -
-    cst_name: TAILLE_TERRAIN
+    cst_name: TAILLE_ETABLI
     cst_val: 6
-    cst_comment: Taille du terrain (longueur et largeur).
+    cst_comment: Taille de l'établi de travail (longueur et largeur).
 
   -
     cst_name: NB_TOURS
     cst_val: 100
-    cst_comment: Nombre de tours à jouer avant la fin de la partie.
+    cst_comment: Nombre de tours à jouer avant la fin de l'expérience.
 
   -
     cst_name: NB_TYPES_CASES
     cst_val: 5
-    cst_comment: 3 qui rapportent des points, 1 changement de couleur, 1 aimant
+    cst_comment: 3 métaux qui rapportent des points, 1 élément pour transmuter, 1 élément pour détruire
 
 
 enum:
@@ -24,25 +24,25 @@ enum:
     enum_summary: "Erreurs possibles"
     enum_field:
       - [ok, "L'action a été exécutée avec succès."]
-      - [position_invalide, "La position spécifiée est hors de la carte."]
+      - [position_invalide, "La position spécifiée n'est pas sur l'établi."]
       - [placement_invalide, "Les deux positions ne correspondent pas à des
                                cases adjacentes."]
       - [placement_impossible, "Les cases ciblées ne sont pas vides."]
       - [case_vide, "La case ciblée est vide."]
-      - [domino_creux, "Le domino ne peut pas contenir de case vide"]
-      - [domino_invalide, "Le domino doit contenir au moins un des terrains
-                           du domino reçu."]
+      - [échantillon_incomplet, "L'échantillon ne peut pas contenir de case vide"]
+      - [échantillon_invalide, "L'échantillon doit contenir au moins un des éléments
+                           de l'échantillon reçu auparavant."]
 
   -
     enum_name: case_type
     enum_summary: "Types de cases"
     enum_field:
       - [vide, "Case vide"]
-      - [point1, "Terrain à points de type 1"]
-      - [point2, "Terrain à points de type 2"]
-      - [point3, "Terrain à points de type 3"]
-      - [destruction, "Terrain à destruction"]
-      - [changement, "Terrain à changement de couleur"]
+      - [plomb, "Plomb transformable en or"]
+      - [fer, "Fer transformable en or"]
+      - [cuivre, "Cuivre transformable en or"]
+      - [soufre, "Elément pour la sublimation"]
+      - [mercure, "Elément pour la transmutation"]
 
 struct:
   -
@@ -53,69 +53,69 @@ struct:
       - [colonne, int, "Coordonnée : colonne"]
       - [ligne, int, "Coordonnée : ligne"]
   -
-    str_name: domino
-    str_summary: Domino, défini par deux types de terrains.
+    str_name: échantillon
+    str_summary: Echantillon, défini par deux types d'éléments.
     str_tuple: yes
     str_field:
-      - [terrain1, case_type, "Type de terrain 1"]
-      - [terrain2, case_type, "Type de terrain 2"]
+      - [élément1, case_type, "Elément 1"]
+      - [élément2, case_type, "Elément 2"]
 
 function:
 
 # Actions
 
   -
-    fct_name: placer_domino
-    fct_summary: Place le domino du tour sur la carte, 
+    fct_name: placer_échantillon
+    fct_summary: Place l'échantillon du tour sur l'établi, 
                  avec les coordonnées de deux cases adjacentes.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos1, position, "Case du terrain où est doit être posée
-                          la première moitié du domino"]
-      - [pos2, position, "Case du terrain où est doit être posée
-                          la deuxième moitié du domino"]
+      - [pos1, position, "Case du terrain où doit être posé
+                          le premier élément de l'échantillon"]
+      - [pos2, position, "Case du terrain où doit être posé
+                          le second élément de l'échantillon"]
 
   -
-    fct_name: activer_region
+    fct_name: activer_region #FIXME
     fct_summary: Fait disparaître le terrain de la case ciblée, 
                  ainsi que tous ceux de toutes les cases de la région 
-                 à laquelle il appartient. Cela enclenche l'effet de ce terrain 
+                 à laquelle il appartient. Cela enclenche l'effet de cet élément 
                  dans les proportions adaptées.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case du terrain dont la région doit être activée"]
+      - [pos, position, "Case de l'établi dont la région doit être activée"]
 
   -
-    fct_name: changer_terrain
-    fct_summary: Utilise un point de changement de terrain sur la case ciblée 
+    fct_name: transmuter
+    fct_summary: Utilise un point de transmutation d'élément sur la case ciblée 
                  du joueur indiqué. 
-                 Remplace l'ancien terrain par le terrain indiqué.
+                 Remplace l'ancien élément par l'élément indiqué.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case du terrain qui doit être changée"]
-      - [id_joueur, int, "Identifiant du joueur dont le terrain est ciblé"]
-      - [terrain, case_type, "Type de terrain qui doit remplacer l'ancien"]
+      - [pos, position, "Case de l'élément qui doit être changée"]
+      - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
+      - [terrain, case_type, "Type d'élément qui doit remplacer l'ancien"]
 
   -
-    fct_name: detruire_terrain
-    fct_summary: Utilise un point de destruction sur la case ciblée 
-                 du joueur indiqué. Détruit le terrain de la case.
+    fct_name: sublimer
+    fct_summary: Utilise un point de sublimation sur la case ciblée 
+                 du joueur indiqué. Détruit l'élément de la case.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case du terrain qui doit être détruit"]
-      - [id_joueur, int, "Identifiant du joueur dont le terrain est ciblé"]
+      - [pos, position, "Case de l'élément qui doit être détruit"]
+      - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
 
   -
-    fct_name: donner_domino
-    fct_summary: Définit le domino que l'adversaire recevra à son prochain tour.
+    fct_name: donner_échantillon
+    fct_summary: Définit l'échantillon que l'adversaire recevra à son prochain tour.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [domino, domino, "Domino que l'adversaire recevra à son prochain tour"]
+      - [échantillon, échantillon, "Echantillon que l'adversaire recevra à son prochain tour"]
 
 # Fonctions de requête sur le terrain
 
@@ -170,18 +170,18 @@ function:
     fct_arg: []
   -
     fct_name: points_changement
-    fct_summary: "Indique votre nombre de points de changement de terrain pour ce tour."
+    fct_summary: "Indique votre nombre de points de transmutation pour ce tour."
     fct_ret_type: int
     fct_arg: []
   -
-    fct_name: points_destruction
-    fct_summary: "Indique votre nombre de points de destruction pour ce tour."
+    fct_name: points_sublimation
+    fct_summary: "Indique votre nombre de points de sublimation pour ce tour."
     fct_ret_type: int
     fct_arg: []
   -
-    fct_name: domino_tour
-    fct_summary: "Indique le domino reçu pour ce tour."
-    fct_ret_type: domino
+    fct_name: échantillon_tour
+    fct_summary: "Indique l'échantillon reçu pour ce tour."
+    fct_ret_type: échantillon
     fct_arg: []
 
 
