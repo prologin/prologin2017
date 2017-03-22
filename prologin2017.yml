@@ -13,7 +13,7 @@ constant:
     cst_comment: Nombre de tours à jouer avant la fin de l'expérience.
 
   -
-    cst_name: NB_TYPES_CASES
+    cst_name: NB_TYPES_METAUX
     cst_val: 5
     cst_comment: 3 métaux qui rapportent des points, 1 élément pour transmuter, 1 élément pour détruire
 
@@ -95,7 +95,7 @@ function:
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case de l'élément qui doit être changée"]
+      - [pos, position, "Case de l'élément qui doit être transmuté"]
       - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
       - [terrain, case_type, "Type d'élément qui doit remplacer l'ancien"]
 
@@ -106,7 +106,7 @@ function:
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case de l'élément qui doit être détruit"]
+      - [pos, position, "Case de l'élément qui doit être sublimé"]
       - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
 
   -
@@ -115,7 +115,7 @@ function:
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [échantillon, échantillon, "Echantillon que l'adversaire recevra à son prochain tour"]
+      - [échantillon, échantillon, "Échantillon que l'adversaire recevra à son prochain tour"]
 
 # Fonctions de requête sur le terrain
 
@@ -131,6 +131,15 @@ function:
     fct_name: est_vide
     fct_summary: Indique si une case donnée est vide ou est un terrain.
     fct_ret_type: bool
+    fct_arg:
+      - [pos, position, "Case choisie."]
+      - [id_joueur, int, "Joueur choisi."]
+
+
+  -
+    fct_name: taille_region
+    fct_summary: Renvoie la taille de la region à laquelle appartient un élément
+    fct_ret_type: int
     fct_arg:
       - [pos, position, "Case choisie."]
       - [id_joueur, int, "Joueur choisi."]
