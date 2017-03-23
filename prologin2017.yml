@@ -83,7 +83,7 @@ function:
 # Actions
 
   -
-    fct_name: placer_échantillon
+    fct_name: placer_echantillon
     fct_summary: Place l’échantillon du tour sur l’établi,
                  avec les coordonnées de deux cases adjacentes.
     fct_ret_type: erreur
@@ -97,10 +97,10 @@ function:
   -
     fct_name: transmuter
     fct_summary: Provoque la transformation chimique de l’élément à la case
-                 ciblée, ainsi que tous les éléments adjacnets du même types,
+                 ciblée, ainsi que tous les éléments adjacents du même type,
                  ceux du même type adjacents à ces derniers, etc.
                  Ils disparaissent alors tous dans leur transmutation en or
-                 ou en cataliseur.
+                 ou en catalyseur.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
@@ -139,7 +139,7 @@ function:
 
   -
     fct_name: est_vide
-    fct_summary: Indique si une case donnée est vide ou est un terrain.
+    fct_summary: Indique si une case donnée est vide ou contient un élément.
     fct_ret_type: bool
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -223,7 +223,7 @@ function:
     fct_arg: []
   -
     fct_name: nombre_catalyseurs
-    fct_summary: Indique le nombre de catalyseur en votre possession.
+    fct_summary: Indique le nombre de catalyseurs en votre possession.
     fct_ret_type: int
     fct_arg: []
   -
