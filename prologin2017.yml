@@ -13,9 +13,9 @@ constant:
     cst_comment: Nombre de tours à jouer avant la fin de l'expérience.
 
   -
-    cst_name: NB_TYPES_METAUX
+    cst_name: NB_TYPES_ELEMENTS
     cst_val: 5
-    cst_comment: 3 métaux qui rapportent des points, 1 élément pour transmuter, 1 élément pour détruire
+    cst_comment: 3 métaux qui rapportent des points, 2 éléments pour transmuter.
 
 
 enum:
@@ -41,8 +41,8 @@ enum:
       - [plomb, "Plomb transformable en or"]
       - [fer, "Fer transformable en or"]
       - [cuivre, "Cuivre transformable en or"]
-      - [soufre, "Elément pour la sublimation"]
-      - [mercure, "Elément pour la transmutation"]
+      - [soufre, "Elément tranformable en catalyseur"]
+      - [mercure, "Elément tranformable en catalyseur"]
 
 struct:
   -
@@ -57,8 +57,8 @@ struct:
     str_summary: Echantillon, défini par deux types d'éléments.
     str_tuple: yes
     str_field:
-      - [élément1, case_type, "Elément 1"]
-      - [élément2, case_type, "Elément 2"]
+      - [élément1, case_type, "Élément 1"]
+      - [élément2, case_type, "Élément 2"]
 
 function:
 
@@ -77,37 +77,27 @@ function:
                           le second élément de l'échantillon"]
 
   -
-    fct_name: activer_region #FIXME
-    fct_summary: Fait disparaître le terrain de la case ciblée, 
-                 ainsi que tous ceux de toutes les cases de la région 
-                 à laquelle il appartient. Cela enclenche l'effet de cet élément 
-                 dans les proportions adaptées.
+    fct_name: transmuter
+    fct_summary: Provoque la transformation chimique de l'élément à la case
+                 ciblée, ainsi que tous les éléments du même type adjacents,
+                 et ceux du même type adjacents à ces derniers, etc.
+                 Ils disparaissent alors tous dans leur transmutation en or
+                 ou en cataliseur.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
       - [pos, position, "Case de l'établi dont la région doit être activée"]
 
   -
-    fct_name: transmuter
-    fct_summary: Utilise un point de transmutation d'élément sur la case ciblée 
-                 du joueur indiqué. 
-                 Remplace l'ancien élément par l'élément indiqué.
+    fct_name: catalyser
+    fct_summary: Utilise un catalyseur sur la case ciblée du joueur indiqué.
+                 Transforme l'ancien élément par l'élément indiqué.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
       - [pos, position, "Case de l'élément qui doit être transmuté"]
       - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
       - [terrain, case_type, "Type d'élément qui doit remplacer l'ancien"]
-
-  -
-    fct_name: sublimer
-    fct_summary: Utilise un point de sublimation sur la case ciblée 
-                 du joueur indiqué. Détruit l'élément de la case.
-    fct_ret_type: erreur
-    fct_action: yes
-    fct_arg:
-      - [pos, position, "Case de l'élément qui doit être sublimé"]
-      - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
 
   -
     fct_name: donner_échantillon
@@ -178,13 +168,8 @@ function:
     fct_ret_type: bool
     fct_arg: []
   -
-    fct_name: points_changement
-    fct_summary: "Indique votre nombre de points de transmutation pour ce tour."
-    fct_ret_type: int
-    fct_arg: []
-  -
-    fct_name: points_sublimation
-    fct_summary: "Indique votre nombre de points de sublimation pour ce tour."
+    fct_name: nombre_catalyseurs
+    fct_summary: "Indique le nombre de catalyseur en votre possession."
     fct_ret_type: int
     fct_arg: []
   -
