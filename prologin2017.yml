@@ -5,60 +5,78 @@ constant:
   -
     cst_name: TAILLE_ETABLI
     cst_val: 6
-    cst_comment: Taille de l'établi de travail (longueur et largeur).
+    cst_comment: Taille de l’établi de travail (longueur et largeur)
 
   -
     cst_name: NB_TOURS
     cst_val: 100
-    cst_comment: Nombre de tours à jouer avant la fin de l'expérience.
+    cst_comment: Nombre de tours à jouer avant la fin de l’affrontement
 
   -
-    cst_name: NB_TYPES_ELEMENTS
-    cst_val: 5
-    cst_comment: 3 métaux qui rapportent des points, 2 éléments pour transmuter.
-
+    cst_name: NB_TYPE_CASES
+    cst_val: 6
+    cst_comment: Taille de l’énumération ``case_type``
 
 enum:
-  -
-    enum_name: erreur
-    enum_summary: "Erreurs possibles"
-    enum_field:
-      - [ok, "L'action a été exécutée avec succès."]
-      - [position_invalide, "La position spécifiée n'est pas sur l'établi."]
-      - [placement_invalide, "Les deux positions ne correspondent pas à des
-                               cases adjacentes."]
-      - [placement_impossible, "Les cases ciblées ne sont pas vides."]
-      - [case_vide, "La case ciblée est vide."]
-      - [échantillon_incomplet, "L'échantillon ne peut pas contenir de case vide"]
-      - [échantillon_invalide, "L'échantillon doit contenir au moins un des éléments
-                           de l'échantillon reçu auparavant."]
-
   -
     enum_name: case_type
     enum_summary: "Types de cases"
     enum_field:
       - [vide, "Case vide"]
-      - [plomb, "Plomb transformable en or"]
-      - [fer, "Fer transformable en or"]
-      - [cuivre, "Cuivre transformable en or"]
-      - [soufre, "Elément tranformable en catalyseur"]
-      - [mercure, "Elément tranformable en catalyseur"]
+      - [plomb, "Plomb ; transmutable en or"]
+      - [fer, "Fer ; transmutable en or"]
+      - [cuivre, "Cuivre ; transmutable en or"]
+      - [soufre, "Soufre ; transmutable en catalyseur"]
+      - [mercure, "Mercure ; transmutable en catalyseur"]
+
+  -
+    enum_name: element_propriete
+    enum_summary: "Types de propriétés des éléments"
+    enum_field:
+      - [aucune, "Les cases vides ne contiennent pas d’élément, qui n’ont donc
+                  aucune propriété"]
+      - [transmutable_or, "Élement transmutable en or"]
+      - [transmutable_catalyseur, "Élément transmutable en catalyseur"]
+
+  -
+    enum_name: erreur
+    enum_summary: "Erreurs possibles"
+    enum_field:
+      - [ok, "L’action a été exécutée avec succès"]
+      - [position_invalide, "La position spécifiée n’est pas sur l’établi"]
+      - [placement_invalide, "Les deux positions ne correspondent pas à des
+                              cases adjacentes"]
+      - [placement_impossible, "Les cases ciblées ne sont pas vides"]
+      - [case_vide, "La case ciblée est vide"]
+      - [echantillon_incomplet, "L’échantillon ne peut pas contenir de case
+                                 vide"]
+      - [echantillon_invalide, "L’échantillon doit contenir au moins un des
+                                éléments de l’échantillon reçu auparavant"]
+
 
 struct:
   -
     str_name: position
-    str_summary: Position sur la carte, donnée par deux coordonnées.
+    str_summary: Position sur la carte, donnée par deux coordonnées
     str_tuple: yes
     str_field:
       - [colonne, int, "Coordonnée : colonne"]
       - [ligne, int, "Coordonnée : ligne"]
   -
-    str_name: échantillon
-    str_summary: Echantillon, défini par deux types d'éléments.
+    str_name: echantillon
+    str_summary: Échantillon, défini par deux types d’éléments
     str_tuple: yes
     str_field:
-      - [élément1, case_type, "Élément 1"]
-      - [élément2, case_type, "Élément 2"]
+      - [element1, case_type, "Élément 1"]
+      - [element2, case_type, "Élément 2"]
+  -
+    str_name: position_echantillon
+    str_summary: Position d’un échantillon, donnée par deux positions
+                 adjacentes
+    str_tuple: yes
+    str_field:
+      - [pos1, position, "Position de l’élément 1 de l’échantillon"]
+      - [pos1, position, "Position de l’élément 2 de l’échantillon"]
 
 function:
 
@@ -66,75 +84,110 @@ function:
 
   -
     fct_name: placer_échantillon
-    fct_summary: Place l'échantillon du tour sur l'établi, 
+    fct_summary: Place l’échantillon du tour sur l’établi,
                  avec les coordonnées de deux cases adjacentes.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
       - [pos1, position, "Case du terrain où doit être posé
-                          le premier élément de l'échantillon"]
+                          le premier élément de l’échantillon"]
       - [pos2, position, "Case du terrain où doit être posé
-                          le second élément de l'échantillon"]
+                          le second élément de l’échantillon"]
 
   -
     fct_name: transmuter
-    fct_summary: Provoque la transformation chimique de l'élément à la case
-                 ciblée, ainsi que tous les éléments du même type adjacents,
-                 et ceux du même type adjacents à ces derniers, etc.
+    fct_summary: Provoque la transformation chimique de l’élément à la case
+                 ciblée, ainsi que tous les éléments adjacnets du même types,
+                 ceux du même type adjacents à ces derniers, etc.
                  Ils disparaissent alors tous dans leur transmutation en or
                  ou en cataliseur.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case de l'établi dont la région doit être activée"]
+      - [pos, position, "Case de l’établi dont la région doit être activée"]
 
   -
     fct_name: catalyser
     fct_summary: Utilise un catalyseur sur la case ciblée du joueur indiqué.
-                 Transforme l'ancien élément par l'élément indiqué.
+                 Transforme l’ancien élément par l’élément indiqué.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [pos, position, "Case de l'élément qui doit être transmuté"]
-      - [id_joueur, int, "Identifiant du joueur dont l'élément est ciblé"]
-      - [terrain, case_type, "Type d'élément qui doit remplacer l'ancien"]
+      - [pos, position, "Case de l’élément qui doit être transmuté"]
+      - [id_joueur, int, "Identifiant du joueur dont l’élément est ciblé"]
+      - [terrain, case_type, "Type d’élément qui doit remplacer l’ancien"]
 
   -
-    fct_name: donner_échantillon
-    fct_summary: Définit l'échantillon que l'adversaire recevra à son prochain tour.
+    fct_name: donner_echantillon
+    fct_summary: Définit l’échantillon que l’adversaire recevra à son prochain
+                 tour.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
-      - [échantillon, échantillon, "Échantillon que l'adversaire recevra à son prochain tour"]
+      - [echantillon_donne, echantillon, "Échantillon que l’adversaire recevra
+                                          à son prochain tour"]
 
 # Fonctions de requête sur le terrain
 
   -
     fct_name: type_case
-    fct_summary: Renvoie le type d'une case donnée.
+    fct_summary: Renvoie le type d’une case donnée.
     fct_ret_type: case_type
     fct_arg:
-      - [pos, position, "Case choisie."]
-      - [id_joueur, int, "Joueur choisi."]
+      - [pos, position, "Case choisie"]
+      - [id_joueur, int, "Joueur choisi"]
 
   -
     fct_name: est_vide
     fct_summary: Indique si une case donnée est vide ou est un terrain.
     fct_ret_type: bool
     fct_arg:
-      - [pos, position, "Case choisie."]
-      - [id_joueur, int, "Joueur choisi."]
+      - [pos, position, "Case choisie"]
+      - [id_joueur, int, "Joueur choisi"]
 
+  -
+    fct_name: propriete_case
+    fct_summary: Renvoie la propriété de l’élément sur une case donnée.
+    fct_ret_type: element_propriete
+    fct_arg:
+      - [pos, position, "Case choisie"]
+      - [id_joueur, int, "Joueur choisi"]
+
+  -
+    fct_name: propriete_case_type
+    fct_summary: Renvoie la propriété d’un type de case donné.
+    fct_ret_type: element_propriete
+    fct_arg:
+      - [type, case_type, "Type de case"]
 
   -
     fct_name: taille_region
-    fct_summary: Renvoie la taille de la region à laquelle appartient un élément
+    fct_summary: Renvoie la taille de la région à laquelle appartient un
+                 élément.
     fct_ret_type: int
     fct_arg:
-      - [pos, position, "Case choisie."]
-      - [id_joueur, int, "Joueur choisi."]
+      - [pos, position, "Case choisie"]
+      - [id_joueur, int, "Joueur choisi"]
 
-# Historique (actions de l'adversaire le tour précédent)
+  -
+    fct_name: positions_region
+    fct_summary: Renvoie la liste des positions des cases composant la région
+                 à laquelle appartient un élément donné.
+    fct_ret_type: position array
+    fct_arg:
+      - [pos, position, "Case choisie"]
+      - [id_joueur, int, "Joueur choisi"]
+
+  -
+    fct_name: placements_possible_echantillon
+    fct_summary: Renvoie la liste des placements possibles pour un échantillon
+                 donné sur l’établi d’un joueur donné
+    fct_ret_type: position_echantillon array
+    fct_arg:
+      - [echantillon_a_placer, echantillon, "Échantillon à placer"]
+      - [id_joueur, int, "Joueur possédant l’établi où poser l’échantillon"]
+
+# Historique (actions de l’adversaire le tour précédent)
 # TODO: fill this
 
 # Autre
@@ -146,13 +199,14 @@ function:
     fct_arg: []
   -
     fct_name: adversaire
-    fct_summary: Renvoie le numéro de votre adversaire.
+    fct_summary: Renvoie le numéro de joueur de votre adversaire.
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: score
-    fct_summary: Renvoie le score du joueur désigné par le numéro ``id_joueur``.
-                 Renvoie -1 si ``id_joueur`` est invalide.
+    fct_summary: Renvoie le score du joueur désigné par le numéro
+                 ``id_joueur``. Renvoie 0 si ``id_joueur`` est invalide
+                 (attention, le score d’un joueur valide peut aussi être 0).
     fct_ret_type: int
     fct_arg:
       - [id_joueur, int, "Identifiant du joueur"]
@@ -163,20 +217,36 @@ function:
     fct_arg: []
   -
     fct_name: annuler
-    fct_summary: "Annule la dernière action.
-         Renvoie ``false`` quand il n'y a pas d'action à annuler ce tour-ci."
+    fct_summary: Annule la dernière action. Renvoie ``false`` quand il n’y a
+                 pas d’action à annuler ce tour-ci.
     fct_ret_type: bool
     fct_arg: []
   -
     fct_name: nombre_catalyseurs
-    fct_summary: "Indique le nombre de catalyseur en votre possession."
+    fct_summary: Indique le nombre de catalyseur en votre possession.
     fct_ret_type: int
     fct_arg: []
   -
-    fct_name: échantillon_tour
-    fct_summary: "Indique l'échantillon reçu pour ce tour."
-    fct_ret_type: échantillon
+    fct_name: echantillon_tour
+    fct_summary: Indique l’échantillon reçu pour ce tour.
+    fct_ret_type: echantillon
     fct_arg: []
+  -
+    fct_name: quantite_transmutation_or
+    fct_summary: Renvoie la quantité d’or (et donc le score) obtenue par la
+                 transmutation de ``taille_region`` éléments transmutables en
+                 or.
+    fct_ret_type: int
+    fct_arg:
+      - [taille_region, int, "Nombre d’éléments d’une région à transmuter"]
+  -
+    fct_name: quantite_transmutation_catalyseur
+    fct_summary: Renvoie la quantité de catalyseurs obtenue par la
+                 transmutation de ``taille_region`` éléments transmutables en
+                 catalyseur.
+    fct_ret_type: int
+    fct_arg:
+      - [taille_region, int, "Nombre d’éléments d’une région à transmuter"]
 
 
 user_function:
