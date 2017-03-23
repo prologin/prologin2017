@@ -149,7 +149,7 @@ function:
     fct_summary: Renvoie le numéro de votre adversaire.
     fct_ret_type: int
     fct_arg: []
- -
+  -
     fct_name: score
     fct_summary: Renvoie le score du joueur désigné par le numéro ``id_joueur``.
                  Renvoie -1 si ``id_joueur`` est invalide.
