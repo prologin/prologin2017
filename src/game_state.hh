@@ -126,6 +126,10 @@ public:
     /// Set the sample for the opponent's next turn.
     void give(echantillon sample);
 
+    /// Tell if a specific sample can be placed at a given location
+    bool is_valid_sample_position(echantillon sample, position pos1,
+                                  position pos2, unsigned apprentice_id) const;
+
     /// Get the type of a case at a given position.
     /// Return 'vide' if the position is invalid.
     case_type get_cell_type(position pos, unsigned apprentice_id) const;
@@ -167,6 +171,10 @@ private:
 
     void change_workbench_case(position pos, case_type to,
                                unsigned internal_apprentice_id);
+
+    bool is_valid_sample_position(echantillon sample, position pos1,
+                                  position pos2, const Workbench& workbench,
+                                  bool has_elements) const;
 
     int turn_;
     int catalysts_;

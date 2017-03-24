@@ -18,8 +18,11 @@
 */
 
 #include "game_state.hh"
+#include "position.hh"
 
+#include <algorithm>
 #include <utility>
+
 
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
@@ -101,6 +104,50 @@ void GameState::give(echantillon sample)
     assert(sample.element1 != VIDE);
     assert(sample.element2 != VIDE);
     next_sample_ = sample;
+}
+
+bool GameState::is_valid_sample_position(echantillon sample, position pos1,
+                                         position pos2,
+                                         unsigned apprentice_id) const
+{
+    assert(apprentices_.count(apprentice_id) != 0);
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    const Workbench& workbench = workbenches_[id];
+    bool has_elements = std::any_of(
+        workbench.begin(), workbench.end(), [sample](const auto& line)
+        {
+            return std::any_of(
+                line.begin(), line.end(), [sample](case_type type)
+                {
+                    return type == sample.element1 || type == sample.element2;
+                });
+        });
+    return is_valid_sample_position(sample, pos1, pos2, workbench,
+                                    has_elements);
+}
+
+bool GameState::is_valid_sample_position(echantillon sample, position pos1,
+                                         position pos2,
+                                         const Workbench& workbench,
+                                         bool has_elements) const
+{
+    if (workbench[pos1.ligne][pos1.colonne] != VIDE)
+        return false;
+    if (workbench[pos2.ligne][pos2.colonne] != VIDE)
+        return false;
+    if (!has_elements)
+        return true;
+    static const position offsets[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    for (position offset : offsets)
+    {
+        position p1 = pos1 + offset;
+        if (sample.element1 == workbench[p1.ligne][p1.colonne])
+            return true;
+        position p2 = pos2 + offset;
+        if (sample.element2 == workbench[p2.ligne][p2.colonne])
+            return true;
+    }
+    return false;
 }
 
 case_type GameState::get_cell_type(position pos, unsigned apprentice_id) const
@@ -204,7 +251,7 @@ const std::vector<action>& GameState::get_history(unsigned apprentice_id) const
 }
 
 void GameState::change_workbench_case(position pos, case_type to,
-                               unsigned internal_apprentice_id)
+                                      unsigned internal_apprentice_id)
 {
     // FIXME
 }
