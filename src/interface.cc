@@ -163,10 +163,47 @@ std::string convert_to_string(erreur in)
         return "\"echantillon_incomplet\"";
     case ECHANTILLON_INVALIDE:
         return "\"echantillon_invalide\"";
+    case AUCUN_CATALYSEUR:
+        return "\"aucun_catalyseur\"";
+    case DEJA_POSE:
+        return "\"deja_pose\"";
+    case DEJA_DONNE:
+        return "\"deja_donne\"";
     }
     return "bad value";
 }
 std::string convert_to_string(std::vector<erreur> in)
+{
+    if (in.size())
+    {
+        std::string s = "[" + convert_to_string(in[0]);
+        for (int i = 1, l = in.size(); i < l; i++)
+        {
+            s = s + ", " + convert_to_string(in[i]);
+        }
+        return s + "]";
+    }
+    else
+    {
+        return "[]";
+    }
+}
+std::string convert_to_string(action_type in)
+{
+    switch (in)
+    {
+    case ACTION_PLACER:
+        return "\"action_placer\"";
+    case ACTION_TRANSMUTER:
+        return "\"action_transmuter\"";
+    case ACTION_CATALYSER:
+        return "\"action_catalyser\"";
+    case ACTION_DONNER_ECHANTILLON:
+        return "\"action_donner_echantillon\"";
+    }
+    return "bad value";
+}
+std::string convert_to_string(std::vector<action_type> in)
 {
     if (in.size())
     {
@@ -263,6 +300,42 @@ std::string convert_to_string(std::vector<position_echantillon> in)
         return "[]";
     }
 }
+std::string convert_to_string(action_hist in)
+{
+    std::string type = convert_to_string(in.type);
+    std::string pos1 = convert_to_string(in.pos1);
+    std::string pos2 = convert_to_string(in.pos2);
+    std::string id_apprenti = convert_to_string(in.id_apprenti);
+    std::string nouvelle_case = convert_to_string(in.nouvelle_case);
+    std::string out = "{";
+    out += "type:" + type;
+    out += ", ";
+    out += "pos1:" + pos1;
+    out += ", ";
+    out += "pos2:" + pos2;
+    out += ", ";
+    out += "id_apprenti:" + id_apprenti;
+    out += ", ";
+    out += "nouvelle_case:" + nouvelle_case;
+    return out + "}";
+}
+
+std::string convert_to_string(std::vector<action_hist> in)
+{
+    if (in.size())
+    {
+        std::string s = "[" + convert_to_string(in[0]);
+        for (int i = 1, l = in.size(); i < l; i++)
+        {
+            s = s + ", " + convert_to_string(in[i]);
+        }
+        return s + "]";
+    }
+    else
+    {
+        return "[]";
+    }
+}
 /// Place l’échantillon du tour sur l’établi, avec les coordonnées de deux cases
 /// adjacentes.
 extern "C" erreur api_placer_echantillon(position pos1, position pos2)
@@ -341,6 +414,13 @@ api_placements_possible_echantillon(echantillon echantillon_a_placer,
                                                 id_apprenti);
 }
 
+/// Renvoie la liste des actions jouées par l’adversaire pendant son tour, dans
+/// l’ordre chronologique.
+extern "C" std::vector<action_hist> api_historique()
+{
+    return api->historique();
+}
+
 /// Renvoie votre numéro d’apprenti.
 extern "C" int api_moi()
 {
@@ -386,6 +466,18 @@ extern "C" echantillon api_echantillon_tour()
     return api->echantillon_tour();
 }
 
+/// Indique si l’échantillon reçu pour ce tour a déjà été posé.
+extern "C" bool api_a_pose_echantillon()
+{
+    return api->a_pose_echantillon();
+}
+
+/// Indique si un échantillon a déjà été donné ce tour.
+extern "C" bool api_a_donne_echantillon()
+{
+    return api->a_donne_echantillon();
+}
+
 /// Renvoie la quantité d’or (et donc le score) obtenue par la transmutation de
 /// ``taille_region`` éléments transmutables en or.
 extern "C" int api_quantite_transmutation_or(int taille_region)
@@ -398,6 +490,13 @@ extern "C" int api_quantite_transmutation_or(int taille_region)
 extern "C" int api_quantite_transmutation_catalyseur(int taille_region)
 {
     return api->quantite_transmutation_catalyseur(taille_region);
+}
+
+/// Renvoie la quantité d’or obtenue par la transmutation de ``taille_region``
+/// éléments transmutables en catalyseur.
+extern "C" int api_quantite_transmutation_catalyseur_or(int taille_region)
+{
+    return api->quantite_transmutation_catalyseur_or(taille_region);
 }
 
 /// Affiche le contenu d'une valeur de type case_type
@@ -479,10 +578,44 @@ std::ostream& operator<<(std::ostream& os, erreur v)
     case ECHANTILLON_INVALIDE:
         os << "ECHANTILLON_INVALIDE";
         break;
+    case AUCUN_CATALYSEUR:
+        os << "AUCUN_CATALYSEUR";
+        break;
+    case DEJA_POSE:
+        os << "DEJA_POSE";
+        break;
+    case DEJA_DONNE:
+        os << "DEJA_DONNE";
+        break;
     }
     return os;
 }
 extern "C" void api_afficher_erreur(erreur v)
+{
+    std::cerr << v << std::endl;
+}
+
+/// Affiche le contenu d'une valeur de type action_type
+std::ostream& operator<<(std::ostream& os, action_type v)
+{
+    switch (v)
+    {
+    case ACTION_PLACER:
+        os << "ACTION_PLACER";
+        break;
+    case ACTION_TRANSMUTER:
+        os << "ACTION_TRANSMUTER";
+        break;
+    case ACTION_CATALYSER:
+        os << "ACTION_CATALYSER";
+        break;
+    case ACTION_DONNER_ECHANTILLON:
+        os << "ACTION_DONNER_ECHANTILLON";
+        break;
+    }
+    return os;
+}
+extern "C" void api_afficher_action_type(action_type v)
 {
     std::cerr << v << std::endl;
 }
@@ -534,6 +667,32 @@ std::ostream& operator<<(std::ostream& os, position_echantillon v)
     return os;
 }
 extern "C" void api_afficher_position_echantillon(position_echantillon v)
+{
+    std::cerr << v << std::endl;
+}
+
+/// Affiche le contenu d'une valeur de type action_hist
+std::ostream& operator<<(std::ostream& os, action_hist v)
+{
+    os << "{ ";
+    os << "type"
+       << "=" << v.type;
+    os << ", ";
+    os << "pos1"
+       << "=" << v.pos1;
+    os << ", ";
+    os << "pos2"
+       << "=" << v.pos2;
+    os << ", ";
+    os << "id_apprenti"
+       << "=" << v.id_apprenti;
+    os << ", ";
+    os << "nouvelle_case"
+       << "=" << v.nouvelle_case;
+    os << " }";
+    return os;
+}
+extern "C" void api_afficher_action_hist(action_hist v)
 {
     std::cerr << v << std::endl;
 }

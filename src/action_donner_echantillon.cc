@@ -38,5 +38,4 @@ int ActionDonnerEchantillon::check(const GameState* st) const
 void ActionDonnerEchantillon::apply_on(GameState* st) const
 {
     st->set_next_sample(echantillon_donne_);
-    st->hist_add_give(echantillon_donne_, player_id_);
 }

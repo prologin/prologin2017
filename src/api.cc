@@ -149,6 +149,14 @@ Api::placements_possible_echantillon(echantillon echantillon_a_placer,
     abort();
 }
 
+/// Renvoie la liste des actions jouées par l’adversaire pendant son tour, dans
+/// l’ordre chronologique.
+std::vector<action_hist> Api::historique()
+{
+    // TODO
+    abort();
+}
+
 /// Renvoie votre numéro d’apprenti.
 int Api::moi()
 {
@@ -201,6 +209,20 @@ echantillon Api::echantillon_tour()
     abort();
 }
 
+/// Indique si l’échantillon reçu pour ce tour a déjà été posé.
+bool Api::a_pose_echantillon()
+{
+    // TODO
+    abort();
+}
+
+/// Indique si un échantillon a déjà été donné ce tour.
+bool Api::a_donne_echantillon()
+{
+    // TODO
+    abort();
+}
+
 /// Renvoie la quantité d’or (et donc le score) obtenue par la transmutation de
 /// ``taille_region`` éléments transmutables en or.
 int Api::quantite_transmutation_or(int taille_region)
@@ -212,6 +234,14 @@ int Api::quantite_transmutation_or(int taille_region)
 /// Renvoie la quantité de catalyseurs obtenue par la transmutation de
 /// ``taille_region`` éléments transmutables en catalyseur.
 int Api::quantite_transmutation_catalyseur(int taille_region)
+{
+    // TODO
+    abort();
+}
+
+/// Renvoie la quantité d’or obtenue par la transmutation de ``taille_region``
+/// éléments transmutables en catalyseur.
+int Api::quantite_transmutation_catalyseur_or(int taille_region)
 {
     // TODO
     abort();

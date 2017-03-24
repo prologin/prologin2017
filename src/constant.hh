@@ -61,7 +61,19 @@ typedef enum erreur
     ECHANTILLON_INCOMPLET, /* <- L’échantillon doit contenir deux éléments. */
     ECHANTILLON_INVALIDE, /* <- L’échantillon doit contenir au moins un des
                              éléments de l’échantillon reçu auparavant */
+    AUCUN_CATALYSEUR,     /* <- Aucun catalyseur disponible */
+    DEJA_POSE,  /* <- L’échantillon a déjà été posé ce tour-ci */
+    DEJA_DONNE, /* <- L’échantillon a déjà été donné ce tour-ci */
 } erreur;
+
+/// Types d’actions
+typedef enum action_type
+{
+    ACTION_PLACER,             /* <- Action ``placer_echantillon`` */
+    ACTION_TRANSMUTER,         /* <- Action ``transmuter`` */
+    ACTION_CATALYSER,          /* <- Action ``catalyser`` */
+    ACTION_DONNER_ECHANTILLON, /* <- Action ``donner_echantillon`` */
+} action_type;
 
 /// Position sur la carte, donnée par deux coordonnées
 typedef struct position
@@ -83,5 +95,20 @@ typedef struct position_echantillon
     position pos1; /* <- Position de l’élément 1 de l’échantillon */
     position pos2; /* <- Position de l’élément 2 de l’échantillon */
 } position_echantillon;
+
+/// Action représentée dans l’historique. L’action ``placer_echantillon``
+/// utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``.
+/// L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et
+/// ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée
+/// dans l’historique, car ``echantillon_tour`` donne l’information.
+typedef struct action_hist
+{
+    action_type type; /* <- Type de l’action */
+    position pos1;    /* <- Position, pour les actions placer (1er élément),
+                         transmuter et catalyser */
+    position pos2;    /* <- Position, pour l’action placer (2e élément) */
+    int id_apprenti;  /* <- ID de l’apprenti, pour l’action catalyser */
+    case_type nouvelle_case; /* <- Élément pour l’action catalyser */
+} action_hist;
 
 #endif // !CONSTANT_HH_

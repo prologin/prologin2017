@@ -270,8 +270,8 @@ void GameState::hist_add_place(position pos1, position pos2,
                                unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    action a;
-    a.type = action_type::PLACE;
+    action_hist a;
+    a.type = ACTION_PLACER;
     a.pos1 = pos1;
     a.pos2 = pos2;
     apprentices_.at(apprentice_id).add_action(a);
@@ -280,8 +280,8 @@ void GameState::hist_add_place(position pos1, position pos2,
 void GameState::hist_add_transmute(position pos, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    action a;
-    a.type = action_type::TRANSMUTE;
+    action_hist a;
+    a.type = ACTION_TRANSMUTER;
     a.pos1 = pos;
     apprentices_.at(apprentice_id).add_action(a);
 }
@@ -290,21 +290,11 @@ void GameState::hist_add_catalize(position pos, unsigned target_apprentice_id,
                                   case_type new_type, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    action a;
-    a.type = action_type::CATALYSE;
+    action_hist a;
+    a.type = ACTION_CATALYSER;
     a.pos1 = pos;
-    a.apprentice_id = target_apprentice_id;
-    a.case1 = new_type;
-    apprentices_.at(apprentice_id).add_action(a);
-}
-
-void GameState::hist_add_give(echantillon sample, unsigned apprentice_id)
-{
-    assert(apprentices_.count(apprentice_id) != 0);
-    action a;
-    a.type = action_type::GIVE;
-    a.case1 = sample.element1;
-    a.case2 = sample.element2;
+    a.id_apprenti = target_apprentice_id;
+    a.nouvelle_case = new_type;
     apprentices_.at(apprentice_id).add_action(a);
 }
 
@@ -314,7 +304,8 @@ void GameState::reset_history(unsigned apprentice_id)
     apprentices_.at(apprentice_id).reset_actions();
 }
 
-const std::vector<action>& GameState::get_history(unsigned apprentice_id) const
+const std::vector<action_hist>&
+GameState::get_history(unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
     return apprentices_.at(apprentice_id).get_actions();

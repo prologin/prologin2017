@@ -99,6 +99,10 @@ public:
     placements_possible_echantillon(echantillon echantillon_a_placer,
                                     int id_apprenti);
 
+    /// Renvoie la liste des actions jouées par l’adversaire pendant son tour,
+    /// dans l’ordre chronologique.
+    std::vector<action_hist> historique();
+
     /// Renvoie votre numéro d’apprenti.
     int moi();
 
@@ -123,6 +127,12 @@ public:
     /// Indique l’échantillon reçu pour ce tour.
     echantillon echantillon_tour();
 
+    /// Indique si l’échantillon reçu pour ce tour a déjà été posé.
+    bool a_pose_echantillon();
+
+    /// Indique si un échantillon a déjà été donné ce tour.
+    bool a_donne_echantillon();
+
     /// Renvoie la quantité d’or (et donc le score) obtenue par la transmutation
     /// de ``taille_region`` éléments transmutables en or.
     int quantite_transmutation_or(int taille_region);
@@ -130,6 +140,10 @@ public:
     /// Renvoie la quantité de catalyseurs obtenue par la transmutation de
     /// ``taille_region`` éléments transmutables en catalyseur.
     int quantite_transmutation_catalyseur(int taille_region);
+
+    /// Renvoie la quantité d’or obtenue par la transmutation de
+    /// ``taille_region`` éléments transmutables en catalyseur.
+    int quantite_transmutation_catalyseur_or(int taille_region);
 };
 
 #endif /* !API_HH_ */

@@ -29,24 +29,6 @@
 #include <array>
 #include <unordered_map>
 
-enum class action_type
-{
-    PLACE,     ///< API function `placer_echantillon`
-    TRANSMUTE, ///< API function `transmuter`
-    CATALYSE,  ///< API function `catalyser`
-    GIVE,      ///< API function `donner_echantillon`
-};
-
-struct action
-{
-    action_type type;  ///< Action type
-    position pos1;     ///< Position for PLACE (1st elem), TRANSMUTE, CATALYSE
-    position pos2;     ///< Position for PLACE (2nd elem)
-    int apprentice_id; ///< Apprentice ID for CATALYZE
-    case_type case1;   ///< Case type for CATALYSE, GIVE (1st elem)
-    case_type case2;   ///< Case type for GIVE (2nd elem)
-};
-
 /// Information about a player; encapsulate its rules::Player_sptr
 class Apprentice
 {
@@ -71,18 +53,18 @@ public:
     void set_name(const std::string& name) const { player_->name = name; }
 
     /// Get the list of actions taken by this player last turn
-    const std::vector<action>& get_actions() const { return actions_; }
+    const std::vector<action_hist>& get_actions() const { return actions_; }
 
     /// Empty the list of actions at the start of a new turn
     void reset_actions() { actions_.clear(); }
 
     /// Register a new action
-    void add_action(action action) { actions_.push_back(action); }
+    void add_action(action_hist action) { actions_.push_back(action); }
 
 private:
-    rules::Player_sptr player_;   ///< Encapsulated stechec implementation
-    std::vector<action> actions_; ///< Actions taken during last turn
-    int internal_id_;             ///< Id of player in GameState arrays
+    rules::Player_sptr player_;        ///< Encapsulated stechec implementation
+    std::vector<action_hist> actions_; ///< Actions taken during last turn
+    int internal_id_;                  ///< Id of player in GameState arrays
 };
 
 class GameState : public rules::GameState
@@ -162,10 +144,9 @@ public:
     void hist_add_transmute(position pos, unsigned apprentice_id);
     void hist_add_catalize(position pos, unsigned target_apprentice_id,
                            case_type new_type, unsigned apprentice_id);
-    void hist_add_give(echantillon sample, unsigned apprentice_id);
     void reset_history(unsigned apprentice_id);
 
-    const std::vector<action>& get_history(unsigned apprentice_id) const;
+    const std::vector<action_hist>& get_history(unsigned apprentice_id) const;
 
     static constexpr echantillon default_sample = {PLOMB, FER};
 
