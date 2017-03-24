@@ -108,13 +108,14 @@ function:
 
   -
     fct_name: catalyser
-    fct_summary: Utilise un catalyseur sur la case ciblée du joueur indiqué.
-                 Transforme l’ancien élément par l’élément indiqué.
+    fct_summary: Utilise un catalyseur sur la case ciblée de l'apprenti
+                 indiqué. Transforme l’ancien élément en l’élément indiqué.
     fct_ret_type: erreur
     fct_action: yes
     fct_arg:
       - [pos, position, "Case de l’élément qui doit être transmuté"]
-      - [id_joueur, int, "Identifiant du joueur dont l’élément est ciblé"]
+      - [id_apprenti, int,
+            "Identifiant de l'apprenti dont l’élément est ciblé"]
       - [terrain, case_type, "Type d’élément qui doit remplacer l’ancien"]
 
   -
@@ -135,7 +136,7 @@ function:
     fct_ret_type: case_type
     fct_arg:
       - [pos, position, "Case choisie"]
-      - [id_joueur, int, "Joueur choisi"]
+      - [id_apprenti, int, "Apprenti choisi"]
 
   -
     fct_name: est_vide
@@ -143,7 +144,7 @@ function:
     fct_ret_type: bool
     fct_arg:
       - [pos, position, "Case choisie"]
-      - [id_joueur, int, "Joueur choisi"]
+      - [id_apprenti, int, "Apprenti choisi"]
 
   -
     fct_name: propriete_case
@@ -151,7 +152,7 @@ function:
     fct_ret_type: element_propriete
     fct_arg:
       - [pos, position, "Case choisie"]
-      - [id_joueur, int, "Joueur choisi"]
+      - [id_apprenti, int, "Apprenti choisi"]
 
   -
     fct_name: propriete_case_type
@@ -167,7 +168,7 @@ function:
     fct_ret_type: int
     fct_arg:
       - [pos, position, "Case choisie"]
-      - [id_joueur, int, "Joueur choisi"]
+      - [id_apprenti, int, "Apprenti choisi"]
 
   -
     fct_name: positions_region
@@ -176,16 +177,17 @@ function:
     fct_ret_type: position array
     fct_arg:
       - [pos, position, "Case choisie"]
-      - [id_joueur, int, "Joueur choisi"]
+      - [id_apprenti, int, "Apprenti choisi"]
 
   -
     fct_name: placements_possible_echantillon
     fct_summary: Renvoie la liste des placements possibles pour un échantillon
-                 donné sur l’établi d’un joueur donné
+                 donné sur l’établi d’un apprenti donné
     fct_ret_type: position_echantillon array
     fct_arg:
       - [echantillon_a_placer, echantillon, "Échantillon à placer"]
-      - [id_joueur, int, "Joueur possédant l’établi où poser l’échantillon"]
+      - [id_apprenti, int, "Apprenti possédant l’établi où poser
+                            l’échantillon"]
 
 # Historique (actions de l’adversaire le tour précédent)
 # TODO: fill this
@@ -194,22 +196,22 @@ function:
 
   -
     fct_name: moi
-    fct_summary: Renvoie votre numéro de joueur.
+    fct_summary: Renvoie votre numéro d'apprenti.
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: adversaire
-    fct_summary: Renvoie le numéro de joueur de votre adversaire.
+    fct_summary: Renvoie le numéro d'apprenti de votre adversaire.
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: score
-    fct_summary: Renvoie le score du joueur désigné par le numéro
-                 ``id_joueur``. Renvoie 0 si ``id_joueur`` est invalide
-                 (attention, le score d’un joueur valide peut aussi être 0).
+    fct_summary: Renvoie le score de l'apprenti désigné par le numéro
+                 ``id_apprenti``. Renvoie 0 si ``id_apprenti`` est invalide
+                 (attention, le score d’un apprenti valide peut aussi être 0).
     fct_ret_type: int
     fct_arg:
-      - [id_joueur, int, "Identifiant du joueur"]
+      - [id_apprenti, int, "Identifiant de l'apprenti"]
   -
     fct_name: tour_actuel
     fct_summary: Renvoie le numéro du tour actuel.
