@@ -21,11 +21,22 @@
 
 int ActionDonnerEchantillon::check(const GameState* st) const
 {
-    // FIXME
-    return 0;
+    if(echantillon_donne_.element1 == VIDE
+            || echantillon_donne_.element2 == VIDE)
+        return ECHANTILLON_INCOMPLET;
+
+    const echantillon& received = st->current_sample();
+    if(received.element1 != echantillon_donne_.element1
+            && received.element1 != echantillon_donne_.element2
+            && received.element2 != echantillon_donne_.element1
+            && received.element2 != echantillon_donne_.element2)
+        return ECHANTILLON_INVALIDE;
+
+    return OK;
 }
 
 void ActionDonnerEchantillon::apply_on(GameState* st) const
 {
-    // FIXME
+    st->set_next_sample(echantillon_donne_);
+    st->hist_add_give(echantillon_donne_, player_id_);
 }
