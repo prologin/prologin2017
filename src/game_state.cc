@@ -31,10 +31,29 @@ GameState::GameState(rules::Players_sptr players)
             apprentices_ids_[pi++] = p->id;
         }
     }
-    // FIXME
+
+    for (int player = 0; player < 2; ++player)
+    {
+        for (int i = 0; i < TAILLE_ETABLI; ++i)
+        {
+            workbenches_[player][i].fill(VIDE);
+            connected_components_[player][i].fill(0);
+        }
+    }
+
+    turn_ = 0;
+    next_sample_ = default_sample;
+    reset_turn_state();
 }
 
 rules::GameState* GameState::copy() const
 {
     return new GameState(*this);
+}
+
+void GameState::reset_turn_state()
+{
+    catalysts_ = 0;
+    sample_placed_ = false;
+    sample_ = next_sample_;
 }

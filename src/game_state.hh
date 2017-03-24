@@ -146,6 +146,8 @@ public:
 
     const std::vector<action>& get_history(unsigned apprentice_id) const;
 
+    static constexpr echantillon default_sample = {PLOMB, FER};
+
 private:
     std::unordered_map<unsigned, Apprentice> apprentices_;
     std::array<unsigned, 2> apprentices_ids_;
