@@ -23,7 +23,6 @@
 #include <algorithm>
 #include <utility>
 
-
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
 {
@@ -77,6 +76,7 @@ void GameState::place_sample(position pos1, position pos2,
     int id = apprentices_.at(apprentice_id).get_internal_id();
     assert(workbenches_.at(id)[pos1.ligne][pos1.colonne] == VIDE);
     assert(workbenches_.at(id)[pos2.ligne][pos2.colonne] == VIDE);
+    assert(is_valid_sample_position(sample_, pos1, pos2, apprentice_id));
     change_workbench_case(pos1, sample_.element1, id);
     change_workbench_case(pos2, sample_.element2, id);
 }
@@ -113,17 +113,8 @@ bool GameState::is_valid_sample_position(echantillon sample, position pos1,
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
     const Workbench& workbench = workbenches_[id];
-    bool has_elements = std::any_of(
-        workbench.begin(), workbench.end(), [sample](const auto& line)
-        {
-            return std::any_of(
-                line.begin(), line.end(), [sample](case_type type)
-                {
-                    return type == sample.element1 || type == sample.element2;
-                });
-        });
     return is_valid_sample_position(sample, pos1, pos2, workbench,
-                                    has_elements);
+                                    has_elements(sample, workbench));
 }
 
 bool GameState::is_valid_sample_position(echantillon sample, position pos1,
@@ -148,6 +139,20 @@ bool GameState::is_valid_sample_position(echantillon sample, position pos1,
             return true;
     }
     return false;
+}
+
+bool GameState::has_elements(echantillon sample,
+                             const Workbench& workbench) const
+{
+    return std::any_of(
+        workbench.begin(), workbench.end(), [sample](const auto& line)
+        {
+            return std::any_of(
+                line.begin(), line.end(), [sample](case_type type)
+                {
+                    return type == sample.element1 || type == sample.element2;
+                });
+        });
 }
 
 case_type GameState::get_cell_type(position pos, unsigned apprentice_id) const
@@ -193,7 +198,36 @@ GameState::possible_sample_positions(echantillon sample,
                                      unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    const Workbench& workbench = workbenches_[id];
+    bool has_elems = has_elements(sample, workbench);
+
+    std::vector<position_echantillon> positions;
+    auto try_pos = [&](position p1, position p2)
+    {
+        if (is_valid_sample_position(sample, p1, p2, has_elems))
+            positions.emplace_back(position_echantillon{p1, p2});
+    };
+    for (int line = 0; line < TAILLE_ETABLI; ++line)
+    {
+        for (int column = 0; column < TAILLE_ETABLI; ++column)
+        {
+            position pos1{line, column};
+            if (line + 1 < TAILLE_ETABLI)
+            {
+                position pos2{line + 1, column};
+                try_pos(pos1, pos2);
+                try_pos(pos2, pos1);
+            }
+            if (column + 1 < TAILLE_ETABLI)
+            {
+                position pos2{line, column + 1};
+                try_pos(pos1, pos2);
+                try_pos(pos2, pos1);
+            }
+        }
+    }
+    return positions;
 }
 
 void GameState::hist_add_place(position pos1, position pos2,

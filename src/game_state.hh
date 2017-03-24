@@ -176,6 +176,8 @@ private:
                                   position pos2, const Workbench& workbench,
                                   bool has_elements) const;
 
+    bool has_elements(echantillon sample, const Workbench& workbench) const;
+
     int turn_;
     int catalysts_;
     bool sample_placed_;
