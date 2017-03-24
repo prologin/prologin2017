@@ -51,7 +51,18 @@ enum:
       - [echantillon_incomplet, "L’échantillon doit contenir deux éléments."]
       - [echantillon_invalide, "L’échantillon doit contenir au moins un des
                                 éléments de l’échantillon reçu auparavant"]
+      - [aucun_catalyseur, "Aucun catalyseur disponible"]
+      - [deja_pose, "L’échantillon a déjà été posé ce tour-ci"]
+      - [deja_donne, "L’échantillon a déjà été donné ce tour-ci"]
 
+  -
+    enum_name: action_type
+    enum_summary: "Types d’actions"
+    enum_field:
+      - [action_placer, "Action ``placer_echantillon``"]
+      - [action_transmuter, "Action ``transmuter``"]
+      - [action_catalyser, "Action ``catalyser``"]
+      - [action_donner_echantillon, "Action ``donner_echantillon``"]
 
 struct:
   -
@@ -76,6 +87,24 @@ struct:
     str_field:
       - [pos1, position, "Position de l’élément 1 de l’échantillon"]
       - [pos2, position, "Position de l’élément 2 de l’échantillon"]
+
+  -
+    str_name: action_hist
+    str_summary: Action représentée dans l’historique.
+                 L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``.
+                 L’action ``transmuter`` utilise ``pos1``.
+                 L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et
+                 ``nouvelle_case``.
+                 L’action ``donner_echantillon`` n’est pas représentée dans
+                 l’historique, car ``echantillon_tour`` donne l’information.
+    str_tuple: no
+    str_field:
+      - [type, action_type, "Type de l’action"]
+      - [pos1, position, "Position, pour les actions placer (1er élément),
+                          transmuter et catalyser"]
+      - [pos2, position, "Position, pour l’action placer (2e élément)"]
+      - [id_apprenti, int, "ID de l’apprenti, pour l’action catalyser"]
+      - [nouvelle_case, case_type, "Élément pour l’action catalyser"]
 
 function:
 
@@ -189,7 +218,13 @@ function:
                             l’échantillon"]
 
 # Historique (actions de l’adversaire le tour précédent)
-# TODO: fill this
+
+  -
+    fct_name: historique
+    fct_summary: Renvoie la liste des actions jouées par l’adversaire pendant
+                 son tour, dans l’ordre chronologique.
+    fct_ret_type: action_hist array
+    fct_arg: []
 
 # Autre
 
@@ -234,6 +269,16 @@ function:
     fct_ret_type: echantillon
     fct_arg: []
   -
+    fct_name: a_pose_echantillon
+    fct_summary: Indique si l’échantillon reçu pour ce tour a déjà été posé.
+    fct_ret_type: bool
+    fct_arg: []
+  -
+    fct_name: a_donne_echantillon
+    fct_summary: Indique si un échantillon a déjà été donné ce tour.
+    fct_ret_type: bool
+    fct_arg: []
+  -
     fct_name: quantite_transmutation_or
     fct_summary: Renvoie la quantité d’or (et donc le score) obtenue par la
                  transmutation de ``taille_region`` éléments transmutables en
@@ -244,6 +289,14 @@ function:
   -
     fct_name: quantite_transmutation_catalyseur
     fct_summary: Renvoie la quantité de catalyseurs obtenue par la
+                 transmutation de ``taille_region`` éléments transmutables en
+                 catalyseur.
+    fct_ret_type: int
+    fct_arg:
+      - [taille_region, int, "Nombre d’éléments d’une région à transmuter"]
+  -
+    fct_name: quantite_transmutation_catalyseur_or
+    fct_summary: Renvoie la quantité d’or obtenue par la
                  transmutation de ``taille_region`` éléments transmutables en
                  catalyseur.
     fct_ret_type: int
