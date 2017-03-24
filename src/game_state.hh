@@ -117,14 +117,14 @@ public:
     /// Place a sample on a workbench.
     void place_sample(position pos1, position pos2, unsigned apprentice_id);
 
-    /// Activate the region at a given position.
-    void transmute(position pos, unsigned apprentice_id);
+    /// Remove the region at a given position and return its size.
+    int remove_region(position pos, unsigned apprentice_id);
 
-    /// Change element on given case. Consume a catalyst.
-    void catalyze(position pos, unsigned apprentice_id, case_type new_type);
+    /// Change element on given case. Do not consume a catalyst.
+    void change_case(position pos, unsigned apprentice_id, case_type new_type);
 
     /// Set the sample for the opponent's next turn.
-    void give(echantillon sample);
+    void set_next_sample(echantillon sample);
 
     /// Tell if a specific sample can be placed at a given location
     bool is_valid_sample_position(echantillon sample, position pos1,

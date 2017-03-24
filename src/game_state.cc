@@ -81,7 +81,7 @@ void GameState::place_sample(position pos1, position pos2,
     change_workbench_case(pos2, sample_.element2, id);
 }
 
-void GameState::transmute(position pos, unsigned apprentice_id)
+int GameState::remove_region(position pos, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
@@ -89,8 +89,8 @@ void GameState::transmute(position pos, unsigned apprentice_id)
     // FIXME
 }
 
-void GameState::catalyze(position pos, unsigned apprentice_id,
-                         case_type new_type)
+void GameState::change_case(position pos, unsigned apprentice_id,
+                            case_type new_type)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
@@ -99,7 +99,7 @@ void GameState::catalyze(position pos, unsigned apprentice_id,
     change_workbench_case(pos, new_type, id);
 }
 
-void GameState::give(echantillon sample)
+void GameState::set_next_sample(echantillon sample)
 {
     assert(sample.element1 != VIDE);
     assert(sample.element2 != VIDE);
