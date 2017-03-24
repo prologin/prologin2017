@@ -52,7 +52,11 @@ class Apprentice
 {
 public:
     /// Constructor from the rules::Player_sptr to encapsulate
-    Apprentice(rules::Player_sptr player);
+    /// `internal_id` is the 0 or 1 position in arrays
+    Apprentice(rules::Player_sptr player, int internal_id);
+
+    /// Id of player in GameState arrays
+    int get_internal_id() const { return internal_id_; }
 
     /// Increase the amount of created gold (thus the score); can be < 0
     void create_gold(int quantity);
@@ -78,6 +82,7 @@ public:
 private:
     rules::Player_sptr player_;   ///< Encapsulated stechec implementation
     std::vector<action> actions_; ///< Actions taken during last turn
+    int internal_id_;             ///< Id of player in GameState arrays
 };
 
 class GameState : public rules::GameState

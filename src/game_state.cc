@@ -19,6 +19,8 @@
 
 #include "game_state.hh"
 
+#include <utility>
+
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
 {
@@ -27,7 +29,7 @@ GameState::GameState(rules::Players_sptr players)
     {
         if (p->type == rules::PLAYER)
         {
-            apprentices_.insert({p->id, p});
+            apprentices_.emplace(std::make_pair(p->id, Apprentice(p, pi)));
             apprentices_ids_[pi++] = p->id;
         }
     }
