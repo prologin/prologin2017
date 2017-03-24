@@ -108,6 +108,12 @@ public:
     /// Get number of catalysts available at the moment.
     int get_catalysts_number() const { return catalysts_; }
 
+    /// Increase number of catalysts
+    void increase_catalysts_number(int by) { catalysts_ += by; }
+
+    /// Consume a catalyst
+    void consume_catalyst() { catalysts_ -= 1; }
+
     /// Get the sample for the turn.
     echantillon current_sample() const { return sample_; }
 
