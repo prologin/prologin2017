@@ -195,7 +195,7 @@ function:
 
   -
     fct_name: moi
-    fct_summary: Renvoie votre numéro d’apprenti
+    fct_summary: Renvoie votre numéro d’apprenti.
     fct_ret_type: int
     fct_arg: []
   -
