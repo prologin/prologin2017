@@ -71,14 +71,18 @@ void GameState::place_sample(position pos1, position pos2,
 {
     assert(!sample_placed_);
     assert(apprentices_.count(apprentice_id) != 0);
-    // assert(workbenches_.at(id)[pos1.ligne][pos1.colonne] == VIDE);
-    // assert(workbenches_.at(id)[pos2.ligne][pos2.colonne] == VIDE);
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    assert(workbenches_.at(id)[pos1.ligne][pos1.colonne] == VIDE);
+    assert(workbenches_.at(id)[pos2.ligne][pos2.colonne] == VIDE);
+    change_workbench_case(pos1, sample_.element1, id);
+    change_workbench_case(pos2, sample_.element2, id);
 }
 
 void GameState::transmute(position pos, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    assert(workbenches_.at(id)[pos.ligne][pos.colonne] != VIDE);
     // FIXME
 }
 
@@ -86,7 +90,10 @@ void GameState::catalyze(position pos, unsigned apprentice_id,
                          case_type new_type)
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    assert(workbenches_.at(id)[pos.ligne][pos.colonne] != VIDE);
+    assert(new_type != VIDE);
+    change_workbench_case(pos, new_type, id);
 }
 
 void GameState::give(echantillon sample)
@@ -99,21 +106,39 @@ void GameState::give(echantillon sample)
 case_type GameState::get_cell_type(position pos, unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    // return workbenches_[id][pos.ligne][pos.colonne];
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    return workbenches_[id][pos.ligne][pos.colonne];
 }
 
 int GameState::get_region_size(position pos, unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    if (workbenches_[id][pos.ligne][pos.colonne] == VIDE)
+        return 0;
+    int connected_component = connected_components_[id][pos.ligne][pos.colonne];
+    int size = 0;
+    for (const auto& line : connected_components_[id])
+        for (int cc : line)
+            if (cc == connected_component)
+                ++size;
+    return size;
 }
 
-std::vector<position> GameState::get_region(position p,
+std::vector<position> GameState::get_region(position pos,
                                             unsigned apprentice_id) const
 {
+    std::vector<position> positions;
     assert(apprentices_.count(apprentice_id) != 0);
-    // FIXME
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    if (workbenches_[id][pos.ligne][pos.colonne] == VIDE)
+        return positions;
+    int connected_component = connected_components_[id][pos.ligne][pos.colonne];
+    for (int l = 0; l < TAILLE_ETABLI; ++l)
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+            if (connected_components_[id][l][c] == connected_component)
+                positions.emplace_back(position{l, c});
+    return positions;
 }
 
 std::vector<position_echantillon>
@@ -176,4 +201,10 @@ const std::vector<action>& GameState::get_history(unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
     return apprentices_.at(apprentice_id).get_actions();
+}
+
+void GameState::change_workbench_case(position pos, case_type to,
+                               unsigned internal_apprentice_id)
+{
+    // FIXME
 }

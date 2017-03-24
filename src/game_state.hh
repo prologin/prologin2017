@@ -165,6 +165,9 @@ private:
         std::array<std::array<int, TAILLE_ETABLI>, TAILLE_ETABLI>;
     std::array<Connect_components, 2> connected_components_;
 
+    void change_workbench_case(position pos, case_type to,
+                               unsigned internal_apprentice_id);
+
     int turn_;
     int catalysts_;
     bool sample_placed_;
