@@ -58,8 +58,8 @@ public:
     /// Id of player in GameState arrays
     int get_internal_id() const { return internal_id_; }
 
-    /// Increase the amount of created gold (thus the score); can be < 0
-    void create_gold(int quantity);
+    /// Increase the score player (or decrease if a negative value is given)
+    void increase_score(int by) { player_->score += by; }
 
     /// Get this player's score (floor of total collected plasma)
     int get_score() const { return player_->score; }
@@ -104,6 +104,9 @@ public:
 
     /// Get a player's score. The id must be valid.
     int get_score(unsigned apprentice_id) const;
+
+    /// Increase a player score (or decrease it if a negative value is given)
+    void increase_score(unsigned apprentice_id, int by);
 
     /// Get number of catalysts available at the moment.
     int get_catalysts_number() const { return catalysts_; }

@@ -25,6 +25,14 @@
 
 static constexpr int CONNECTED_COMPONENT_OF_EMPTY = -1;
 
+Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
+    : player_(std::move(player))
+    , internal_id_(internal_id)
+{
+    assert(player_);
+    player->score = 0;
+}
+
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
 {
@@ -68,6 +76,12 @@ int GameState::get_score(unsigned apprentice_id) const
 {
     assert(apprentices_.count(apprentice_id) != 0);
     return apprentices_.at(apprentice_id).get_score();
+}
+
+void GameState::increase_score(unsigned apprentice_id, int by)
+{
+    assert(apprentices_.count(apprentice_id) != 0);
+    apprentices_.at(apprentice_id).increase_score(by);
 }
 
 void GameState::place_sample(position pos1, position pos2,
