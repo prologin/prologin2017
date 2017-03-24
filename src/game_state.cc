@@ -72,6 +72,7 @@ void GameState::reset_turn_state()
 {
     catalysts_ = 0;
     sample_placed_ = false;
+    sample_given_ = false;
     sample_ = next_sample_;
 }
 
@@ -139,6 +140,7 @@ void GameState::set_next_sample(echantillon sample)
     assert(sample.element1 != VIDE);
     assert(sample.element2 != VIDE);
     next_sample_ = sample;
+    sample_given_ = true;
 }
 
 bool GameState::is_valid_sample_position(echantillon sample, position pos1,

@@ -196,6 +196,7 @@ private:
     int turn_;
     int catalysts_;
     bool sample_placed_;
+    bool sample_given_;
     echantillon sample_;
     echantillon next_sample_;
 };
