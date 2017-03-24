@@ -21,15 +21,15 @@
 
 int ActionDonnerEchantillon::check(const GameState* st) const
 {
-    if(echantillon_donne_.element1 == VIDE
-            || echantillon_donne_.element2 == VIDE)
+    if (echantillon_donne_.element1 == VIDE ||
+        echantillon_donne_.element2 == VIDE)
         return ECHANTILLON_INCOMPLET;
 
     const echantillon& received = st->current_sample();
-    if(received.element1 != echantillon_donne_.element1
-            && received.element1 != echantillon_donne_.element2
-            && received.element2 != echantillon_donne_.element1
-            && received.element2 != echantillon_donne_.element2)
+    if (received.element1 != echantillon_donne_.element1 &&
+        received.element1 != echantillon_donne_.element2 &&
+        received.element2 != echantillon_donne_.element1 &&
+        received.element2 != echantillon_donne_.element2)
         return ECHANTILLON_INVALIDE;
 
     return OK;
