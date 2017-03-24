@@ -75,7 +75,7 @@ struct:
     str_tuple: yes
     str_field:
       - [pos1, position, "Position de l’élément 1 de l’échantillon"]
-      - [pos1, position, "Position de l’élément 2 de l’échantillon"]
+      - [pos2, position, "Position de l’élément 2 de l’échantillon"]
 
 function:
 

@@ -232,11 +232,11 @@ std::string convert_to_string(std::vector<echantillon> in)
 std::string convert_to_string(position_echantillon in)
 {
     std::string pos1 = convert_to_string(in.pos1);
-    std::string pos1 = convert_to_string(in.pos1);
+    std::string pos2 = convert_to_string(in.pos2);
     std::string out = "{";
     out += "pos1:" + pos1;
     out += ", ";
-    out += "pos1:" + pos1;
+    out += "pos2:" + pos2;
     return out + "}";
 }
 
@@ -521,8 +521,8 @@ std::ostream& operator<<(std::ostream& os, position_echantillon v)
     os << "pos1"
        << "=" << v.pos1;
     os << ", ";
-    os << "pos1"
-       << "=" << v.pos1;
+    os << "pos2"
+       << "=" << v.pos2;
     os << " }";
     return os;
 }

@@ -74,7 +74,7 @@ typedef struct echantillon
 typedef struct position_echantillon
 {
     position pos1; /* <- Position de l’élément 1 de l’échantillon */
-    position pos1; /* <- Position de l’élément 2 de l’échantillon */
+    position pos2; /* <- Position de l’élément 2 de l’échantillon */
 } position_echantillon;
 
 #endif // !CONSTANT_HH_
