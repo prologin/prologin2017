@@ -2,6 +2,7 @@
 ** This file is part of Prologin2017, a rules library for stechec2.
 **
 ** Copyright (c) 2017 Association Prologin <info@prologin.org>
+** Copyright (c) 2017 Sacha Delanoue <sacha.delanoue@prologin.org>
 **
 ** Prologin2017 is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,9 +22,11 @@
 #include "position.hh"
 
 #include <algorithm>
+#include <queue>
 #include <utility>
 
 static constexpr int CONNECTED_COMPONENT_OF_EMPTY = -1;
+static const position offsets[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
     : player_(std::move(player))
@@ -160,7 +163,6 @@ bool GameState::is_valid_sample_position(echantillon sample, position pos1,
         return false;
     if (!has_elements)
         return true;
-    static const position offsets[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     for (position offset : offsets)
     {
         position p1 = pos1 + offset;
@@ -316,8 +318,74 @@ const std::vector<action>& GameState::get_history(unsigned apprentice_id) const
     return apprentices_.at(apprentice_id).get_actions();
 }
 
+void GameState::merge_connect_components(int from, int to,
+                                         unsigned internal_apprentice_id)
+{
+    if (from == to) // no op
+        return;
+    for (auto& line : connected_components_.at(internal_apprentice_id))
+        for (auto& cc : line)
+            if (cc == from)
+                cc = to;
+}
+
+void GameState::traverse_and_update_cc(position from, position ignored,
+                                       Connect_components& ccs)
+{
+    std::array<std::array<bool, TAILLE_ETABLI>, TAILLE_ETABLI> visited;
+    visited[ignored.ligne][ignored.colonne] = true;
+    int cc_from = ccs[from.ligne][from.colonne];
+    int cc_to = from.ligne * TAILLE_ETABLI + from.colonne;
+    std::queue<position> queue;
+    queue.emplace(from);
+    while (!queue.empty())
+    {
+        position pos = queue.front();
+        queue.pop();
+        if (visited[pos.ligne][pos.colonne])
+            continue;
+        visited[pos.ligne][pos.colonne] = true;
+        if (ccs[pos.ligne][pos.colonne] != cc_from)
+            continue;
+        ccs[pos.ligne][pos.colonne] = cc_to;
+        for (position offset : offsets)
+            queue.emplace(pos + offset);
+    }
+}
+
 void GameState::change_workbench_case(position pos, case_type to,
                                       unsigned internal_apprentice_id)
 {
-    // FIXME
+    // This function does two things. The easy part is to change the value
+    // of the workbench.
+    // But it also keeps up to date the connected components numbers.
+    // About those numbers: an empty case always has a number equa to
+    // CONNECTED_COMPONENT_OF_EMPTY, a non-empty case has the same value as all
+    // the cases in its region, and is equal to the inherent value of one of
+    // those cases.
+    // The inherent value of a case at a position {line, column} is
+    // line * TAILLE_ETABLI + column
+
+    auto& ccs = connected_components_.at(internal_apprentice_id);
+    auto& case0 = workbenches_[internal_apprentice_id][pos.ligne][pos.colonne];
+    auto& cc = ccs[pos.ligne][pos.colonne];
+    if (case0 != VIDE)
+    {
+        for (position offset : offsets)
+        {
+            position p = pos + offset;
+            if (ccs[p.ligne][p.colonne] == cc)
+                traverse_and_update_cc(p, pos, ccs);
+        }
+    }
+    case0 = to;
+    assert(to != VIDE);
+    cc = pos.ligne * TAILLE_ETABLI + pos.colonne;
+    for (position offset : offsets)
+    {
+        position p = pos + offset;
+        if (workbenches_[internal_apprentice_id][p.ligne][p.colonne] == case0)
+            merge_connect_components(cc, ccs[p.ligne][p.colonne],
+                                     internal_apprentice_id);
+    }
 }

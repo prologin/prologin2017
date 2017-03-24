@@ -181,6 +181,12 @@ private:
     void change_workbench_case(position pos, case_type to,
                                unsigned internal_apprentice_id);
 
+    void merge_connect_components(int from, int to,
+                                  unsigned internal_apprentice_id);
+
+    void traverse_and_update_cc(position from, position ignored,
+                                Connect_components& ccs);
+
     bool is_valid_sample_position(echantillon sample, position pos1,
                                   position pos2, const Workbench& workbench,
                                   bool has_elements) const;
