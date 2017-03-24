@@ -83,8 +83,6 @@ private:
 class GameState : public rules::GameState
 {
 public:
-    // FIXME
-    // additional parameters? for instance map
     GameState(rules::Players_sptr players);
     rules::GameState* copy() const override;
     ~GameState();
@@ -92,6 +90,19 @@ public:
 private:
     std::unordered_map<unsigned, Apprentice> apprentices_;
     std::array<unsigned, 2> apprentices_ids_;
+
+    using Workbench =
+        std::array<std::array<case_type, TAILLE_ETABLI>, TAILLE_ETABLI>;
+    std::array<Workbench, 2> workbenches_;
+
+    using Connect_components =
+        std::array<std::array<int, TAILLE_ETABLI>, TAILLE_ETABLI>;
+    std::array<Connect_components, 2> connected_components_;
+
+    int turn_;
+    int catalysts_;
+    bool sample_placed_;
+    echantillon sample_;
 };
 
 #endif /* !GAME_STATE_HH */
