@@ -21,15 +21,16 @@
 
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
-    , players_(players)
 {
-    // FIXME
-}
-
-GameState::GameState(const GameState& st)
-    : rules::GameState(st)
-    , players_(st.players_)
-{
+    unsigned pi = 0;
+    for (auto& p : players->players)
+    {
+        if (p->type == rules::PLAYER)
+        {
+            apprentices_.insert({p->id, p});
+            apprentices_ids_[pi++] = p->id;
+        }
+    }
     // FIXME
 }
 
