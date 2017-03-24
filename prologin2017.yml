@@ -33,7 +33,7 @@ enum:
     enum_name: element_propriete
     enum_summary: "Types de propriétés des éléments"
     enum_field:
-      - [aucune, "Les cases vides ne contiennent pas d’élément, qui n’ont donc
+      - [aucune, "Les cases vides ne contiennent pas d’élément, et n’ont donc
                   aucune propriété"]
       - [transmutable_or, "Élement transmutable en or"]
       - [transmutable_catalyseur, "Élément transmutable en catalyseur"]
@@ -48,8 +48,7 @@ enum:
                               cases adjacentes"]
       - [placement_impossible, "Les cases ciblées ne sont pas vides"]
       - [case_vide, "La case ciblée est vide"]
-      - [echantillon_incomplet, "L’échantillon ne peut pas contenir de case
-                                 vide"]
+      - [echantillon_incomplet, "L’échantillon doit contenir deux éléments."]
       - [echantillon_invalide, "L’échantillon doit contenir au moins un des
                                 éléments de l’échantillon reçu auparavant"]
 
@@ -60,8 +59,8 @@ struct:
     str_summary: Position sur la carte, donnée par deux coordonnées
     str_tuple: yes
     str_field:
-      - [colonne, int, "Coordonnée : colonne"]
       - [ligne, int, "Coordonnée : ligne"]
+      - [colonne, int, "Coordonnée : colonne"]
   -
     str_name: echantillon
     str_summary: Échantillon, défini par deux types d’éléments
@@ -114,8 +113,8 @@ function:
     fct_action: yes
     fct_arg:
       - [pos, position, "Case de l’élément qui doit être transmuté"]
-      - [id_apprenti, int,
-            "Identifiant de l'apprenti dont l’élément est ciblé"]
+      - [id_apprenti, int, "Identifiant de l’apprenti dont l’élément est
+                            ciblé"]
       - [terrain, case_type, "Type d’élément qui doit remplacer l’ancien"]
 
   -
@@ -196,22 +195,23 @@ function:
 
   -
     fct_name: moi
-    fct_summary: Renvoie votre numéro d'apprenti.
+    fct_summary: Renvoie votre numéro d’apprenti
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: adversaire
-    fct_summary: Renvoie le numéro d'apprenti de votre adversaire.
+    fct_summary: Renvoie le numéro d’apprenti de votre adversaire.
     fct_ret_type: int
     fct_arg: []
   -
     fct_name: score
-    fct_summary: Renvoie le score de l'apprenti désigné par le numéro
-                 ``id_apprenti``. Renvoie 0 si ``id_apprenti`` est invalide
-                 (attention, le score d’un apprenti valide peut aussi être 0).
+    fct_summary: Renvoie la quantité d’or amassée par l’apprenti désigné par le
+                 numéro ``id_apprenti``. Renvoie 0 si ``id_apprenti`` est
+                 invalide (attention, le score d’un apprenti valide peut aussi
+                 être 0).
     fct_ret_type: int
     fct_arg:
-      - [id_apprenti, int, "Identifiant de l'apprenti"]
+      - [id_apprenti, int, "Identifiant de l’apprenti"]
   -
     fct_name: tour_actuel
     fct_summary: Renvoie le numéro du tour actuel.
