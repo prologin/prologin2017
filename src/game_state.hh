@@ -123,6 +123,9 @@ public:
     /// Tell if the sample was already placed.
     bool is_sample_placed() const { return sample_placed_; }
 
+    /// Tel if a sample was given this turn.
+    bool was_sample_given() const { return sample_given_; }
+
     /// Place a sample on a workbench.
     void place_sample(position pos1, position pos2, unsigned apprentice_id);
 
