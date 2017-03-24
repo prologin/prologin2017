@@ -23,6 +23,8 @@
 #include <algorithm>
 #include <utility>
 
+static constexpr int CONNECTED_COMPONENT_OF_EMPTY = -1;
+
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
 {
@@ -41,7 +43,7 @@ GameState::GameState(rules::Players_sptr players)
         for (int i = 0; i < TAILLE_ETABLI; ++i)
         {
             workbenches_[player][i].fill(VIDE);
-            connected_components_[player][i].fill(0);
+            connected_components_[player][i].fill(CONNECTED_COMPONENT_OF_EMPTY);
         }
     }
 
@@ -86,7 +88,23 @@ int GameState::remove_region(position pos, unsigned apprentice_id)
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
     assert(workbenches_.at(id)[pos.ligne][pos.colonne] != VIDE);
-    // FIXME
+
+    int connected_component = connected_components_[id][pos.ligne][pos.colonne];
+    int size = 0;
+    for (int l = 0; l < TAILLE_ETABLI; ++l)
+    {
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+        {
+            int& cc = connected_components_[id][l][c];
+            if (cc == connected_component)
+            {
+                ++size;
+                cc = CONNECTED_COMPONENT_OF_EMPTY;
+                workbenches_[id][l][c] = VIDE;
+            }
+        }
+    }
+    return size;
 }
 
 void GameState::change_case(position pos, unsigned apprentice_id,
