@@ -85,7 +85,6 @@ class GameState : public rules::GameState
 public:
     GameState(rules::Players_sptr players);
     rules::GameState* copy() const override;
-    ~GameState();
 
     void increment_turn() { turn_++; }
     int get_turn() const { return turn_; }
