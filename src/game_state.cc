@@ -68,6 +68,18 @@ rules::GameState* GameState::copy() const
     return new GameState(*this);
 }
 
+int GameState::transmute_gold_scoreval(int area) {
+    return 0; // FIXME
+}
+
+int GameState::transmute_catalyst_scoreval(int area) {
+    return 0; // FIXME
+}
+
+int GameState::transmute_catalyst_outcome(int area) {
+    return 0; // FIXME
+}
+
 void GameState::reset_turn_state()
 {
     catalysts_ = 0;
@@ -196,6 +208,22 @@ case_type GameState::get_cell_type(position pos, unsigned apprentice_id) const
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
     return workbenches_[id][pos.ligne][pos.colonne];
+}
+
+element_propriete GameState::get_element_property(case_type element) {
+    switch(element) {
+        case PLOMB:
+        case FER:
+        case CUIVRE:
+            return TRANSMUTABLE_OR;
+
+        case SOUFRE:
+        case MERCURE:
+            return TRANSMUTABLE_CATALYSEUR;
+
+        default:
+            return AUCUNE;
+    }
 }
 
 int GameState::get_region_size(position pos, unsigned apprentice_id) const

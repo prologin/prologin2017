@@ -81,6 +81,15 @@ public:
                                                : apprentices_ids_[0];
     }
 
+    /// Get the score increase when transmuting the given area into gold.
+    static int transmute_gold_scoreval(int area);
+
+    /// Get the score increase when transmuting the given area into catalysts.
+    static int transmute_catalyst_scoreval(int area);
+
+    /// Get the number of catalysts created by transmuting the given area.
+    static int transmute_catalyst_outcome(int area);
+
     /// Reset all inner state variables only valid during a turn.
     void reset_turn_state();
 
@@ -127,6 +136,9 @@ public:
     /// Get the type of a case at a given position.
     /// Return 'vide' if the position is invalid.
     case_type get_cell_type(position pos, unsigned apprentice_id) const;
+
+    /// Get the element property for the given element.
+    static element_propriete get_element_property(case_type element);
 
     /// Get the size of the region containing the position.
     /// Return -1 if position is invalid.

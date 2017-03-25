@@ -21,11 +21,34 @@
 
 int ActionTransmuter::check(const GameState* st) const
 {
-    // FIXME
-    return 0;
+    if (pos_.ligne < 0 || pos_.ligne >= TAILLE_ETABLI || pos_.colonne < 0 ||
+        pos_.colonne >= TAILLE_ETABLI)
+        return POSITION_INVALIDE;
+
+    if (st->get_cell_type(pos_, player_id_) == VIDE)
+        return CASE_VIDE;
+
+    return OK;
 }
 
 void ActionTransmuter::apply_on(GameState* st) const
 {
-    // FIXME
+    element_propriete region_prop =
+        st->get_element_property(st->get_cell_type(pos_, player_id_));
+    int region_size = st->remove_region(pos_, player_id_);
+
+    if (region_prop == TRANSMUTABLE_OR)
+    {
+        st->increase_score(player_id_,
+                           st->transmute_gold_scoreval(region_size));
+    }
+    else if (region_prop == TRANSMUTABLE_CATALYSEUR)
+    {
+        st->increase_score(player_id_,
+                           st->transmute_catalyst_scoreval(region_size));
+        st->increase_catalysts_number(
+            st->transmute_catalyst_outcome(region_size));
+    }
+
+    st->hist_add_transmute(pos_, player_id_);
 }
