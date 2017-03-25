@@ -47,6 +47,9 @@ enum:
       - [placement_invalide, "Les deux positions ne correspondent pas à des
                               cases adjacentes"]
       - [placement_impossible, "Les cases ciblées ne sont pas vides"]
+      - [placement_incorrect, "Un des deux éléments de l'échantillon doit
+                               être placé adjacent à un élément du même
+                               type déjà présent sur l'établi"]
       - [case_vide, "La case ciblée est vide"]
       - [echantillon_incomplet, "L’échantillon doit contenir deux éléments."]
       - [echantillon_invalide, "L’échantillon doit contenir au moins un des
