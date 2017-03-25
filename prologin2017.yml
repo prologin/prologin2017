@@ -164,7 +164,8 @@ function:
 
   -
     fct_name: type_case
-    fct_summary: Renvoie le type d’une case donnée.
+    fct_summary: Renvoie le type d’une case donnée, ou 0 si la case est
+                 invaide.
     fct_ret_type: case_type
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -173,6 +174,7 @@ function:
   -
     fct_name: est_vide
     fct_summary: Indique si une case donnée est vide ou contient un élément.
+                 Renvoie faux en cas d'erreur.
     fct_ret_type: bool
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -180,7 +182,8 @@ function:
 
   -
     fct_name: propriete_case
-    fct_summary: Renvoie la propriété de l’élément sur une case donnée.
+    fct_summary: Renvoie la propriété de l’élément sur une case donnée. Un
+                 élément invalide n'a pas de propriété.
     fct_ret_type: element_propriete
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -196,7 +199,7 @@ function:
   -
     fct_name: taille_region
     fct_summary: Renvoie la taille de la région à laquelle appartient un
-                 élément.
+                 élément. Renvoie -1 si la position est invalide.
     fct_ret_type: int
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -205,7 +208,8 @@ function:
   -
     fct_name: positions_region
     fct_summary: Renvoie la liste des positions des cases composant la région
-                 à laquelle appartient un élément donné.
+                 à laquelle appartient un élément donné. Renvoie une liste vide
+                 en cas d'erreur.
     fct_ret_type: position array
     fct_arg:
       - [pos, position, "Case choisie"]
@@ -214,7 +218,8 @@ function:
   -
     fct_name: placements_possible_echantillon
     fct_summary: Renvoie la liste des placements possibles pour un échantillon
-                 donné sur l’établi d’un apprenti donné
+                 donné sur l’établi d’un apprenti donné. Renvoie une liste vide
+                 en cas d'erreur.
     fct_ret_type: position_echantillon array
     fct_arg:
       - [echantillon_a_placer, echantillon, "Échantillon à placer"]

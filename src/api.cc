@@ -21,6 +21,7 @@
 
 #include "actions.hh"
 #include "api.hh"
+#include "position.hh"
 
 // global used in interface.cc
 Api* api;
@@ -99,18 +100,27 @@ erreur Api::donner_echantillon(echantillon echantillon_donne)
 /// Renvoie le type d’une case donnée.
 case_type Api::type_case(position pos, int id_apprenti)
 {
+    if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
+        return VIDE;
+
     return game_state_->get_cell_type(pos, id_apprenti);
 }
 
 /// Indique si une case donnée est vide ou contient un élément.
 bool Api::est_vide(position pos, int id_apprenti)
 {
+    if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
+        return false;
+
     return type_case(pos, id_apprenti) == VIDE;
 }
 
 /// Renvoie la propriété de l’élément sur une case donnée.
 element_propriete Api::propriete_case(position pos, int id_apprenti)
 {
+    if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
+        return AUCUNE;
+
     return propriete_case_type(type_case(pos, id_apprenti));
 }
 
@@ -123,6 +133,9 @@ element_propriete Api::propriete_case_type(case_type type)
 /// Renvoie la taille de la région à laquelle appartient un élément.
 int Api::taille_region(position pos, int id_apprenti)
 {
+    if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
+        return -1;
+
     return game_state_->get_region_size(pos, id_apprenti);
 }
 
@@ -130,6 +143,9 @@ int Api::taille_region(position pos, int id_apprenti)
 /// appartient un élément donné.
 std::vector<position> Api::positions_region(position pos, int id_apprenti)
 {
+    if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
+        return std::vector<position>();
+
     return game_state_->get_region(pos, id_apprenti);
 }
 
@@ -139,6 +155,13 @@ std::vector<position_echantillon>
 Api::placements_possible_echantillon(echantillon echantillon_a_placer,
                                      int id_apprenti)
 {
+    if (echantillon_a_placer.element1 == VIDE ||
+        echantillon_a_placer.element2 == VIDE ||
+        !game_state_->valid_player(id_apprenti))
+    {
+        return std::vector<position_echantillon>();
+    }
+
     return game_state_->possible_sample_positions(echantillon_a_placer,
                                                   id_apprenti);
 }
@@ -167,6 +190,9 @@ int Api::adversaire()
 /// score d’un apprenti valide peut aussi être 0).
 int Api::score(int id_apprenti)
 {
+    if (!game_state_->valid_player(id_apprenti))
+        return 0;
+
     return game_state_->get_score(id_apprenti);
 }
 
@@ -215,6 +241,10 @@ bool Api::a_donne_echantillon()
 /// ``taille_region`` éléments transmutables en or.
 int Api::quantite_transmutation_or(int taille_region)
 {
+    // Strict check, in case the values are defined explicitly
+    if (taille_region <= 0 || taille_region > TAILLE_ETABLI * TAILLE_ETABLI)
+        return 0;
+
     return game_state_->transmute_gold_scoreval(taille_region);
 }
 
@@ -222,6 +252,10 @@ int Api::quantite_transmutation_or(int taille_region)
 /// ``taille_region`` éléments transmutables en catalyseur.
 int Api::quantite_transmutation_catalyseur(int taille_region)
 {
+    // Strict check, in case the values are defined explicitly
+    if (taille_region <= 0 || taille_region > TAILLE_ETABLI * TAILLE_ETABLI)
+        return 0;
+
     return game_state_->transmute_catalyst_outcome(taille_region);
 }
 
@@ -229,6 +263,10 @@ int Api::quantite_transmutation_catalyseur(int taille_region)
 /// éléments transmutables en catalyseur.
 int Api::quantite_transmutation_catalyseur_or(int taille_region)
 {
+    // Strict check, in case the values are defined explicitly
+    if (taille_region <= 0 || taille_region > TAILLE_ETABLI * TAILLE_ETABLI)
+        return 0;
+
     return game_state_->transmute_catalyst_scoreval(taille_region);
 }
 

@@ -90,6 +90,9 @@ public:
     /// Get the number of catalysts created by transmuting the given area.
     static int transmute_catalyst_outcome(int area);
 
+    /// Checks whether the given player id is indeed a payer
+    bool valid_player(unsigned apprentice_id);
+
     /// Reset all inner state variables only valid during a turn.
     void reset_turn_state();
 
