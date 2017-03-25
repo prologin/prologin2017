@@ -80,7 +80,7 @@ int GameState::transmute_catalyst_outcome(int area) {
     return 0; // FIXME
 }
 
-bool GameState::valid_player(unsigned apprentice_id) {
+bool GameState::valid_player(unsigned apprentice_id) const {
     return apprentices_.count(apprentice_id) != 0;
 }
 

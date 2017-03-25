@@ -91,7 +91,7 @@ public:
     static int transmute_catalyst_outcome(int area);
 
     /// Checks whether the given player id is indeed a payer
-    bool valid_player(unsigned apprentice_id);
+    bool valid_player(unsigned apprentice_id) const;
 
     /// Reset all inner state variables only valid during a turn.
     void reset_turn_state();
