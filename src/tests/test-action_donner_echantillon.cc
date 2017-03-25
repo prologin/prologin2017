@@ -6,75 +6,56 @@
 
 TEST_F(ActionTest, DonnerEchantillon_Invalid)
 {
-    ActionDonnerEchantillon* act;
+    ActionDonnerEchantillon act({VIDE, MERCURE}, PLAYER_1);
+    EXPECT_EQ(ECHANTILLON_INCOMPLET, act.check(gs_));
 
-    act = new ActionDonnerEchantillon({VIDE, MERCURE}, PLAYER_1);
-    EXPECT_EQ(ECHANTILLON_INCOMPLET, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act2({SOUFRE, VIDE}, PLAYER_2);
+    EXPECT_EQ(ECHANTILLON_INCOMPLET, act2.check(gs_));
 
-    act = new ActionDonnerEchantillon({SOUFRE, VIDE}, PLAYER_2);
-    EXPECT_EQ(ECHANTILLON_INCOMPLET, act->check(gs_));
-    delete act;
-
-    act = new ActionDonnerEchantillon({VIDE, VIDE}, PLAYER_1);
-    EXPECT_EQ(ECHANTILLON_INCOMPLET, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act3({VIDE, VIDE}, PLAYER_1);
+    EXPECT_EQ(ECHANTILLON_INCOMPLET, act3.check(gs_));
 }
 
 TEST_F(ActionTest, DonnerEchantillon_MatchingPrevious)
 {
-    ActionDonnerEchantillon* act;
-
     gs_->set_next_sample({MERCURE, SOUFRE});
     gs_->reset_turn_state();
 
-    act = new ActionDonnerEchantillon({MERCURE, FER}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act({MERCURE, FER}, PLAYER_2);
+    EXPECT_EQ(OK, act.check(gs_));
 
-    act = new ActionDonnerEchantillon({SOUFRE, FER}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act2({SOUFRE, FER}, PLAYER_2);
+    EXPECT_EQ(OK, act2.check(gs_));
 
-    act = new ActionDonnerEchantillon({CUIVRE, MERCURE}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act3({CUIVRE, MERCURE}, PLAYER_2);
+    EXPECT_EQ(OK, act3.check(gs_));
 
-    act = new ActionDonnerEchantillon({CUIVRE, SOUFRE}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act4({CUIVRE, SOUFRE}, PLAYER_2);
+    EXPECT_EQ(OK, act4.check(gs_));
 
-    act = new ActionDonnerEchantillon({MERCURE, SOUFRE}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act5({MERCURE, SOUFRE}, PLAYER_2);
+    EXPECT_EQ(OK, act5.check(gs_));
 
-    act = new ActionDonnerEchantillon({SOUFRE, MERCURE}, PLAYER_2);
-    EXPECT_EQ(OK, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act6({SOUFRE, MERCURE}, PLAYER_2);
+    EXPECT_EQ(OK, act6.check(gs_));
 
-    act = new ActionDonnerEchantillon({CUIVRE, FER}, PLAYER_2);
-    EXPECT_EQ(ECHANTILLON_INVALIDE, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act7({CUIVRE, FER}, PLAYER_2);
+    EXPECT_EQ(ECHANTILLON_INVALIDE, act7.check(gs_));
 
-    act = new ActionDonnerEchantillon({PLOMB, PLOMB}, PLAYER_2);
-    EXPECT_EQ(ECHANTILLON_INVALIDE, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act8({PLOMB, PLOMB}, PLAYER_2);
+    EXPECT_EQ(ECHANTILLON_INVALIDE, act8.check(gs_));
 }
 
 TEST_F(ActionTest, DonnerEchantillon_UpdateGamestate)
 {
-    ActionDonnerEchantillon* act;
-
     gs_->set_next_sample({MERCURE, SOUFRE});
     gs_->reset_turn_state();
 
-    act = new ActionDonnerEchantillon({FER, MERCURE}, PLAYER_1);
-    EXPECT_EQ(OK, act->check(gs_));
-    act->apply_on(gs_);
+    ActionDonnerEchantillon act({FER, MERCURE}, PLAYER_1);
+    EXPECT_EQ(OK, act.check(gs_));
+    act.apply_on(gs_);
     EXPECT_EQ(true, gs_->was_sample_given());
-    delete act;
 
-    act = new ActionDonnerEchantillon({FER, MERCURE}, PLAYER_1);
-    EXPECT_EQ(DEJA_DONNE, act->check(gs_));
-    delete act;
+    ActionDonnerEchantillon act2({FER, MERCURE}, PLAYER_1);
+    EXPECT_EQ(DEJA_DONNE, act2.check(gs_));
 }
