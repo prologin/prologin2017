@@ -55,6 +55,7 @@ enum:
       - [echantillon_invalide, "L’échantillon doit contenir au moins un des
                                 éléments de l’échantillon reçu auparavant"]
       - [aucun_catalyseur, "Aucun catalyseur disponible"]
+      - [catalyse_invalide, "L'élément de destination ne peut pas être vide."]
       - [deja_pose, "L’échantillon a déjà été posé ce tour-ci"]
       - [deja_donne, "L’échantillon a déjà été donné ce tour-ci"]
 
