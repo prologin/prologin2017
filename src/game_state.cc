@@ -33,7 +33,7 @@ Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
     , internal_id_(internal_id)
 {
     assert(player_);
-    player->score = 0;
+    player_->score = 0;
 }
 
 GameState::GameState(rules::Players_sptr players)
