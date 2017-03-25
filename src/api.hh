@@ -144,6 +144,9 @@ public:
     /// Renvoie la quantité d’or obtenue par la transmutation de
     /// ``taille_region`` éléments transmutables en catalyseur.
     int quantite_transmutation_catalyseur_or(int taille_region);
+
+    /// Indique l’échantillon par défaut lors du premier tour
+    echantillon echantillon_defaut_premier_tour();
 };
 
 #endif /* !API_HH_ */

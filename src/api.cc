@@ -246,3 +246,10 @@ int Api::quantite_transmutation_catalyseur_or(int taille_region)
     // TODO
     abort();
 }
+
+/// Indique l’échantillon par défaut lors du premier tour
+echantillon Api::echantillon_defaut_premier_tour()
+{
+    // TODO
+    abort();
+}

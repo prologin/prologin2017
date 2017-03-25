@@ -167,6 +167,8 @@ std::string convert_to_string(erreur in)
         return "\"echantillon_invalide\"";
     case AUCUN_CATALYSEUR:
         return "\"aucun_catalyseur\"";
+    case CATALYSE_INVALIDE:
+        return "\"catalyse_invalide\"";
     case DEJA_POSE:
         return "\"deja_pose\"";
     case DEJA_DONNE:
@@ -501,6 +503,12 @@ extern "C" int api_quantite_transmutation_catalyseur_or(int taille_region)
     return api->quantite_transmutation_catalyseur_or(taille_region);
 }
 
+/// Indique l’échantillon par défaut lors du premier tour
+extern "C" echantillon api_echantillon_defaut_premier_tour()
+{
+    return api->echantillon_defaut_premier_tour();
+}
+
 /// Affiche le contenu d'une valeur de type case_type
 std::ostream& operator<<(std::ostream& os, case_type v)
 {
@@ -585,6 +593,9 @@ std::ostream& operator<<(std::ostream& os, erreur v)
         break;
     case AUCUN_CATALYSEUR:
         os << "AUCUN_CATALYSEUR";
+        break;
+    case CATALYSE_INVALIDE:
+        os << "CATALYSE_INVALIDE";
         break;
     case DEJA_POSE:
         os << "DEJA_POSE";

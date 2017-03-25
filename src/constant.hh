@@ -65,7 +65,8 @@ typedef enum erreur
     ECHANTILLON_INVALIDE, /* <- L’échantillon doit contenir au moins un des
                              éléments de l’échantillon reçu auparavant */
     AUCUN_CATALYSEUR,     /* <- Aucun catalyseur disponible */
-    DEJA_POSE,  /* <- L’échantillon a déjà été posé ce tour-ci */
+    CATALYSE_INVALIDE, /* <- L'élément de destination ne peut pas être vide. */
+    DEJA_POSE,         /* <- L’échantillon a déjà été posé ce tour-ci */
     DEJA_DONNE, /* <- L’échantillon a déjà été donné ce tour-ci */
 } erreur;
 
