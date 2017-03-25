@@ -306,6 +306,11 @@ function:
     fct_ret_type: int
     fct_arg:
       - [taille_region, int, "Nombre d’éléments d’une région à transmuter"]
+  -
+    fct_name: echantillon_defaut_premier_tour
+    fct_summary: Indique l’échantillon par défaut lors du premier tour
+    fct_ret_type: echantillon
+    fct_arg: []
 
 
 user_function:
