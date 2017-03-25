@@ -18,11 +18,11 @@
 */
 
 #include "actions.hh"
+#include "position.hh"
 
 int ActionTransmuter::check(const GameState* st) const
 {
-    if (pos_.ligne < 0 || pos_.ligne >= TAILLE_ETABLI || pos_.colonne < 0 ||
-        pos_.colonne >= TAILLE_ETABLI)
+    if (!in_board(pos_))
         return POSITION_INVALIDE;
 
     if (st->get_cell_type(pos_, player_id_) == VIDE)
