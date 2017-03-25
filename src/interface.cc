@@ -157,6 +157,8 @@ std::string convert_to_string(erreur in)
         return "\"placement_invalide\"";
     case PLACEMENT_IMPOSSIBLE:
         return "\"placement_impossible\"";
+    case PLACEMENT_INCORRECT:
+        return "\"placement_incorrect\"";
     case CASE_VIDE:
         return "\"case_vide\"";
     case ECHANTILLON_INCOMPLET:
@@ -568,6 +570,9 @@ std::ostream& operator<<(std::ostream& os, erreur v)
         break;
     case PLACEMENT_IMPOSSIBLE:
         os << "PLACEMENT_IMPOSSIBLE";
+        break;
+    case PLACEMENT_INCORRECT:
+        os << "PLACEMENT_INCORRECT";
         break;
     case CASE_VIDE:
         os << "CASE_VIDE";

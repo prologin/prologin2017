@@ -57,7 +57,10 @@ typedef enum erreur
     PLACEMENT_INVALIDE,   /* <- Les deux positions ne correspondent pas à des
                              cases adjacentes */
     PLACEMENT_IMPOSSIBLE, /* <- Les cases ciblées ne sont pas vides */
-    CASE_VIDE,            /* <- La case ciblée est vide */
+    PLACEMENT_INCORRECT, /* <- Un des deux éléments de l'échantillon doit être
+                            placé adjacent à un élément du même type déjà
+                            présent sur l'établi */
+    CASE_VIDE,           /* <- La case ciblée est vide */
     ECHANTILLON_INCOMPLET, /* <- L’échantillon doit contenir deux éléments. */
     ECHANTILLON_INVALIDE, /* <- L’échantillon doit contenir au moins un des
                              éléments de l’échantillon reçu auparavant */
