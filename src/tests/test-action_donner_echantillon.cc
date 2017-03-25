@@ -73,4 +73,8 @@ TEST_F(ActionTest, DonnerEchantillon_UpdateGamestate)
     act->apply_on(gs_);
     EXPECT_EQ(true, gs_->was_sample_given());
     delete act;
+
+    act = new ActionDonnerEchantillon({FER, MERCURE}, PLAYER_1);
+    EXPECT_EQ(DEJA_DONNE, act->check(gs_));
+    delete act;
 }
