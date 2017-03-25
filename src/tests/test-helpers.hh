@@ -32,8 +32,8 @@ class ActionTest : public ::testing::Test
 
         GameState* gs_;
 
-        const int PLAYER_1 = 0;
-        const int PLAYER_2 = 1;
+        const int PLAYER_1 = 42;
+        const int PLAYER_2 = 1337;
 };
 
 #endif
