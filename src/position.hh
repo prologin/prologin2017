@@ -70,6 +70,12 @@ inline int distance(const position& a, const position& b)
     return std::abs(a.ligne - b.ligne) + std::abs(a.colonne - b.colonne);
 }
 
+inline bool in_board(const position& pos)
+{
+    return pos.ligne >= 0 && pos.ligne < TAILLE_ETABLI && pos.colonne >= 0 &&
+           pos.colonne < TAILLE_ETABLI;
+}
+
 namespace std
 {
 template <> struct hash<position>

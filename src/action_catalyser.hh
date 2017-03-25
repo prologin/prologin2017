@@ -55,9 +55,9 @@ public:
 
 private:
     position pos_;
-    int id_apprenti_;
+    int id_apprenti_; /// Workbench on which we will transmute something
     case_type terrain_;
-    int player_id_;
+    int player_id_; /// Player initiating the transmutation
 };
 
 #endif // !ACTION_CATALYSER_HH

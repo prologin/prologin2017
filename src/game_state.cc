@@ -286,7 +286,7 @@ void GameState::hist_add_transmute(position pos, unsigned apprentice_id)
     apprentices_.at(apprentice_id).add_action(a);
 }
 
-void GameState::hist_add_catalize(position pos, unsigned target_apprentice_id,
+void GameState::hist_add_catalyze(position pos, unsigned target_apprentice_id,
                                   case_type new_type, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);

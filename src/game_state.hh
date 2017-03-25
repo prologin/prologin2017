@@ -142,7 +142,7 @@ public:
     // Update action history
     void hist_add_place(position pos1, position pos2, unsigned apprentice_id);
     void hist_add_transmute(position pos, unsigned apprentice_id);
-    void hist_add_catalize(position pos, unsigned target_apprentice_id,
+    void hist_add_catalyze(position pos, unsigned target_apprentice_id,
                            case_type new_type, unsigned apprentice_id);
     void reset_history(unsigned apprentice_id);
 

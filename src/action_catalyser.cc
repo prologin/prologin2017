@@ -18,14 +18,29 @@
 */
 
 #include "actions.hh"
+#include "position.hh"
 
 int ActionCatalyser::check(const GameState* st) const
 {
-    // FIXME
-    return 0;
+    if (st->get_catalysts_number() <= 0)
+        return AUCUN_CATALYSEUR;
+
+    if (!in_board(pos_))
+        return POSITION_INVALIDE;
+
+    if (terrain_ == VIDE)
+        return CATALYSE_INVALIDE;
+
+    case_type old_cell = st->get_cell_type(pos_, id_apprenti_);
+    if (old_cell == VIDE)
+        return CASE_VIDE;
+
+    return OK;
 }
 
 void ActionCatalyser::apply_on(GameState* st) const
 {
-    // FIXME
+    st->consume_catalyst();
+    st->change_case(pos_, id_apprenti_, terrain_);
+    st->hist_add_catalyze(pos_, id_apprenti_, terrain_, player_id_);
 }
