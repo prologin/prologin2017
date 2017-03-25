@@ -19,8 +19,8 @@
 
 #include <stdlib.h>
 
-#include "api.hh"
 #include "actions.hh"
+#include "api.hh"
 
 // global used in interface.cc
 Api* api;
@@ -99,44 +99,38 @@ erreur Api::donner_echantillon(echantillon echantillon_donne)
 /// Renvoie le type d’une case donnée.
 case_type Api::type_case(position pos, int id_apprenti)
 {
-    // TODO
-    abort();
+    return game_state_->get_cell_type(pos, id_apprenti);
 }
 
 /// Indique si une case donnée est vide ou contient un élément.
 bool Api::est_vide(position pos, int id_apprenti)
 {
-    // TODO
-    abort();
+    return type_case(pos, id_apprenti) == VIDE;
 }
 
 /// Renvoie la propriété de l’élément sur une case donnée.
 element_propriete Api::propriete_case(position pos, int id_apprenti)
 {
-    // TODO
-    abort();
+    return propriete_case_type(type_case(pos, id_apprenti));
 }
 
 /// Renvoie la propriété d’un type de case donné.
 element_propriete Api::propriete_case_type(case_type type)
 {
-    // TODO
-    abort();
+    return game_state_->get_element_property(type);
 }
 
 /// Renvoie la taille de la région à laquelle appartient un élément.
 int Api::taille_region(position pos, int id_apprenti)
 {
-    // TODO
-    abort();
+    return game_state_->get_region_size(pos, id_apprenti);
 }
 
 /// Renvoie la liste des positions des cases composant la région à laquelle
 /// appartient un élément donné.
 std::vector<position> Api::positions_region(position pos, int id_apprenti)
 {
-    // TODO
-    abort();
+    return game_state_->get_region(pos, id_apprenti);
 }
 
 /// Renvoie la liste des placements possibles pour un échantillon donné sur
@@ -145,30 +139,27 @@ std::vector<position_echantillon>
 Api::placements_possible_echantillon(echantillon echantillon_a_placer,
                                      int id_apprenti)
 {
-    // TODO
-    abort();
+    return game_state_->possible_sample_positions(echantillon_a_placer,
+                                                  id_apprenti);
 }
 
 /// Renvoie la liste des actions jouées par l’adversaire pendant son tour, dans
 /// l’ordre chronologique.
 std::vector<action_hist> Api::historique()
 {
-    // TODO
-    abort();
+    return game_state_->get_history(adversaire());
 }
 
 /// Renvoie votre numéro d’apprenti.
 int Api::moi()
 {
-    // TODO
-    abort();
+    return player_->id;
 }
 
 /// Renvoie le numéro d’apprenti de votre adversaire.
 int Api::adversaire()
 {
-    // TODO
-    abort();
+    return game_state_->opponent(moi());
 }
 
 /// Renvoie la quantité d’or amassée par l’apprenti désigné par le numéro
@@ -176,80 +167,73 @@ int Api::adversaire()
 /// score d’un apprenti valide peut aussi être 0).
 int Api::score(int id_apprenti)
 {
-    // TODO
-    abort();
+    return game_state_->get_score(id_apprenti);
 }
 
 /// Renvoie le numéro du tour actuel.
 int Api::tour_actuel()
 {
-    // TODO
-    abort();
+    return game_state_->get_turn();
 }
 
 /// Annule la dernière action. Renvoie ``false`` quand il n’y a pas d’action à
 /// annuler ce tour-ci.
 bool Api::annuler()
 {
-    // TODO
-    abort();
+    if (!game_state_->can_cancel())
+        return false;
+    actions_.cancel();
+    game_state_ = rules::cancel(game_state_);
+    return true;
 }
 
 /// Indique le nombre de catalyseurs en votre possession.
 int Api::nombre_catalyseurs()
 {
-    // TODO
-    abort();
+    return game_state_->get_catalysts_number();
 }
 
 /// Indique l’échantillon reçu pour ce tour.
 echantillon Api::echantillon_tour()
 {
-    // TODO
-    abort();
+    return game_state_->current_sample();
 }
 
 /// Indique si l’échantillon reçu pour ce tour a déjà été posé.
 bool Api::a_pose_echantillon()
 {
-    // TODO
-    abort();
+    return game_state_->is_sample_placed();
 }
 
 /// Indique si un échantillon a déjà été donné ce tour.
 bool Api::a_donne_echantillon()
 {
-    // TODO
-    abort();
+    return game_state_->was_sample_given();
 }
 
 /// Renvoie la quantité d’or (et donc le score) obtenue par la transmutation de
 /// ``taille_region`` éléments transmutables en or.
 int Api::quantite_transmutation_or(int taille_region)
 {
-    // TODO
-    abort();
+    return game_state_->transmute_gold_scoreval(taille_region);
 }
 
 /// Renvoie la quantité de catalyseurs obtenue par la transmutation de
 /// ``taille_region`` éléments transmutables en catalyseur.
 int Api::quantite_transmutation_catalyseur(int taille_region)
 {
-    // TODO
-    abort();
+    return game_state_->transmute_catalyst_outcome(taille_region);
 }
 
 /// Renvoie la quantité d’or obtenue par la transmutation de ``taille_region``
 /// éléments transmutables en catalyseur.
 int Api::quantite_transmutation_catalyseur_or(int taille_region)
 {
-    // TODO
-    abort();
+    return game_state_->transmute_catalyst_scoreval(taille_region);
 }
 
 /// Indique l’échantillon par défaut lors du premier tour
 echantillon Api::echantillon_defaut_premier_tour()
 {
-    // TODO
-    abort();
+    return game_state_->default_sample;
 }
