@@ -25,6 +25,9 @@ int ActionDonnerEchantillon::check(const GameState* st) const
         echantillon_donne_.element2 == VIDE)
         return ECHANTILLON_INCOMPLET;
 
+    if (st->was_sample_given())
+        return DEJA_DONNE;
+
     const echantillon& received = st->current_sample();
     if (received.element1 != echantillon_donne_.element1 &&
         received.element1 != echantillon_donne_.element2 &&
