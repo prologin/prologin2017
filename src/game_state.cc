@@ -115,6 +115,7 @@ void GameState::place_sample(position pos1, position pos2,
     assert(is_valid_sample_position(sample_, pos1, pos2, apprentice_id));
     change_workbench_case(pos1, sample_.element1, id);
     change_workbench_case(pos2, sample_.element2, id);
+    sample_placed_ = true;
 }
 
 int GameState::remove_region(position pos, unsigned apprentice_id)
