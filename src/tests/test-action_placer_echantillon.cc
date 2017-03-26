@@ -21,10 +21,14 @@ TEST_F(ActionTest, PlacerEchantillon_NotAdjacent)
 
 TEST_F(ActionTest, PlacerEchantillon_Impossible)
 {
+    gs_->set_next_sample({MERCURE, FER});
+    gs_->reset_turn_state();
+
     ActionPlacerEchantillon act({1, 1}, {2, 1}, PLAYER_1);
     EXPECT_EQ(OK, act.check(gs_));
     act.apply_on(gs_);
 
+    gs_->set_next_sample({CUIVRE, PLOMB});
     gs_->reset_turn_state();
 
     ActionPlacerEchantillon act2({2, 2}, {3, 2}, PLAYER_1);
