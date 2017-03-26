@@ -28,8 +28,11 @@ int ActionPlacerEchantillon::check(const GameState* st) const
     if(!in_board(pos1_) || !in_board(pos2_))
         return POSITION_INVALIDE;
 
-    if (st->get_cell_type(pos1_, player_id_) == VIDE ||
-        st->get_cell_type(pos2_, player_id_) == VIDE)
+    if(distance(pos1_, pos2_) != 1)
+        return PLACEMENT_INVALIDE;
+
+    if (st->get_cell_type(pos1_, player_id_) != VIDE ||
+        st->get_cell_type(pos2_, player_id_) != VIDE)
         return PLACEMENT_IMPOSSIBLE;
 
     const echantillon& sample = st->current_sample();
