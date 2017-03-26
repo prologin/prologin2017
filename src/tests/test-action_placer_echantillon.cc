@@ -75,21 +75,20 @@ TEST_F(ActionTest, PlacerEchantillon_Connexity)
     EXPECT_EQ(PLACEMENT_INCORRECT, act6.check(gs_));
 }
 
-
 TEST_F(ActionTest, PlacerEchantillon_AlreadyGiven)
 {
     gs_->set_next_sample({MERCURE, FER});
     gs_->reset_turn_state();
 
     {
-    ActionPlacerEchantillon act({1, 1}, {2, 1}, PLAYER_1);
-    EXPECT_EQ(OK, act.check(gs_));
-    act.apply_on(gs_);
-    EXPECT_EQ(true, gs_->is_sample_placed());
+        ActionPlacerEchantillon act({1, 1}, {2, 1}, PLAYER_1);
+        EXPECT_EQ(OK, act.check(gs_));
+        act.apply_on(gs_);
+        EXPECT_EQ(true, gs_->is_sample_placed());
     }
 
     {
-    ActionPlacerEchantillon act({1, 2}, {2, 2}, PLAYER_1);
-    EXPECT_EQ(DEJA_POSE, act.check(gs_));
+        ActionPlacerEchantillon act({1, 2}, {2, 2}, PLAYER_1);
+        EXPECT_EQ(DEJA_POSE, act.check(gs_));
     }
 }
