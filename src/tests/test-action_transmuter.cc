@@ -1,10 +1,10 @@
-include "../actions.hh"
+#include "../actions.hh"
 
 #include "test-helpers.hh"
 
-    // ActionTransmuter(position pos, int player)
+// ActionTransmuter(position pos, int player)
 
-    TEST_F(ActionTest, Transmuter_InvalidPosition)
+TEST_F(ActionTest, Transmuter_InvalidPosition)
 {
     {
         ActionTransmuter act({-1, -1}, PLAYER_1);
