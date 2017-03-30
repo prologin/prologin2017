@@ -274,7 +274,7 @@ GameState::possible_sample_positions(echantillon sample,
     std::vector<position_echantillon> positions;
     auto try_pos = [&](position p1, position p2)
     {
-        if (is_valid_sample_position(sample, p1, p2, has_elems))
+        if (is_valid_sample_position(sample, p1, p2, apprentice_id))
             positions.emplace_back(position_echantillon{p1, p2});
     };
     for (int line = 0; line < TAILLE_ETABLI; ++line)
