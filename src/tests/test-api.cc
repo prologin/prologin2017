@@ -137,6 +137,7 @@ TEST_F(ApiTest, Api_PositionRegion)
 
 TEST_F(ApiTest, Api_PlacementsPossibleEchantillon)
 {
+    players[0].api->placer_echantillon({1, 1}, {1, 2});
     EXPECT_EQ(2 * 2 * 5 * 6u, players[0]
                                   .api->placements_possible_echantillon(
                                             {FER, PLOMB}, players[0].id)
@@ -168,7 +169,7 @@ TEST_F(ApiTest, Api_PlacementsPossibleEchantillon)
                       .api->placements_possible_echantillon({CUIVRE, CUIVRE},
                                                             players[0].id)
                       .size());
-    EXPECT_EQ(0u, players[0]
+    EXPECT_EQ(86u, players[0]
                       .api->placements_possible_echantillon({FER, PLOMB},
                                                             players[0].id)
                       .size());
