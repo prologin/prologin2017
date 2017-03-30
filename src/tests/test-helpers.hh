@@ -10,6 +10,7 @@
 #include "../constant.hh"
 #include "../game_state.hh"
 #include "../rules.hh"
+#include "../position.hh"
 
 static rules::Players_sptr make_players(int id1, int id2)
 {
