@@ -23,6 +23,7 @@
 
 #include "api.hh"
 #include "rules.hh"
+#include "constant.hh"
 #include "game_state.hh"
 
 /// Decodes a UTF-8 string to a list of 32 bit unicode codepoints. Ignores
@@ -122,9 +123,79 @@ static void dump_string(std::ostream& ss, const std::string& s)
     ss << "\"";
 }
 
+/// Dump one of the benches
+static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
+{
+    bool onceRow = true;
+
+    ss << "[";
+    for(int row = 0; row < TAILLE_ETABLI; row++)
+    {
+        bool onceCol = true;
+
+        if(!onceRow)
+            ss << ", ";
+        onceRow = false;
+
+        ss << "[";
+        for(int col = 0; col < TAILLE_ETABLI; col++)
+        {
+            if(!onceCol)
+                ss << ", ";
+            onceCol = false;
+
+            position pos{row, col};
+            ss << "{"
+                << "\"type\": " << st.get_cell_type(pos, id)
+                << "}";
+        }
+        ss << "]";
+    }
+    ss << "]";
+}
+
+/// Dumps the players' data
+static void dump_players(std::ostream& ss, const GameState& st)
+{
+    const auto& players = st.get_apprentices();
+    bool once = true;
+
+    ss << "{";
+    for(const auto& player_entry : players)
+    {
+        if(!once)
+            ss << ", ";
+        once = false;
+
+        const auto& player = player_entry.second;
+        ss << "\"" << player_entry.first << "\": {"
+            << "\"name\": ";
+        dump_string(ss, player.get_name());
+        ss << ", \"score\": " << player.get_score()
+            << ", \"id\": " << player.get_internal_id()
+            << ", ";
+
+        ss << "\"bench\": ";
+        dump_bench(ss, st, player.get_internal_id());
+
+        ss << "}";
+    }
+    ss << "}";
+}
+
+/// Dump the whole gamestate
 static void dump_stream(std::ostream& ss, const GameState& st)
 {
-    // TODO
+    ss << "{";
+
+    ss << "\"turn\": [" << st.get_turn() << ", " << NB_TOURS << "], ";
+
+    ss << "\"players\": ";
+    dump_players(ss, st);
+
+    // FIXME dump the next sample to be placed? How & when is this called?
+
+    ss << "}\n";
 }
 
 void Rules::dump_state(std::ostream& ss)

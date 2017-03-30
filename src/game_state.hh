@@ -81,6 +81,9 @@ public:
                                                : apprentices_ids_[0];
     }
 
+    /// Get the players infos
+    const auto& get_apprentices() const { return apprentices_; }
+
     /// Get the score increase when transmuting the given area into gold.
     static int transmute_gold_scoreval(int area);
 
