@@ -135,6 +135,14 @@ TEST_F(ApiTest, Api_PositionRegion)
     }
 }
 
+//
+// ......
+// .MM...
+// .CM...
+// ..M...
+// ..M...
+// ......
+//
 TEST_F(ApiTest, Api_PlacementsPossibleEchantillon)
 {
     EXPECT_EQ(2 * 2 * 5 * 6u, players[0]
@@ -156,23 +164,23 @@ TEST_F(ApiTest, Api_PlacementsPossibleEchantillon)
                        .api->placements_possible_echantillon({MERCURE, MERCURE},
                                                              players[0].id)
                        .size());
-    EXPECT_EQ(23u, players[0]
+    EXPECT_EQ(27u, players[0]
                        .api->placements_possible_echantillon({MERCURE, CUIVRE},
                                                              players[0].id)
                        .size());
-    EXPECT_EQ(23u, players[0]
+    EXPECT_EQ(27u, players[0]
                        .api->placements_possible_echantillon({CUIVRE, MERCURE},
                                                              players[0].id)
                        .size());
-    EXPECT_EQ(4u, players[0]
+    EXPECT_EQ(8u, players[0]
                       .api->placements_possible_echantillon({CUIVRE, CUIVRE},
                                                             players[0].id)
                       .size());
-    EXPECT_EQ(86u, players[0]
-                      .api->placements_possible_echantillon({FER, PLOMB},
-                                                            players[0].id)
-                      .size());
-    EXPECT_EQ(2u, players[0]
+    EXPECT_EQ(84u, players[0]
+                       .api->placements_possible_echantillon({FER, PLOMB},
+                                                             players[0].id)
+                       .size());
+    EXPECT_EQ(4u, players[0]
                       .api->placements_possible_echantillon({FER, CUIVRE},
                                                             players[0].id)
                       .size());
