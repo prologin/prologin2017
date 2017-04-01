@@ -69,15 +69,19 @@ rules::GameState* GameState::copy() const
 }
 
 int GameState::transmute_gold_scoreval(int area) {
-    return 0; // FIXME
+    if (area <= 0)
+        return -3;
+    return (area - 1) * (area - 1);
 }
 
 int GameState::transmute_catalyst_scoreval(int area) {
-    return 0; // FIXME
+    if (area <= 0)
+        return -3;
+    return area - 1;
 }
 
 int GameState::transmute_catalyst_outcome(int area) {
-    return 0; // FIXME
+    return area / 2;
 }
 
 bool GameState::valid_player(unsigned apprentice_id) const {
