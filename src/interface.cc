@@ -306,13 +306,13 @@ std::string convert_to_string(std::vector<position_echantillon> in)
 }
 std::string convert_to_string(action_hist in)
 {
-    std::string type = convert_to_string(in.type);
+    std::string atype = convert_to_string(in.atype);
     std::string pos1 = convert_to_string(in.pos1);
     std::string pos2 = convert_to_string(in.pos2);
     std::string id_apprenti = convert_to_string(in.id_apprenti);
     std::string nouvelle_case = convert_to_string(in.nouvelle_case);
     std::string out = "{";
-    out += "type:" + type;
+    out += "atype:" + atype;
     out += ", ";
     out += "pos1:" + pos1;
     out += ", ";
@@ -370,38 +370,41 @@ extern "C" erreur api_donner_echantillon(echantillon echantillon_donne)
     return api->donner_echantillon(echantillon_donne);
 }
 
-/// Renvoie le type d’une case donnée.
+/// Renvoie le type d’une case donnée, ou 0 si la case est invaide.
 extern "C" case_type api_type_case(position pos, int id_apprenti)
 {
     return api->type_case(pos, id_apprenti);
 }
 
-/// Indique si une case donnée est vide ou contient un élément.
+/// Indique si une case donnée est vide ou contient un élément. Renvoie faux en
+/// cas d'erreur.
 extern "C" bool api_est_vide(position pos, int id_apprenti)
 {
     return api->est_vide(pos, id_apprenti);
 }
 
-/// Renvoie la propriété de l’élément sur une case donnée.
+/// Renvoie la propriété de l’élément sur une case donnée. Un élément invalide
+/// n'a pas de propriété.
 extern "C" element_propriete api_propriete_case(position pos, int id_apprenti)
 {
     return api->propriete_case(pos, id_apprenti);
 }
 
 /// Renvoie la propriété d’un type de case donné.
-extern "C" element_propriete api_propriete_case_type(case_type type)
+extern "C" element_propriete api_propriete_case_type(case_type ctype)
 {
-    return api->propriete_case_type(type);
+    return api->propriete_case_type(ctype);
 }
 
-/// Renvoie la taille de la région à laquelle appartient un élément.
+/// Renvoie la taille de la région à laquelle appartient un élément. Renvoie -1
+/// si la position est invalide.
 extern "C" int api_taille_region(position pos, int id_apprenti)
 {
     return api->taille_region(pos, id_apprenti);
 }
 
 /// Renvoie la liste des positions des cases composant la région à laquelle
-/// appartient un élément donné.
+/// appartient un élément donné. Renvoie une liste vide en cas d'erreur.
 extern "C" std::vector<position> api_positions_region(position pos,
                                                       int id_apprenti)
 {
@@ -409,7 +412,7 @@ extern "C" std::vector<position> api_positions_region(position pos,
 }
 
 /// Renvoie la liste des placements possibles pour un échantillon donné sur
-/// l’établi d’un apprenti donné
+/// l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur.
 extern "C" std::vector<position_echantillon>
 api_placements_possible_echantillon(echantillon echantillon_a_placer,
                                     int id_apprenti)
@@ -691,8 +694,8 @@ extern "C" void api_afficher_position_echantillon(position_echantillon v)
 std::ostream& operator<<(std::ostream& os, action_hist v)
 {
     os << "{ ";
-    os << "type"
-       << "=" << v.type;
+    os << "atype"
+       << "=" << v.atype;
     os << ", ";
     os << "pos1"
        << "=" << v.pos1;

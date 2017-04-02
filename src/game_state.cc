@@ -308,7 +308,7 @@ void GameState::hist_add_place(position pos1, position pos2,
 {
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
-    a.type = ACTION_PLACER;
+    a.atype = ACTION_PLACER;
     a.pos1 = pos1;
     a.pos2 = pos2;
     apprentices_.at(apprentice_id).add_action(a);
@@ -318,7 +318,7 @@ void GameState::hist_add_transmute(position pos, unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
-    a.type = ACTION_TRANSMUTER;
+    a.atype = ACTION_TRANSMUTER;
     a.pos1 = pos;
     apprentices_.at(apprentice_id).add_action(a);
 }
@@ -328,7 +328,7 @@ void GameState::hist_add_catalyze(position pos, unsigned target_apprentice_id,
 {
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
-    a.type = ACTION_CATALYSER;
+    a.atype = ACTION_CATALYSER;
     a.pos1 = pos;
     a.id_apprenti = target_apprentice_id;
     a.nouvelle_case = new_type;

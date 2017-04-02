@@ -103,7 +103,7 @@ struct:
                  l’historique, car ``echantillon_tour`` donne l’information.
     str_tuple: no
     str_field:
-      - [type, action_type, "Type de l’action"]
+      - [atype, action_type, "Type de l’action"]
       - [pos1, position, "Position, pour les actions placer (1er élément),
                           transmuter et catalyser"]
       - [pos2, position, "Position, pour l’action placer (2e élément)"]
@@ -194,7 +194,7 @@ function:
     fct_summary: Renvoie la propriété d’un type de case donné.
     fct_ret_type: element_propriete
     fct_arg:
-      - [type, case_type, "Type de case"]
+      - [ctype, case_type, "Type de case"]
 
   -
     fct_name: taille_region

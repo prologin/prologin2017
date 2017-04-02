@@ -20,6 +20,8 @@
 #ifndef CONSTANT_HH_
 #define CONSTANT_HH_
 
+#include <functional> // needed for std::hash
+
 /// Taille de l’établi de travail (longueur et largeur)
 #define TAILLE_ETABLI 6
 
@@ -39,6 +41,17 @@ typedef enum case_type
     SOUFRE,  /* <- Soufre ; transmutable en catalyseur */
     MERCURE, /* <- Mercure ; transmutable en catalyseur */
 } case_type;
+// This is needed for old compilers
+namespace std
+{
+template <> struct hash<case_type>
+{
+    size_t operator()(const case_type& v) const
+    {
+        return hash<int>()(static_cast<int>(v));
+    }
+};
+}
 
 /// Types de propriétés des éléments
 typedef enum element_propriete
@@ -48,6 +61,17 @@ typedef enum element_propriete
     TRANSMUTABLE_OR,         /* <- Élement transmutable en or */
     TRANSMUTABLE_CATALYSEUR, /* <- Élément transmutable en catalyseur */
 } element_propriete;
+// This is needed for old compilers
+namespace std
+{
+template <> struct hash<element_propriete>
+{
+    size_t operator()(const element_propriete& v) const
+    {
+        return hash<int>()(static_cast<int>(v));
+    }
+};
+}
 
 /// Erreurs possibles
 typedef enum erreur
@@ -69,6 +93,17 @@ typedef enum erreur
     DEJA_POSE,         /* <- L’échantillon a déjà été posé ce tour-ci */
     DEJA_DONNE, /* <- L’échantillon a déjà été donné ce tour-ci */
 } erreur;
+// This is needed for old compilers
+namespace std
+{
+template <> struct hash<erreur>
+{
+    size_t operator()(const erreur& v) const
+    {
+        return hash<int>()(static_cast<int>(v));
+    }
+};
+}
 
 /// Types d’actions
 typedef enum action_type
@@ -78,6 +113,17 @@ typedef enum action_type
     ACTION_CATALYSER,          /* <- Action ``catalyser`` */
     ACTION_DONNER_ECHANTILLON, /* <- Action ``donner_echantillon`` */
 } action_type;
+// This is needed for old compilers
+namespace std
+{
+template <> struct hash<action_type>
+{
+    size_t operator()(const action_type& v) const
+    {
+        return hash<int>()(static_cast<int>(v));
+    }
+};
+}
 
 /// Position sur la carte, donnée par deux coordonnées
 typedef struct position
@@ -107,11 +153,11 @@ typedef struct position_echantillon
 /// dans l’historique, car ``echantillon_tour`` donne l’information.
 typedef struct action_hist
 {
-    action_type type; /* <- Type de l’action */
-    position pos1;    /* <- Position, pour les actions placer (1er élément),
-                         transmuter et catalyser */
-    position pos2;    /* <- Position, pour l’action placer (2e élément) */
-    int id_apprenti;  /* <- ID de l’apprenti, pour l’action catalyser */
+    action_type atype; /* <- Type de l’action */
+    position pos1;     /* <- Position, pour les actions placer (1er élément),
+                          transmuter et catalyser */
+    position pos2;     /* <- Position, pour l’action placer (2e élément) */
+    int id_apprenti;   /* <- ID de l’apprenti, pour l’action catalyser */
     case_type nouvelle_case; /* <- Élément pour l’action catalyser */
 } action_hist;
 
