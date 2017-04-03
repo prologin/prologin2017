@@ -30,6 +30,7 @@ static const position offsets[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
     : player_(std::move(player))
+    , sample_({VIDE, VIDE})
     , internal_id_(internal_id)
 {
     assert(player_);
@@ -129,6 +130,7 @@ void GameState::place_sample(position pos1, position pos2,
     assert(is_valid_sample_position(sample_, pos1, pos2, apprentice_id));
     change_workbench_case(pos1, sample_.element1, id);
     change_workbench_case(pos2, sample_.element2, id);
+    apprentices_.at(apprentice_id).set_sample(sample_);
     sample_placed_ = true;
 }
 

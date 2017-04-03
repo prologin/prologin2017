@@ -123,6 +123,58 @@ static void dump_string(std::ostream& ss, const std::string& s)
     ss << "\"";
 }
 
+static std::ostream& operator<<(std::ostream& ss, const position& pos)
+{
+    ss << "(" << pos.ligne << ", " << pos.colonne << ")";
+    return ss;
+}
+
+static std::ostream& operator<<(std::ostream& ss, action_type act)
+{
+    switch (act)
+    {
+    case ACTION_PLACER:
+        ss << "ACTION_PLACER";
+        break;
+    case ACTION_TRANSMUTER:
+        ss << "ACTION_TRANSMUTER";
+        break;
+    case ACTION_CATALYSER:
+        ss << "ACTION_CATALYSER";
+        break;
+    case ACTION_DONNER_ECHANTILLON:
+        ss << "ACTION_DONNER_ECHANTILLON";
+        break;
+    }
+    return ss;
+}
+
+static std::ostream& operator<<(std::ostream& ss, const case_type& ctype)
+{
+    switch (ctype)
+    {
+    case VIDE:
+        ss << "VIDE";
+        break;
+    case PLOMB:
+        ss << "PLOMB";
+        break;
+    case FER:
+        ss << "FER";
+        break;
+    case CUIVRE:
+        ss << "CUIVRE";
+        break;
+    case SOUFRE:
+        ss << "SOUFRE";
+        break;
+    case MERCURE:
+        ss << "MERCURE";
+        break;
+    }
+    return ss;
+}
+
 /// Dump one of the benches
 static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
 {
@@ -154,6 +206,37 @@ static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
     ss << "]";
 }
 
+static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
+{
+    const std::vector<action_hist>& history = st.get_history(id);
+
+    ss << "[";
+    for (auto action : history)
+    {
+        ss << "{\"type\": \"" << action.atype << ", ";
+
+        switch (action.atype)
+        {
+        case ACTION_PLACER:
+            ss << "\"pos1\": " << action.pos1 << ", "
+               << "\"pos2\": " << action.pos2;
+            break;
+        case ACTION_TRANSMUTER:
+            ss << "\"pos\": " << action.pos1;
+            break;
+        case ACTION_CATALYSER:
+            ss << "\"pos\": " << action.pos1 << ", "
+               << "\"apprentice_id\": " << action.id_apprenti << ", "
+               << "\"new_type\": " << action.nouvelle_case;
+            break;
+        case ACTION_DONNER_ECHANTILLON:
+            // This action is not represented in the history
+            break;
+        }
+    }
+    ss << "]";
+}
+
 /// Dumps the players' data
 static void dump_players(std::ostream& ss, const GameState& st)
 {
@@ -178,6 +261,13 @@ static void dump_players(std::ostream& ss, const GameState& st)
         ss << "\"bench\": ";
         dump_bench(ss, st, player.get_internal_id());
 
+        const echantillon& sample = player.get_sample();
+        ss << ", \"sample\": [" << sample.element1 << ", " << sample.element2
+           << "]";
+
+        ss << ", \"history\": ";
+        dump_history(ss, st, player.get_internal_id());
+
         ss << "}";
     }
     ss << "}";
@@ -192,8 +282,6 @@ static void dump_stream(std::ostream& ss, const GameState& st)
 
     ss << "\"players\": ";
     dump_players(ss, st);
-
-    // FIXME dump the next sample to be placed? How & when is this called?
 
     ss << "}\n";
 }
