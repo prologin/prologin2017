@@ -17,14 +17,14 @@
 ** along with Prologin2017.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <string>
 
 #include "api.hh"
-#include "rules.hh"
 #include "constant.hh"
 #include "game_state.hh"
+#include "rules.hh"
 
 /// Decodes a UTF-8 string to a list of 32 bit unicode codepoints. Ignores
 /// erroneous characters.
@@ -181,25 +181,24 @@ static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
     bool onceRow = true;
 
     ss << "[";
-    for(int row = 0; row < TAILLE_ETABLI; row++)
+    for (int row = 0; row < TAILLE_ETABLI; row++)
     {
         bool onceCol = true;
 
-        if(!onceRow)
+        if (!onceRow)
             ss << ", ";
         onceRow = false;
 
         ss << "[";
-        for(int col = 0; col < TAILLE_ETABLI; col++)
+        for (int col = 0; col < TAILLE_ETABLI; col++)
         {
-            if(!onceCol)
+            if (!onceCol)
                 ss << ", ";
             onceCol = false;
 
             position pos{row, col};
             ss << "{"
-                << "\"type\": " << st.get_cell_type(pos, id)
-                << "}";
+               << "\"type\": " << st.get_cell_type(pos, id) << "}";
         }
         ss << "]";
     }
@@ -244,19 +243,18 @@ static void dump_players(std::ostream& ss, const GameState& st)
     bool once = true;
 
     ss << "{";
-    for(const auto& player_entry : players)
+    for (const auto& player_entry : players)
     {
-        if(!once)
+        if (!once)
             ss << ", ";
         once = false;
 
         const auto& player = player_entry.second;
         ss << "\"" << player_entry.first << "\": {"
-            << "\"name\": ";
+           << "\"name\": ";
         dump_string(ss, player.get_name());
         ss << ", \"score\": " << player.get_score()
-            << ", \"id\": " << player.get_internal_id()
-            << ", ";
+           << ", \"id\": " << player.get_internal_id() << ", ";
 
         ss << "\"bench\": ";
         dump_bench(ss, st, player.get_internal_id());
@@ -290,7 +288,6 @@ void Rules::dump_state(std::ostream& ss)
 {
     dump_stream(ss, *api_->game_state());
 }
-
 
 // from api.cc
 extern Api* api;
