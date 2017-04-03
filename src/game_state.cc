@@ -197,10 +197,10 @@ bool GameState::is_valid_sample_position(echantillon sample, position pos1,
     for (position offset : offsets)
     {
         position p1 = pos1 + offset;
-        if (sample.element1 == workbench[p1.ligne][p1.colonne])
+        if (in_board(p1) && sample.element1 == workbench[p1.ligne][p1.colonne])
             return true;
         position p2 = pos2 + offset;
-        if (sample.element2 == workbench[p2.ligne][p2.colonne])
+        if (in_board(p2) && sample.element2 == workbench[p2.ligne][p2.colonne])
             return true;
     }
     return false;
