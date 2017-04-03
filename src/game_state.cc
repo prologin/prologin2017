@@ -108,6 +108,14 @@ void GameState::increase_score(unsigned apprentice_id, int by)
     apprentices_.at(apprentice_id).increase_score(by);
 }
 
+void GameState::place_element(case_type element, position pos, unsigned apprentice_id)
+{
+    assert(apprentices_.count(apprentice_id) != 0);
+    int id = apprentices_.at(apprentice_id).get_internal_id();
+    assert(workbenches_.at(id)[pos.ligne][pos.colonne] == VIDE);
+    change_workbench_case(pos, element, id);
+}
+
 void GameState::place_sample(position pos1, position pos2,
                              unsigned apprentice_id)
 {

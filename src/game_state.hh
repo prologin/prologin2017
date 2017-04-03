@@ -120,6 +120,9 @@ public:
     /// Tel if a sample was given this turn.
     bool was_sample_given() const { return sample_given_; }
 
+    /// Place an element on a workbench.
+    void place_element(case_type element, position pos, unsigned apprentice_id);
+
     /// Place a sample on a workbench.
     void place_sample(position pos1, position pos2, unsigned apprentice_id);
 
