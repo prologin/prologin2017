@@ -36,6 +36,8 @@ Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
     player_->score = 0;
 }
 
+constexpr echantillon GameState::default_sample;
+
 GameState::GameState(rules::Players_sptr players)
     : rules::GameState()
 {
