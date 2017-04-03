@@ -31,6 +31,11 @@ protected:
         gs_ = new GameState(make_players(PLAYER_1, PLAYER_2));
     }
 
+    virtual void TearDown()
+    {
+        delete gs_;
+    }
+
     GameState* gs_;
 
     const int PLAYER_1 = 42;
