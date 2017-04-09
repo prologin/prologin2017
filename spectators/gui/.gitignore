@@ -1,0 +1,4 @@
+*.so
+*.pkg.tar.xz
+*.o.d
+*.o

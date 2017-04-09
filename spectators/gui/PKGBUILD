@@ -1,0 +1,27 @@
+# Maintainer: Prologin <serveur@prologin.org>
+# Contributor: Prologin <serveur@prologin.org>
+
+pkgname=stechec2-prologin2017-gui
+pkgver=2017_0.1
+pkgrel=1
+pkgdesc="Stechec2 with Prologin 2017 GUI"
+arch=('i686' 'x86_64')
+url="https://prologin.org/"
+license=('GPL')
+provides=('prologin2017-gui')
+depends=('stechec2' 'python-aiohttp')
+makedepends=('git')
+source=("git+https://bitbucket.org/prologin/prologin2017")
+sha512sums=(SKIP)
+
+build() {
+    cd "$srcdir/prologin2017/spectators/gui"
+    make
+}
+
+package() {
+    cd "$srcdir/prologin2017/spectators"
+    mkdir -p "$pkgdir/usr/share/stechec2/prologin2017/"
+    cp -r gui "$pkgdir/usr/share/stechec2/prologin2017/"
+    install -Dm755 gui/prologin2017-replay "$pkgdir/usr/bin/prologin2017-replay"
+}
