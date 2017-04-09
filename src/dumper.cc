@@ -259,9 +259,19 @@ static void dump_players(std::ostream& ss, const GameState& st)
         ss << "\"bench\": ";
         dump_bench(ss, st, player.get_internal_id());
 
-        const echantillon& sample = player.get_sample();
-        ss << ", \"sample\": [" << sample.element1 << ", " << sample.element2
-           << "]";
+        ss << ", \"just_played\": ";
+        // This relies on `set_current_player` being called at the
+        // *BEGINNING* of a player's turn
+        if (st.current_player() == player.get_internal_id())
+        {
+            ss << "true";
+
+            const echantillon& sample = st.current_sample();
+            ss << ", \"sample\": [" << sample.element1 << ", "
+               << sample.element2 << "]";
+        }
+        else
+            ss << "false";
 
         ss << ", \"history\": ";
         dump_history(ss, st, player.get_internal_id());

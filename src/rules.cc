@@ -140,6 +140,7 @@ void Rules::start_of_player_turn(unsigned player_id) {
     api_->game_state()->reset_turn_state();
     api_->game_state()->increment_turn();
     api_->game_state()->reset_history(player_id);
+    api_->game_state()->set_current_player(player_id);
 }
 
 void Rules::end_of_player_turn(unsigned /*player_id*/) {

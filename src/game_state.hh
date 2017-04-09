@@ -61,16 +61,9 @@ public:
     /// Register a new action
     void add_action(action_hist action) { actions_.push_back(action); }
 
-    /// Get the sample last placed
-    echantillon get_sample() const { return sample_; }
-
-    /// Set the sample last placed
-    void set_sample(echantillon sample) { sample_ = sample; }
-
 private:
     rules::Player_sptr player_;        ///< Encapsulated stechec implementation
     std::vector<action_hist> actions_; ///< Actions taken during last turn
-    echantillon sample_;               ///< Sample last placed
     int internal_id_;                  ///< Id of player in GameState arrays
 };
 
@@ -105,6 +98,12 @@ public:
 
     /// Reset all inner state variables only valid during a turn.
     void reset_turn_state();
+
+    /// Get the ID of the player currently playing
+    int current_player() const { return current_player_; }
+
+    /// Set the player ID currently playing
+    void set_current_player(unsigned apprentice_id);
 
     /// Get a player's score. The id must be valid.
     int get_score(unsigned apprentice_id) const;
@@ -206,6 +205,7 @@ private:
     bool has_elements(echantillon sample, const Workbench& workbench) const;
 
     int turn_;
+    int current_player_;
     int catalysts_;
     bool sample_placed_;
     bool sample_given_;
