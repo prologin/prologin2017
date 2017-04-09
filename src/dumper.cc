@@ -249,20 +249,20 @@ static void dump_players(std::ostream& ss, const GameState& st)
             ss << ", ";
         once = false;
 
+        int id = player_entry.first;
         const auto& player = player_entry.second;
-        ss << "\"" << player_entry.first << "\": {"
+        ss << "\"" << id << "\": {"
            << "\"name\": ";
         dump_string(ss, player.get_name());
-        ss << ", \"score\": " << player.get_score()
-           << ", \"id\": " << player.get_internal_id() << ", ";
+        ss << ", \"score\": " << player.get_score() << ", ";
 
         ss << "\"bench\": ";
-        dump_bench(ss, st, player.get_internal_id());
+        dump_bench(ss, st, id);
 
         ss << ", \"just_played\": ";
         // This relies on `set_current_player` being called at the
         // *BEGINNING* of a player's turn
-        if (st.current_player() == player.get_internal_id())
+        if (st.current_player() == id)
         {
             ss << "true";
 
@@ -274,7 +274,7 @@ static void dump_players(std::ostream& ss, const GameState& st)
             ss << "false";
 
         ss << ", \"history\": ";
-        dump_history(ss, st, player.get_internal_id());
+        dump_history(ss, st, id);
 
         ss << "}";
     }
