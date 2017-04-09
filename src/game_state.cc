@@ -388,7 +388,7 @@ void GameState::traverse_and_update_cc(position from, position ignored,
     {
         position pos = queue.front();
         queue.pop();
-        if (visited[pos.ligne][pos.colonne])
+        if (!in_board(pos) || visited[pos.ligne][pos.colonne])
             continue;
         visited[pos.ligne][pos.colonne] = true;
         if (ccs[pos.ligne][pos.colonne] != cc_from)
@@ -420,7 +420,7 @@ void GameState::change_workbench_case(position pos, case_type to,
         for (position offset : offsets)
         {
             position p = pos + offset;
-            if (ccs[p.ligne][p.colonne] == cc)
+            if (in_board(p) && ccs[p.ligne][p.colonne] == cc)
                 traverse_and_update_cc(p, pos, ccs);
         }
     }
@@ -430,7 +430,8 @@ void GameState::change_workbench_case(position pos, case_type to,
     for (position offset : offsets)
     {
         position p = pos + offset;
-        if (workbenches_[internal_apprentice_id][p.ligne][p.colonne] == case0)
+        if (in_board(p) &&
+            workbenches_[internal_apprentice_id][p.ligne][p.colonne] == case0)
             merge_connect_components(cc, ccs[p.ligne][p.colonne],
                                      internal_apprentice_id);
     }
