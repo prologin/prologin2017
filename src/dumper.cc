@@ -125,12 +125,13 @@ static void dump_string(std::ostream& ss, const std::string& s)
 
 static std::ostream& operator<<(std::ostream& ss, const position& pos)
 {
-    ss << "(" << pos.ligne << ", " << pos.colonne << ")";
+    ss << "{\"r\": " << pos.ligne << ", \"c\":" << pos.colonne << "}";
     return ss;
 }
 
 static std::ostream& operator<<(std::ostream& ss, action_type act)
 {
+    ss << "\"";
     switch (act)
     {
     case ACTION_PLACER:
@@ -146,11 +147,13 @@ static std::ostream& operator<<(std::ostream& ss, action_type act)
         ss << "ACTION_DONNER_ECHANTILLON";
         break;
     }
+    ss << "\"";
     return ss;
 }
 
 static std::ostream& operator<<(std::ostream& ss, const case_type& ctype)
 {
+ss << "\"";
     switch (ctype)
     {
     case VIDE:
@@ -172,35 +175,23 @@ static std::ostream& operator<<(std::ostream& ss, const case_type& ctype)
         ss << "MERCURE";
         break;
     }
+    ss << "\"";
     return ss;
 }
 
 /// Dump one of the benches
 static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
 {
-    bool onceRow = true;
-
     ss << "[";
     for (int row = 0; row < TAILLE_ETABLI; row++)
     {
-        bool onceCol = true;
-
-        if (!onceRow)
-            ss << ", ";
-        onceRow = false;
-
-        ss << "[";
         for (int col = 0; col < TAILLE_ETABLI; col++)
         {
-            if (!onceCol)
-                ss << ", ";
-            onceCol = false;
-
             position pos{row, col};
-            ss << "{"
-               << "\"type\": " << st.get_cell_type(pos, id) << "}";
+            ss << st.get_cell_type(pos, id);
+            if (!(row == TAILLE_ETABLI -1 && col == TAILLE_ETABLI - 1))
+                ss << ", ";
         }
-        ss << "]";
     }
     ss << "]";
 }
@@ -212,7 +203,7 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
     ss << "[";
     for (auto action : history)
     {
-        ss << "{\"type\": \"" << action.atype << ", ";
+        ss << "{\"type\": " << action.atype << ", ";
 
         switch (action.atype)
         {
@@ -232,6 +223,7 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
             // This action is not represented in the history
             break;
         }
+        ss << "}";
     }
     ss << "]";
 }
