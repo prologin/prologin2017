@@ -16,7 +16,7 @@ std::vector<std::vector<case_type>> get_map(int id) {
     return map;
 }
 
-void print_map(auto map) {
+void print_map(const std::vector<std::vector<case_type>> &map) {
     for (int i = 0; i < TAILLE_ETABLI; i++) {
         for (int j = 0; j < TAILLE_ETABLI; j++) {
             switch (map[i][j]) {
