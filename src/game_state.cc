@@ -105,6 +105,17 @@ void GameState::reset_turn_state()
     sample_ = next_sample_;
 }
 
+void GameState::end_turn(unsigned apprentice_id)
+{
+    // Check that the player placed their sample
+    if(!is_sample_placed())
+    {
+        assert(apprentices_.count(apprentice_id) != 0);
+        int id = apprentices_.at(apprentice_id).get_internal_id();
+        wipe_workbench(id);
+    }
+}
+
 void GameState::set_current_player(unsigned apprentice_id)
 {
     current_player_ = apprentice_id;
@@ -411,6 +422,19 @@ void GameState::traverse_and_update_cc(position from, position ignored,
         ccs[pos.ligne][pos.colonne] = cc_to;
         for (position offset : offsets)
             queue.emplace(pos + offset);
+    }
+}
+
+void GameState::wipe_workbench(unsigned internal_apprentice_id)
+{
+    // This function purely sets the whole workbench to `VIDE`, but also resets
+    // the connected components data.
+
+    auto& workbench = workbenches_.at(internal_apprentice_id);
+    auto& ccs = connected_components_.at(internal_apprentice_id);
+    for(unsigned row = 0; row < TAILLE_ETABLI; ++row) {
+        workbench[row].fill(VIDE);
+        ccs[row].fill(CONNECTED_COMPONENT_OF_EMPTY);
     }
 }
 

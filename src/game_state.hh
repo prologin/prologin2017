@@ -103,6 +103,9 @@ public:
     /// Reset all inner state variables only valid during a turn.
     void reset_turn_state();
 
+    /// Perform end of turn checks and actions
+    void end_turn(unsigned apprentice_id);
+
     /// Get the ID of the player currently playing
     int current_player() const { return current_player_; }
 
@@ -195,6 +198,8 @@ private:
     using Connect_components =
         std::array<std::array<int, TAILLE_ETABLI>, TAILLE_ETABLI>;
     std::array<Connect_components, 2> connected_components_;
+
+    void wipe_workbench(unsigned internal_apprentice_id);
 
     void change_workbench_case(position pos, case_type to,
                                unsigned internal_apprentice_id);

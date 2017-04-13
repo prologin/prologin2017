@@ -147,6 +147,8 @@ void Rules::start_of_player_turn(unsigned player_id)
 void Rules::end_of_player_turn(unsigned player_id)
 {
     api_->game_state()->synchronize_score(player_id);
+    api_->game_state()->end_turn(player_id);
+
     // Clear the list of game states at the end of each turn (half-round)
     // We need the linked list of game states only for undo and history,
     // therefore old states are not needed anymore after the turn ends.
