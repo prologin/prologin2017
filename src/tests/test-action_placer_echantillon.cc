@@ -92,3 +92,31 @@ TEST_F(ActionTest, PlacerEchantillon_AlreadyGiven)
         EXPECT_EQ(DEJA_POSE, act.check(gs_));
     }
 }
+
+TEST_F(ActionTest, PlacerEchantillon_Forgot)
+{
+    gs_->set_next_sample({MERCURE, MERCURE});
+    gs_->reset_turn_state();
+
+    {
+        ActionPlacerEchantillon act({1, 1}, {2, 1}, PLAYER_1);
+        EXPECT_EQ(OK, act.check(gs_));
+        act.apply_on(gs_);
+        EXPECT_EQ(true, gs_->is_sample_placed());
+    }
+
+    EXPECT_EQ(MERCURE, gs_->get_cell_type({1, 1}, PLAYER_1));
+    EXPECT_EQ(MERCURE, gs_->get_cell_type({2, 1}, PLAYER_1));
+    EXPECT_EQ(2, gs_->get_region_size({1, 1}, PLAYER_1));
+    EXPECT_EQ(2, gs_->get_region_size({2, 1}, PLAYER_1));
+
+    gs_->reset_turn_state();
+
+    gs_->end_turn(PLAYER_1); // Should wipe `PLAYER_1`'s bench
+    gs_->reset_turn_state();
+
+    EXPECT_EQ(VIDE, gs_->get_cell_type({1, 1}, PLAYER_1));
+    EXPECT_EQ(VIDE, gs_->get_cell_type({2, 1}, PLAYER_1));
+    EXPECT_EQ(0, gs_->get_region_size({1, 1}, PLAYER_1));
+    EXPECT_EQ(0, gs_->get_region_size({2, 1}, PLAYER_1));
+}
