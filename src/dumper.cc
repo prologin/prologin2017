@@ -26,6 +26,8 @@
 #include "game_state.hh"
 #include "rules.hh"
 
+constexpr auto COMMA = ", ";
+
 /// Decodes a UTF-8 string to a list of 32 bit unicode codepoints. Ignores
 /// erroneous characters.
 /// Imported from prologin2016
@@ -200,9 +202,11 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
 {
     const std::vector<action_hist>& history = st.get_history(id);
 
+    auto sep = "";
     ss << "[";
-    for (auto action : history)
+    for (const auto& action : history)
     {
+        ss << sep; sep = COMMA;
         ss << "{\"type\": " << action.atype << ", ";
 
         switch (action.atype)
@@ -232,14 +236,12 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
 static void dump_players(std::ostream& ss, const GameState& st)
 {
     const auto& players = st.get_apprentices();
-    bool once = true;
 
+    auto sep = "";
     ss << "{";
     for (const auto& player_entry : players)
     {
-        if (!once)
-            ss << ", ";
-        once = false;
+        ss << sep; sep = COMMA;
 
         int id = player_entry.first;
         const auto& player = player_entry.second;
