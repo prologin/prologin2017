@@ -378,7 +378,7 @@ void GameState::merge_connect_components(int from, int to,
 void GameState::traverse_and_update_cc(position from, position ignored,
                                        Connect_components& ccs)
 {
-    std::array<std::array<bool, TAILLE_ETABLI>, TAILLE_ETABLI> visited;
+    std::array<std::array<bool, TAILLE_ETABLI>, TAILLE_ETABLI> visited{};
     visited[ignored.ligne][ignored.colonne] = true;
     int cc_from = ccs[from.ligne][from.colonne];
     int cc_to = from.ligne * TAILLE_ETABLI + from.colonne;
