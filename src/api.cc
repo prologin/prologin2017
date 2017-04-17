@@ -22,6 +22,7 @@
 #include "actions.hh"
 #include "api.hh"
 #include "position.hh"
+#include "utils.hh"
 
 // global used in interface.cc
 Api* api;
@@ -274,4 +275,10 @@ int Api::quantite_transmutation_catalyseur_or(int taille_region)
 echantillon Api::echantillon_defaut_premier_tour()
 {
     return game_state_->default_sample;
+}
+
+/// Affiche l'état actuel des deux établis dans la console.
+void Api::afficher_etablis()
+{
+    print_workbenches(game_state_, std::cout);
 }

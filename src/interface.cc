@@ -512,6 +512,12 @@ extern "C" echantillon api_echantillon_defaut_premier_tour()
     return api->echantillon_defaut_premier_tour();
 }
 
+/// Affiche l'état actuel des deux établis dans la console.
+extern "C" void api_afficher_etablis()
+{
+  api->afficher_etablis();
+}
+
 /// Affiche le contenu d'une valeur de type case_type
 std::ostream& operator<<(std::ostream& os, case_type v)
 {

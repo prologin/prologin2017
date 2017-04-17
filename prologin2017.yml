@@ -316,6 +316,11 @@ function:
     fct_summary: Indique l’échantillon par défaut lors du premier tour
     fct_ret_type: echantillon
     fct_arg: []
+  -
+    fct_name: afficher_etablis
+    fct_summary: Affiche l'état actuel des deux établis dans la console.
+    fct_ret_type: void
+    fct_arg: []
 
 
 user_function:
