@@ -35,15 +35,25 @@ void print_workbenches(const GameState* game_state, std::ostream& stream)
     stream << bgcolor(7) << fgcolor(0) << "moi";
     std::fill_n(std::ostream_iterator<char>(stream), TAILLE_ETABLI - 5, ' ');
     stream << std::setw(4) << current_player.get_score()
-           << color_reset << color_bold << "Tour:"
+           << color_reset << color_bold << "     "
            << color_reset << bgcolor(7) << fgcolor(0) << "adv";
     std::fill_n(std::ostream_iterator<char>(stream), TAILLE_ETABLI - 5, ' ');
     stream << std::setw(4) << opponent.get_score() << color_reset << "\n";
 
+    // Second line
+    stream << bgcolor(7) << fgcolor(0) << " ";
+    for (size_t x = 0; x < TAILLE_ETABLI; ++x)
+        stream << x;
+    stream << " " << color_reset << color_bold << "Tour:";
+    stream << color_reset << bgcolor(7) << fgcolor(0) << " ";
+    for (size_t x = 0; x < TAILLE_ETABLI; ++x)
+        stream << x;
+    stream << " " << color_reset << "\n";
+
     for (uint8_t y = 0; y < TAILLE_ETABLI; ++y)
     {
         // My workbench
-        stream << bgcolor(7) << " ";
+        stream << bgcolor(7) << fgcolor(0) << (unsigned)y;
         for (uint8_t x = 0; x < TAILLE_ETABLI; ++x)
             stream << bgcolor(game_state->get_cell_type({y, x}, current_player_id)) << " ";
         stream << bgcolor(7) << " " << color_reset;
@@ -52,7 +62,7 @@ void print_workbenches(const GameState* game_state, std::ostream& stream)
         if (y == 0)
             stream << std::setw(4) << game_state->get_turn() << " ";
         else if (y == 1)
-            stream << color_bold << "Reçu:";
+            stream << color_bold << "Reçu:" << color_reset;
         else if (y == 2)
         {
             stream << "  "
@@ -64,7 +74,7 @@ void print_workbenches(const GameState* game_state, std::ostream& stream)
             stream << "     ";
 
         // Opponent's workbench
-        stream << bgcolor(7) << " ";
+        stream << bgcolor(7) << fgcolor(0) << (unsigned)y;
         for (uint8_t x = 0; x < TAILLE_ETABLI; ++x)
             stream << bgcolor(game_state->get_cell_type({y, x}, opponent_id)) << " ";
         stream << bgcolor(7) << " " << color_reset << "\n";
