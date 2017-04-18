@@ -147,6 +147,9 @@ public:
 
     /// Indique l’échantillon par défaut lors du premier tour
     echantillon echantillon_defaut_premier_tour();
+
+    /// Affiche l'état actuel des deux établis dans la console.
+    void afficher_etablis();
 };
 
 #endif /* !API_HH_ */
