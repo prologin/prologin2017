@@ -93,7 +93,7 @@ void jouer_tour()
             best_size = size_max;
             best_pos = p;
         }
-        annuler();
+        if (e_pe == OK) annuler();
     }
     erreur e_pe = placer_echantillon(best_pos.pos1, best_pos.pos2);
     if (e_pe != OK) std::cout << "placer : " << e_pe << std::endl;
@@ -129,7 +129,7 @@ void jouer_tour()
         int max_size = -1;
         int i_max = 0, j_max = 0, m_max = 0;
         for (int i = 0; i < TAILLE_ETABLI; i++) for (int j = 0; j < TAILLE_ETABLI; j++) for (int m = 1; m < 6; m++) {
-            catalyser({i, j}, moi(), itocase[m]);
+            erreur e_c = catalyser({i, j}, moi(), itocase[m]);
             int size = taille_region({i, j}, moi());
             if (size > max_size) {
                 max_size = size;
@@ -137,7 +137,7 @@ void jouer_tour()
                 j_max = j;
                 m_max = m;
             }
-            annuler();
+            if (e_c == OK) annuler();
         }
         if (catalyser({i_max, j_max}, moi(), itocase[m_max]) != OK) break;
     }
