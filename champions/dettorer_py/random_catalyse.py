@@ -14,6 +14,7 @@
 
 
 from api import *
+import itertools
 import random
 
 
@@ -49,10 +50,16 @@ def give_sampe():
     print("donner_echantillon(({}, {}))".format(str(a), str(b)))
 
 
-last_catalysed = moi()
+def is_empty_workbench(player_id):
+    coords = itertools.permutations(range(TAILLE_ETABLI), 2)
+    return all([type_case((x, y), player_id) == case_type.VIDE for x, y in coords])
+
+
+next_catalysed = adversaire()
 def use_catalyst():
-    global last_catalysed
-    target_player = moi() if last_catalysed == adversaire() else adversaire()
+    global next_catalysed
+    target_player = next_catalysed
+
     target_pos = (random.randint(0, TAILLE_ETABLI), random.randint(0, TAILLE_ETABLI))
     while type_case(target_pos, target_player) == case_type.VIDE:
         target_pos = (random.randint(0, TAILLE_ETABLI), random.randint(0, TAILLE_ETABLI))
@@ -66,15 +73,16 @@ def use_catalyst():
     catalyser(target_pos, target_player, dest_type)
     print("catalyser({}, {}, {})".format(target_pos, target_player, str(dest_type)))
 
-    last_catalysed = target_player
+    next_catalysed = moi() if target_player == adversaire() else adversaire()
 
 
 # Fonction appelée à chaque tour.
 def jouer_tour():
     place_sample()
     give_sampe()
-    while nombre_catalyseurs() > 0:
-        use_catalyst()
+    if not is_empty_workbench(next_catalysed):
+        while nombre_catalyseurs() > 0:
+            use_catalyst()
     afficher_etablis()
     pass
 
