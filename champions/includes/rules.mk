@@ -14,39 +14,39 @@ MFPATH ?= ../includes
 # ==============================================================================
 
 ifdef V
-	quiet =
-	Q =
+  quiet =
+  Q =
 else
-	quiet = quiet_
-	Q = @
+  quiet = quiet_
+  Q = @
 endif
 
 ifndef NOCOLORS
-  quiet_cmd_cc			= [1;32mcc   $< -> $@[0m
-  quiet_cmd_cxx			= [1;32mcxx  $< -> $@[0m
-  quiet_cmd_gmcs		= [1;34mcs   $^ -> $@[0m
-  quiet_cmd_java		= [1;34mjava $< -> $@[0m
-  quiet_cmd_ocaml		= [1;33mcaml $< -> $@[0m
-  quiet_cmd_ocamlo		= [1;33mcaml $< -> $@[0m
-  quiet_cmd_hsc2hs		= [1;32mhsc2hs   $< -> $@[0m
-  quiet_cmd_ghc			= [1;33mghc   $^ -> $@[0m
-  quiet_cmd_ld_shared	= [1;36mlib  $@[0m
-  quiet_cmd_clean		= [1;35mclean[0m
-  quiet_cmd_distclean	= [1;35mdistclean[0m
-  quiet_cmd_tar			= [1;35mtar  champion.tgz[0m
+  quiet_cmd_cc        = [1;32mcc     $< -> $@[0m
+  quiet_cmd_cxx       = [1;32mcxx    $< -> $@[0m
+  quiet_cmd_mcs       = [1;34mcs     $^ -> $@[0m
+  quiet_cmd_java      = [1;34mjava   $< -> $@[0m
+  quiet_cmd_ocaml     = [1;33mcaml   $< -> $@[0m
+  quiet_cmd_ocamlo    = [1;33mcaml   $< -> $@[0m
+  quiet_cmd_hsc2hs    = [1;32mhsc2hs $< -> $@[0m
+  quiet_cmd_ghc       = [1;33mghc    $^ -> $@[0m
+  quiet_cmd_ld_shared = [1;36mlib    $@[0m
+  quiet_cmd_clean     = [1;35mclean[0m
+  quiet_cmd_distclean = [1;35mdistclean[0m
+  quiet_cmd_tar       = [1;35mtar champion.tgz[0m
 else
-  quiet_cmd_cc		= CC      $@
-  quiet_cmd_cxx		= CXX     $@
-  quiet_cmd_gmcs	= CS      $@
-  quiet_cmd_java	= JAVA    $@
-  quiet_cmd_ocaml	= OCAML   $@
-  quiet_cmd_ocamlo	= OCAML   $@
-  quiet_cmd_hsc2hs    	= HSC2HS      $@
-  quiet_cmd_ghc    	= GHC      $@
-  quiet_cmd_ld_shared	= LINK    $@
-  quiet_cmd_clean	= CLEAN   objects
-  quiet_cmd_distclean	= CLEAN   targets
-  quiet_cmd_tar		= TAR     champion.tgz
+  quiet_cmd_cc        = CC      $@
+  quiet_cmd_cxx       = CXX     $@
+  quiet_cmd_mcs       = CS      $@
+  quiet_cmd_java      = JAVA    $@
+  quiet_cmd_ocaml     = OCAML   $@
+  quiet_cmd_ocamlo    = OCAML   $@
+  quiet_cmd_hsc2hs    = HSC2HS  $@
+  quiet_cmd_ghc       = GHC     $@
+  quiet_cmd_ld_shared = LINK    $@
+  quiet_cmd_clean     = CLEAN   objects
+  quiet_cmd_distclean = CLEAN   targets
+  quiet_cmd_tar       = TAR     champion.tgz
 endif
 
 cmd = $(if $($(quiet)cmd_$(1)),@echo '$(if $(quiet),  )$($(quiet)cmd_$(1))';) $(cmd_$(1))
@@ -58,23 +58,23 @@ exists = $(if $(shell test -e $(1) && echo exists),$(1),)
 # build environment
 # ==============================================================================
 
-CC		= $(CROSS)gcc
-CXX		= $(CROSS)g++
-GMCS		= MONO_SHARED_DIR=/tmp gmcs </dev/null
-CPP		= $(CROSS)cpp
-JAVAC		= javac
-OCAMLC 		= $(CROSS)ocamlc
-GHC		= $(CROSS)ghc
-HSC2HS		= $(CROSS)hsc2hs
-LD		= $(CROSS)ld
+CC     = $(CROSS)gcc
+CXX    = $(CROSS)g++
+mcs    = MONO_SHARED_DIR = /tmp mcs </dev/null
+CPP    = $(CROSS)cpp
+JAVAC  = javac
+OCAMLC = $(CROSS)ocamlc
+GHC    = $(CROSS)ghc
+HSC2HS = $(CROSS)hsc2hs
+LD     = $(CROSS)ld
 
-OCAML_LIBS      = -L`ocamlc -where` -Wl,-R`ocamlc -where` -lcamlrun_shared -lcurses -lm
-OCAML_CFLAGS    = -O2 -I`ocamlc -where`
+OCAML_LIBS     = -L`ocamlc -where` -Wl,-R`ocamlc -where` -lcamlrun_shared -lcurses -lm
+OCAML_CFLAGS   = -O2 -I`ocamlc -where`
 
-HASKELL_CFLAGS	= -O2 -I`$(GHC) --print-libdir`/include -std=c++11
+HASKELL_CFLAGS = -O2 -I`$(GHC) --print-libdir`/include
 
-LANG_FILE     	= _lang
-DIST_FILE	= champion.tgz
+LANG_FILE      = _lang
+DIST_FILE      = champion.tgz
 
 ifeq ($(STECHEC_LANG),haskell)
 	LINK_CMD = ghc
@@ -92,7 +92,7 @@ endef
 
 define get_ocaml_objs
   $(1)-mlsrcs := $$(filter %.ml,$$($(1)-srcs))
-  $(1)-camlobjs := $$(shell python $(MFPATH)/toposort.py $$($(1)-mlsrcs))
+  $(1)-camlobjs := $$(shell python3 $(MFPATH)/toposort.py $$($(1)-mlsrcs))
   ifneq ($$($(1)-camlobjs),)
     $(1)-objs := $(1)-caml.o $(value $(1)-objs)
     $(1)-cflags := $$($(1)-cflags) $$(OCAML_CFLAGS)
@@ -113,7 +113,7 @@ define get_haskell_objs
   $(1)-hsc-src := $$(filter %.hsc,$$($(1)-srcs))
   $(1)-hs-src := $$(filter %.hs,$$($(1)-srcs)) $$($(1)-hsc-src:.hsc=.hs)
 
-  ifneq ($$($(1)-hs-src),)
+  ifneq ($$(strip $$($(1)-hs-src)),)
     $(1)-deps := $$($(1)-hs-src)
     $(1)-cxxflags := $$($(1)-cxxflags) $$(HASKELL_CFLAGS)
   endif
@@ -127,8 +127,8 @@ define get_csclass
     _targets := $$(_targets) $(1)-prologin.dll
 
 $(1)-prologin.dll: $$(src)
-	$$(call cmd,gmcs)
-	$(Q)$(GMCS) -out:$$@ $$($(1)-csflags) $$^
+	$$(call cmd,mcs)
+	$(Q)$(mcs) -out:$$@ $$($(1)-csflags) $$^
   endif
 endef
 
@@ -162,27 +162,29 @@ $(1).so: $$(_obj)
 endef
 
 
-c_flags			= $(_CFLAGS) -MD -MP -MF $(@D)/.$(@F).d
-cxx_flags		= $(_CXXFLAGS) -MD -MP -MF $(@D)/.$(@F).d
-cpp_flags		= $(_CPPFLAGS)
-cmd_cc			= $(CC) $(c_flags) $(cpp_flags) -fPIC -c $< -o $@
-cmd_cxx			= $(CXX) $(cxx_flags) $(cpp_flags) -fPIC -c $< -o $@
-cmd_java		= $(JAVAC) $(java_flags) $<
-cmd_ocaml		= $(OCAMLC) $(_CAMLFLAGS) -c $< -o $@
-cmd_ocamlo		= $(OCAMLC) -output-obj $(_CAMLFLAGS) $(filter %.cmo,$^) -o $@
-cmd_hsc2hs		= $(HSC2HS) $< -o $@
-cmd_ghc			= $(GHC) -pgml $(CXX) -O9 -dynamic --make -shared -fPIC -L`$(GHC) --print-libdir` -lHSrts-ghc`$(GHC) --numeric-version` $(filter %.hs %.o %.a,$^) -o $@
+c_flags    = $(_CFLAGS) -MD -MP -MF $(@D)/.$(@F).d
+cxx_flags  = $(_CXXFLAGS) -std=c++14 -MD -MP -MF $(@D)/.$(@F).d
+cpp_flags  = $(_CPPFLAGS)
+cmd_cc     = $(CC) $(c_flags) $(cpp_flags) -fPIC -c $< -o $@
+cmd_cxx    = $(CXX) $(cxx_flags) $(cpp_flags) -fPIC -c $< -o $@
+cmd_java   = $(JAVAC) $(java_flags) $<
+cmd_ocaml  = $(OCAMLC) $(_CAMLFLAGS) -c $< -o $@
+cmd_ocamlo = $(OCAMLC) -output-obj $(_CAMLFLAGS) $(filter %.cmo,$^) -o $@
+cmd_hsc2hs = $(HSC2HS) $< -o $@
+cmd_ghc    = $(GHC) -pgml $(CXX) -O9 -dynamic --make -shared -fPIC \
+             -L`$(GHC) --print-libdir` -lHSrts-ghc`$(GHC) --numeric-version` \
+             $(filter %.hs %.o %.a,$^) -o $@
 
-ld_flags	= $(_LDFLAGS)
-cmd_ld_shared	= $(CXX) $(filter %.o %.a,$^) $(ld_flags) -shared -o $@ $(_LDLIBS)
+ld_flags      = $(_LDFLAGS)
+cmd_ld_shared = $(CXX) $(filter %.o %.a,$^) $(ld_flags) -shared -o $@ $(_LDLIBS)
 
-cmd_clean	= $(RM) $(_cleanfiles)
-cmd_distclean	= $(RM) $(_dcleanfiles)
-cmd_tar		= tar czf champion.tgz $(_dist) $(LANG_FILE)
+cmd_clean     = $(RM) $(_cleanfiles)
+cmd_distclean = $(RM) $(_dcleanfiles)
+cmd_tar       = tar czf champion.tgz $(_dist) $(LANG_FILE)
 
-lib_TARGETS	:= $(lib_TARGETS)
+lib_TARGETS := $(lib_TARGETS)
 
-_targets	:= $(foreach l,$(lib_TARGETS),$(l).so)
+_targets    := $(foreach l,$(lib_TARGETS),$(l).so)
 
 $(foreach t,$(lib_TARGETS),$(eval $(call get_objs,$(t),c)))
 $(foreach t,$(lib_TARGETS),$(eval $(call get_objs,$(t),cc)))
@@ -194,11 +196,11 @@ $(foreach t,$(lib_TARGETS),$(eval $(call get_csclass,$(t))))
 
 $(foreach t,$(lib_TARGETS),$(eval $(call build_lib,$(t))))
 
-_dist		:= $(foreach t,$(lib_TARGETS),$($(t)-dists) $(filter-out ../%,$($(t)-srcs)))
-_deps		:= $(foreach f,$(_objs),$(dir $(f)).$(notdir $(f)).d)
-_cleanfiles	:= $(cleanfiles) $(_objs) $(_deps)
-_dcleanfiles	:= $(_targets) champion.tgz *.class
-_run_reqs	:= $(_targets) $(foreach t,$(lib_TARGETS),$($(t)-dists))
+_dist        := $(foreach t,$(lib_TARGETS),$($(t)-dists) $(filter-out ../%,$($(t)-srcs)))
+_deps        := $(foreach f,$(_objs),$(dir $(f)).$(notdir $(f)).d)
+_cleanfiles  := $(cleanfiles) $(_objs) $(_deps)
+_dcleanfiles := $(_targets) champion.tgz *.class
+_run_reqs    := $(_targets) $(foreach t,$(lib_TARGETS),$($(t)-dists))
 
 # ==============================================================================
 # rules
@@ -265,7 +267,7 @@ dist-upload: $(DIST_FILE)
 	@echo "Uploading $^..."
 	@/var/prologin/venv/bin/python -m prologin.concours.api champion upload $^
 
-getmap: 
+getmap:
 	@echo -n "map id: "
 	@read id && /var/prologin/venv/bin/python -m prologin.concours.api map get "$${id}"
 

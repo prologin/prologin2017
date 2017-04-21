@@ -328,6 +328,14 @@ static inline echantillon echantillon_defaut_premier_tour()
 }
 
 
+/// Affiche l'état actuel des deux établis dans la console.
+extern "C" void api_afficher_etablis();
+static inline void afficher_etablis()
+{
+  api_afficher_etablis();
+}
+
+
 /// Affiche le contenu d'une valeur de type case_type
 extern "C" void api_afficher_case_type(case_type v);
 static inline void afficher_case_type(case_type v)
