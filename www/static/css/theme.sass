@@ -1,0 +1,59 @@
+#map-controls
+  input[type=radio]
+    width: 2em
+    float: left
+    outline: none
+
+  label
+    display: block
+    font-weight: normal
+    padding-top: 1pt
+
+  font-size: .9em
+  margin-bottom: 1em
+
+#map-contents span.hl
+  background-color: lemonchiffon
+  color: #333
+
+#replay-board
+  > svg
+    background-color: black
+
+
+#replay-legend
+  margin: 1em 0 2em
+
+.replay-player
+  display: table-row
+  margin: .5em 0
+
+  > svg
+    overflow: visible
+
+  > *
+    display: table-cell
+    vertical-align: middle
+    margin: 0 1em
+    padding: .5em 1em 0 0
+
+.navbar-brand
+  margin-top: -5px
+  margin-left: 0 !important
+  position: fixed
+
+  @media(max-width: 768px)
+    right: 350px
+
+  > svg
+    position: absolute
+    height: auto
+    overflow: visible
+
+@media(max-width: 768px)
+  .navbar-text
+    display: block
+    margin: 0
+
+  .nav > li > span
+    padding: 10px 15px
