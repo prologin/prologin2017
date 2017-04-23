@@ -1,0 +1,75 @@
+\section{Tournois}
+
+\subsection{Tournois intermédiaires}
+
+Afin de vous aider à perfectionner vos algorithmes, des tournois intermédiaires
+vous seront proposés toutes les six heures environ. Ces matchs n'ont absolument
+aucune influence sur le classement final, mais sont néanmoins à prendre au
+sérieux car ils vous permettront de vous situer par rapport aux autres
+joueurs, de connaître vos ennemis, vos points forts et vos faiblesses, et vous
+donneront des pistes pour vous améliorer pendant la finale.
+
+Les tournois se dérouleront aux horaires suivants :
+
+\begin{itemize}
+    \item Samedi 15~h~42 (tournoi de test)
+    \item Samedi 17~h~42
+    \item Samedi 23~h~42
+    \item Dimanche 5~h~42
+    \item Dimanche 11~h~42
+    \item Dimanche 17~h~42
+    \item \textbf{Lundi 00~h~42 (rendu final)}
+\end{itemize}
+
+À chacun des horaires indiqués ci-dessous, nous prendrons le dernier champion
+que chaque candidat aura envoyé sur le site de soumission pour le faire
+participer au tournoi, et nous vous donnerons les résultats ainsi que votre
+progression dès que les tournois se seront terminés, avec un récapitulatif
+de votre progression globale.
+
+Les tournois seront exécutés sur des cartes officielles de notre choix, qui
+seront potentiellement amenées à changer au fur et à mesure.
+
+\subsection{Rendu final}
+
+Le rendu final est le seul rendu qui comptera pour le classement. Les mêmes
+règles s'appliquent : le dernier champion soumis à l'heure du début du tournoi
+sera le champion utilisé pour le tournoi final.
+
+Lors du tournoi final, plusieurs cartes seront ajoutées, qui resteront
+inconnues de tous les joueurs à l'avance, afin de mesurer l'adaptabilité de
+vos algorithmes à des situations inconnues.
+
+Pour le rendu final, nous vous demandons de rajouter des commentaires qui
+résument le fonctionnement des différents blocs logiques de votre code, ainsi
+qu'un \textbf{commentaire global en haut de votre fichier principal} qui
+détaille votre stratégie ainsi que les différents algorithmes que vous avez
+employés pour l'implémenter.
+
+\section{Considérations techniques}
+
+Vous disposez d'une seconde (temps réel !) à chaque fois qu'une de vos
+fonctions est appelée pour rendre la main. Passé ce délai, votre programme est
+tué, le match continue sans vous et vos fonctions ne sont plus appelées. Il
+n'est pas possible de revenir en jeu tout simplement parce qu'il n'y a aucun
+moyen de rétablir l'état des environnements des langages après une
+interruption.  Les limites de mémoire sont faites avec des \texttt{cgroups}, ce
+qui fait que l'allocation échouera si vous essayez de dépasser la limite qui
+vous est accordée. Cette limite compte aussi la taille de la pile.
+
+D'autres limitations sont appliquées :
+
+\begin{itemize}
+    \item le système de fichiers est entièrement en lecture seule ;
+    \item seuls \texttt{/usr}, \texttt{/var} et \texttt{/tmp} sont montés ;
+    \item vous n'avez pas le droit d'utiliser des processus en parallèle ;
+    \item la mémoire est limitée à 500 Mio ;
+    \item la taille totale de votre output ne doit pas dépasser 256 Kio (elle
+        sera tronquée à partir de cette limite) ;
+    \item le temps d'exécution total du processus est limité à 300 secondes de
+        temps réel ;
+    \item chaque appel de fonction est limité à une seconde de temps réel plus
+        500 millisecondes de marge pour prendre en compte le surcoût de
+        sérialisation/désérialisation des valeurs depuis et vers les langages
+        cibles.
+\end{itemize}

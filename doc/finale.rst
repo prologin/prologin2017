@@ -1,18 +1,18 @@
-==================
-Cahier des charges
-==================
+======
+Manuel
+======
 
 ------
-Etabli
+Établi
 ------
 
-Chaque établi consiste en une grille carrée de 6 cases de côté. Chaque apprenti
-a son propre établi.
+Chaque établi peut être représenté par une grille carrée de 6 cases de côté.
+Chaque apprenti a son propre établi.
 
-Elément
+Élément
 =======
 
-Les éléments sont les matières premières que FIXME met à votre disposition. Il y
+Les éléments sont les matières premières mis à votre disposition. Il y
 en a cinq :
 
 * Le *plomb*, le *fer* et le *cuivre* sont les trois métaux que vous pouvez
@@ -21,7 +21,7 @@ en a cinq :
 * Le *mercure* et le *soufre* sont les deux éléments volatiles qui permettront
   de catalyser un élément vers un autre élément.
 
-Echantillon
+Échantillon
 ===========
 
 Un échantillon est une paire d'éléments. Ils peuvent être composés de deux
@@ -32,7 +32,9 @@ Un échantillon est une paire d'éléments. Ils peuvent être composés de deux
 Déroulement d'un tour
 ---------------------
 
-FIXME
+Au début de votre tour, vous recevrez l'échantillon créé par votre
+adversaire pour vous au tour précédent. Vous pouvez réaliser les actions
+ci-dessous dans n'importe quel ordre.
 
 Actions
 =======
@@ -40,14 +42,15 @@ Actions
 Donner un échantillon
 ---------------------
 
-Pour inculper la solidarité et exacerber l'entraîde entre ses apprentis, FIXME
-demande à tous ses apprentis de se rendre service et de ne jamais se servir
-soit-même dans la réserve. Comme il ne vous passerait pas par l'esprit de lui
-désobéir, sous peine de terribles représailles, vous vous pliez religieusement
-à ses demandes.
+Pour inculper la solidarité et exacerber l'entraîde entre ses apprentis, il est
+demandé à tous les apprentis de se rendre service et de ne jamais se servir
+soit-même dans la réserve. (FIXME : footnote "il ne vous viendrait pas à
+l'esprit de lui désobéir))
 
-A chaque début de tour, l'un des apprenti met au point un échantillon et le
-donne à son confrère.
+À chaque tour N, les deux apprentis créent un échantillon pour leur adversaire,
+échantillon qui sera posé au tour N+1. Si vous oubliez de créer cet
+échantillon, votre adversaire recevra un échantillon identique à celui qu'il a
+lui-même créé au tour précédent.
 Par souci d'égalité, chaque échantillon doit avoir au minimum *un élément en
 commun* avec l'échantillon reçu au tour précédent. Par exemple, si l'apprenti A
 confie un échantillon de plomb et de mercure à l'apprenti B, l'apprenti B devra
@@ -81,13 +84,12 @@ obtiendrez d'or.
 // FIXME Insérez ici la formule.
 
 Vous pouvez transmuter un unique bloc de métal. Néanmoins, cela revient à
-détruire ce bout d'élément et donc à perdre de l'or - et l'estime de
-votre Maître.
+détruire ce bout d'élément et donc à perdre de l'or - stratégie aussi
+audacieuse que dangereuse.
 
 Catalyser
 ---------
 
-(FIXME)
 Lorsque vous possédez une zone suffisamment large de catalyseur (mercure ou
 soufre), vous pouvez sublimer ces éléments, les faisant ainsi disparaître de
 l'établi. Le catalyseur obtenu vous permettra de transformer un élément
