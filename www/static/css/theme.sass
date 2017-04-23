@@ -57,3 +57,29 @@
 
   .nav > li > span
     padding: 10px 15px
+
+table td .progress
+  margin-bottom: 0
+
+/* header */
+.navbar
+  min-height: 80px
+
+.navbar-brand img
+  position: absolute
+
+@keyframes rotate
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
+@keyframes blink
+  50%
+    opacity: 0
+
+.anim-rotate
+  animation: rotate 1s linear infinite
+
+.anim-blink
+  animation: blink 1s linear infinite

@@ -12,12 +12,12 @@ $state-danger-bg: lighten($brand-danger, 42)
 $navbar-default-color: $text-color
 $navbar-default-bg: transparent
 $navbar-default-link-hover-bg: $primary
-$navbar-default-link-hover-color: $text-color
+$navbar-default-link-hover-color: $body-bg
 
 $nav-link-hover-bg: lighten($primary, 10)
 $nav-pills-border-radius: 0
-$nav-pills-active-link-hover-color: $text-color
 $nav-pills-active-link-hover-bg: $primary
+$nav-pills-active-link-hover-color: $body-bg
 $nav-tabs-active-link-hover-color: darken($text-color, 20)
 
 $pre-bg: lighten($body-bg, 5)
@@ -47,6 +47,9 @@ $table-bg-accent: lighten($body-bg, 10)
   > li
     > a
       color: $text-color
+
+.nav > li > a:hover, .nav > li > a:focus
+  color: $nav-pills-active-link-hover-color
 
 body
   margin:

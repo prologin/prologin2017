@@ -1,66 +1,53 @@
-let xx = 420, yy = 442;
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    function loaded() {
+      unbindEvents();
+      resolve(image);
+    }
+
+    function errored() {
+      unbindEvents();
+      reject(image);
+    }
+
+    function unbindEvents() {
+      image.onload = null;
+      image.onerror = null;
+      image.onabort = null;
+    }
+
+    const image = new Image();
+    image.onload = loaded;
+    image.onerror = errored;
+    image.onabort = errored;
+    image.src = url;
+  });
+}
 
 $(function () {
   const $brand = $('.navbar-brand');
 
-  function rotateInterpolation(from, to, x, y, extra) {
-    from = [(extra || "") + " rotate(", from, ",", x, ",", y, ")"].join("");
-    to = [(extra || "") + " rotate(", to, ",", x, ",", y, ")"].join("");
-    return d3.interpolateString(from, to);
-  }
-
-  $.when(
-    $.ajax({url: '/static/logo.outline.svg', dataType: 'text'}),
-    $.ajax({url: '/static/logo.text.svg', dataType: 'text'})
-  ).then((outline, text) => {
-    const $outline = $(outline[0]), $text = $(text[0]);
-    $brand.append($outline).append($text);
-    $outline.css({
-      width: 112,
+  Promise.all(['circle', 'star', 'symbols', 'text'].map(e => '/static/logo.' + e + '.png').map(loadImage))
+    .then((images) => {
+      const [circle, star, symbols, text] = images.map($);
+      circle.addClass('anim-rotate').css({
+        animationDuration: '19s'
+      });
+      star.addClass('anim-rotate').css({
+        animationDuration: '21s',
+        animationDirection: 'reverse',
+        top: 41,
+        left: 40,
+      });
+      symbols.addClass('anim-blink').css({
+        animationDuration: '4.2s',
+        top: 40,
+        left: 54,
+      });
+      text.css({
+        top: 30,
+        left: 155,
+      });
+      $brand.append(circle).append(star).append(symbols).append(text);
     });
-    $text.css({
-      width: 210,
-      top: 20,
-      left: 150,
-    });
-
-    const svgOutline = d3.select('.navbar-brand > svg:first-child'),
-      eDragons = svgOutline.selectAll("#dragtext"),
-      eStar = svgOutline.selectAll('#star'),
-      eSymbols= svgOutline.selectAll('#symbols');
-
-    const fromDragons = Math.random() * 360, fromStar = Math.random() * 360;
-
-    function animateDragons() {
-      eDragons
-        .transition()
-        .duration(19000)
-        .ease("linear")
-        .attrTween("transform", (d, i, a) => rotateInterpolation(fromDragons, fromDragons - 359, 426, 511))
-        .each("end", animateDragons);
-    }
-
-    function animateStar() {
-      eStar
-        .transition()
-        .duration(29000)
-        .ease("linear")
-        .attrTween("transform", (d, i, a) => rotateInterpolation(fromStar, fromStar + 359, 229 - 200, 83 - 200, "translate(400,626)"))
-        .each("end", animateStar);
-    }
-
-    function animateSymbols() {
-      eSymbols
-        .transition()
-        .duration(29000 / 3)
-        .ease("linear")
-        .attrTween("opacity", () => ((t) => Math.abs(Math.cos(t * 2 * Math.PI + .08))))
-        .each("end", animateSymbols);
-    }
-
-    animateDragons();
-    animateStar();
-    animateSymbols();
-
-  });
 });

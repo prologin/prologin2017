@@ -3618,7 +3618,7 @@ tbody.collapse.in {
   .nav-pills > li + li {
     margin-left: 2px; }
   .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    color: #d2c6b4;
+    color: #3a3f45;
     background-color: #af7813; }
 
 .nav-stacked > li {
@@ -3965,7 +3965,7 @@ tbody.collapse.in {
   .navbar-default .navbar-nav > li > a {
     color: #777; }
     .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-      color: #d2c6b4;
+      color: #3a3f45;
       background-color: #af7813; }
   .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
     color: #555;
@@ -3989,7 +3989,7 @@ tbody.collapse.in {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
       color: #777; }
       .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-        color: #d2c6b4;
+        color: #3a3f45;
         background-color: #af7813; }
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
       color: #555;
@@ -4000,11 +4000,11 @@ tbody.collapse.in {
   .navbar-default .navbar-link {
     color: #777; }
     .navbar-default .navbar-link:hover {
-      color: #d2c6b4; }
+      color: #3a3f45; }
   .navbar-default .btn-link {
     color: #777; }
     .navbar-default .btn-link:hover, .navbar-default .btn-link:focus {
-      color: #d2c6b4; }
+      color: #3a3f45; }
     .navbar-default .btn-link[disabled]:hover, .navbar-default .btn-link[disabled]:focus, fieldset[disabled] .navbar-default .btn-link:hover, fieldset[disabled] .navbar-default .btn-link:focus {
       color: #ccc; }
 
@@ -5813,6 +5813,9 @@ button.close {
 
 .nav > li > a {
   color: #d2c6b4; }
+
+.nav > li > a:hover, .nav > li > a:focus {
+  color: #3a3f45; }
 
 body {
   margin-bottom: 2em; }
