@@ -44,8 +44,7 @@ Donner un échantillon
 
 Pour inculper la solidarité et exacerber l'entraîde entre ses apprentis, il est
 demandé à tous les apprentis de se rendre service et de ne jamais se servir
-soit-même dans la réserve. (FIXME : footnote "il ne vous viendrait pas à
-l'esprit de lui désobéir))
+soit-même dans la réserve.
 
 À chaque tour N, les deux apprentis créent un échantillon pour leur adversaire,
 échantillon qui sera posé au tour N+1. Si vous oubliez de créer cet
@@ -72,16 +71,12 @@ Une fois l'échantillon en main, vous devez délicatement le déposer sur votre
   qui - n'en doutez pas ! - savait pertinemment quel tour il était en train de
   vous jouer.
 
-FIXME exemples
-
 Transmuter
 ----------
 
 Lorsque vous possédez une zone d'un certain métal (cuivre, fer ou plomb), vous
 pouvez lancer la *transmutation* en or. Plus cette zone est grande, plus vous
 obtiendrez d'or.
-
-// FIXME Insérez ici la formule.
 
 Vous pouvez transmuter un unique bloc de métal. Néanmoins, cela revient à
 détruire ce bout d'élément et donc à perdre de l'or - stratégie aussi
@@ -94,6 +89,9 @@ Lorsque vous possédez une zone suffisamment large de catalyseur (mercure ou
 soufre), vous pouvez sublimer ces éléments, les faisant ainsi disparaître de
 l'établi. Le catalyseur obtenu vous permettra de transformer un élément
 quelconque de l'établi en un autre élément de votre choix.
+Plus la zone sublimée est grande, plus vous aurez de catalyseur et plus vous
+pourrez transformer de cases.
+Transmuter une zone de catalyseurs vous donnera également un peu d'or.
 Rien ne vous empêche de catalyser un élément de l'établi d'un autre apprenti,
 tant que celui-ci a le dos tourné...
 
