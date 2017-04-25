@@ -17,9 +17,50 @@
   color: #333
 
 #replay-board
-  > svg
-    background-color: black
+  width: 700px
+  height: 500px
+  position: relative
+  margin: 1em auto
 
+  #players
+    position: absolute
+    width: 100%
+    bottom: 10px
+    text-align: center
+    z-index: 100
+    display: block
+    color: white
+
+  .player
+    position: absolute
+    width: 50%
+    bottom: 0
+    padding: .5em 0
+    color: #efefef
+    font-family: sans-serif
+    text-align: center
+    &:first-child
+      left: 0
+    &:last-child
+      left: 50%
+
+  .winner .name
+    font-size: 1.5em
+    padding: .5em 0
+
+  .gold .icon, .catalyst .icon
+    display: inline-block
+    width: 24px
+    height: 24px
+    margin-right: .5em
+    background-size: contain
+    vertical-align: middle
+
+  .gold .icon
+    background-image: url(/static/img/gold.png)
+
+  .catalyst .icon
+    background-image: url(/static/img/catalyst.png)
 
 #replay-legend
   margin: 1em 0 2em
@@ -40,7 +81,7 @@
 .navbar-brand
   margin-top: -5px
   margin-left: 0 !important
-  position: fixed
+  position: absolute
 
   @media(max-width: 768px)
     right: 350px
@@ -78,8 +119,19 @@ table td .progress
   50%
     opacity: 0
 
+@keyframes appear
+  0%
+    opacity: 0
+    margin-top: calc(-200%)
+  100%
+    opacity: 1
+    margin-top: -0
+
 .anim-rotate
   animation: rotate 1s linear infinite
 
 .anim-blink
   animation: blink 1s linear infinite
+
+.anim-appear
+  animation: appear .6s ease 1

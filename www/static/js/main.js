@@ -1,0 +1,1 @@
+../../../spectators/gui/www/js/main.js

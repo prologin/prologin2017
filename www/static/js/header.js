@@ -44,7 +44,7 @@ $(function () {
         top: 40,
         left: 54,
       });
-      text.css({
+      text.addClass('anim-appear').css({
         top: 30,
         left: 155,
       });
