@@ -1,5 +1,4 @@
 async function main() {
-  const TURN_DURATION = 1;
   window.GEOMETRY_DIR = '/static/geometry';
   window.TEXTURE_DIR = '/static/texture/';
 
@@ -45,7 +44,10 @@ async function main() {
   $replay.hide();
 
   window.END_TURN_CALLBACK = function () {
-    nextTurnCallback();
+    if (animationEnabled)
+      nextTurnCallback();
+    else
+      setTimeout(nextTurnCallback, 100);
   };
 
   await init(document.getElementById('replay-board'));
@@ -62,14 +64,10 @@ async function main() {
 
       // ui handlers
       $previous.click(() => {
-        // turnIndex--;
-        // turnForward = false;
         $turnSlider.val(turnIndex - 1).trigger('change');
       });
 
       $next.click(() => {
-        // turnIndex++;
-        // turnForward = true;
         $turnSlider.val(turnIndex + 1).trigger('change');
       });
 
@@ -87,7 +85,7 @@ async function main() {
       nextTurnCallback = function () {
         if (!playing)
           return;
-        if (turnIndex >= turns.length) {
+        if (turnIndex >= turns.length - 1) {
           turnIndex = turns.length - 1;
           playing = true; // trigger pause
           $playPause.trigger('click');
@@ -123,22 +121,18 @@ async function main() {
         } else if (key === 37) {
           // left
           stop();
-          // turnIndex -= offset;
           $turnSlider.val(turnIndex - offset).trigger('change');
         } else if (key === 39) {
           // right
           stop();
-          // turnIndex += offset;
           $turnSlider.val(turnIndex + offset).trigger('change');
         } else if (key === 65) {
           // a
           stop();
-          // turnIndex = 0;
           $turnSlider.val(0).trigger('change');
         } else if (key === 69) {
           // e
           stop();
-          // turnIndex = turns.length - 1;
           $turnSlider.val(turns.length - 1).trigger('change');
         } else if (key === 77) {
           // m
