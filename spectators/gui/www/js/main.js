@@ -1,16 +1,16 @@
 'use strict';
 
-let TURN_DURATION = 400;
 let ANIMATE = true;
+let INTERACTIVE = false;
+let SHOW_FPS = false;
+
 const DIRECTIONS = [{r: 0, c: -1}, {r: 1, c: 0}, {r: 0, c: 1}, {r: -1, c: 0}];
 const PLAYERS = [0, 1];
-const PLAYER_COLORS = ['#ff71b0', '#8aff73'];
-const INTERACTIVE = false;
 const BOARD_SIZE = 6, H_BOARD_SIZE = BOARD_SIZE / 2;
 const TILE_OFF = 1.1, H_TILE_OFF = TILE_OFF / 2, TILE_Y = .33;
 
-let stats, scene, camera, renderer, composer, bloomPass, cursorSample, $players;
-let socket, turnCache = [], turnIndex, firstTurnSamples, canGoBackwards = false, canSeek = false, tvMode = false, populated = false, lastTurn = null;
+let stats, scene, camera, renderer, composer,  cursorSample, $players;
+let turnCache = [], turnIndex, tvMode = false, lastTurn = null;
 let boards = [], samples = [], catalysts = PLAYERS.map(() => 0);
 let lights = {}, books = {};
 let boardTiles;
@@ -20,8 +20,10 @@ let animating = false, playing = true;
 let mouse = new THREE.Vector2();
 let clock = new THREE.Clock(true);
 let raycaster = new THREE.Raycaster();
+let domMain;
 
-let domMain = document.getElementById('container');
+const FRAGMENT_SHADER = 'uniform float time;uniform float offset;uniform vec2 resolution;uniform float fogDensity;uniform vec3 fogColor;uniform sampler2D texture1;uniform sampler2D texture2;varying vec2 vUv;void main(void){if(fogDensity>1.){gl_FragColor=texture2D(texture2,vUv);return;}vec2 position=-1.0+2.0*vUv;vec4 noise=texture2D(texture1,vUv);vec2 T1=vUv+vec2(1.5,-1.5)*(time+offset)*0.02;vec2 T2=vUv+vec2(-0.5,2.0)*(time+offset)*0.01;T1.x+=noise.x*2.0;T1.y+=noise.y*2.0;T2.x-=noise.y*0.2;T2.y+=noise.z*0.2;float p=texture2D(texture1,T1*2.0).a;vec4 color=texture2D(texture2,T2*2.0);vec4 temp=color*(vec4(p,p,p,p)*2.0)+(color*color-0.1);if(temp.r>1.0){temp.bg+=clamp(temp.r-2.0,0.0,100.0);}if(temp.g>1.0){temp.rb+=temp.g-1.0;}if(temp.b>1.0){temp.rg+=temp.b-1.0;}gl_FragColor=temp;float depth=10.;const float LOG2=1.442695;float fogFactor=exp2(-fogDensity*fogDensity*depth*depth*LOG2);fogFactor=1.0-clamp(fogFactor,0.0,1.0);gl_FragColor=mix(gl_FragColor,vec4(fogColor,gl_FragColor.w),fogFactor);}';
+const VERTEX_SHADER = 'uniform vec2 uvScale;varying vec2 vUv;void main(){vUv=uvScale*uv;vec4 mvPosition=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mvPosition;}';
 
 const metalUniforms = {
   fogDensity: {value: 0.06},
@@ -45,11 +47,7 @@ const TEXTURES = {
   candleSpecular: 'candle.specular.jpg',
   catalyst: 'catalyst.jpg',
   gold: 'gold.jpg',
-  // copper: 'copper.jpg',
-  // iron: 'iron.jpg',
-  // lead: 'lead.jpg',
   powder: 'powder.jpg',
-  // sulfur: 'sulfur.jpg',
   norm1: 'norm1.jpg',
   norm2: 'norm2.jpg',
   norm3: 'norm3.jpg',
@@ -61,8 +59,8 @@ const TEXTURES = {
   prologin: 'prologin.png',
 };
 
-const GEOMETRY_DIR = './geometry';
-const TEXTURE_DIR = './texture/';
+const GEOMETRY_DIR = window.GEOMETRY_DIR || './geometry';
+const TEXTURE_DIR = window.TEXTURE_DIR || './texture/';
 
 const GEOMETRIES = {
   tile: new THREE.BoxGeometry(1, .2, 1),
@@ -118,16 +116,6 @@ class Tile {
     this.setType(type);
   }
 
-  // clone(type) {
-  //   let t = new Tile(type || this.type, this.board, this.position);
-  //   t.setPosition(this.board, this.position);
-  //   if (this.material.map)
-  //     t.setMapOffet(this.material.map.offset);
-  //   else if (this.material.normalMap)
-  //     t.setMapOffet(this.material.normalMap.offset);
-  //   return t;
-  // }
-
   setMapOffet(offset) {
     if (this.material.map) {
       this.material.map.offset = offset;
@@ -148,41 +136,11 @@ class Tile {
       TILE_Y,
       (position.r - BOARD_SIZE / 2 + .5) * TILE_OFF
     );
-    //this.group.position.add(board.group.position);
   }
-
-  // setPosition(board, pos) {
-  //   this.board = board;
-  //   this.position = pos;
-  //   this.group.position.set(
-  //     (pos.x - BOARD_SIZE / 2 + .5) * TILE_OFF,
-  //     TILE_Y,
-  //     (pos.z - BOARD_SIZE / 2 + .5) * TILE_OFF);
-  //   this.group.position.add(board.group.position);
-  // }
 
   morphTo(newType, delay) {
     console.assert(!!this.material);
     this.morphing = true;
-    /*
-     let light = new THREE.PointLight({color: 0xffffff});
-     light.translation = GEOMETRIES.tile.center;
-     light.intensity = 0;
-     light.distance = 2;
-     light.position.copy(this.group.position);
-     light.position.y += .4;
-     scene.add(light);
-     let lightIn = new TWEEN.Tween(light)
-     .easing(TWEEN.Easing.Sinusoidal.In)
-     .to({intensity: 3}, 500);
-     let lightOut = new TWEEN.Tween(light)
-     .easing(TWEEN.Easing.Exponential.Out)
-     .to({intensity: 0}, 200)
-     .onComplete(() => {
-     scene.remove(light);
-     });
-     lightIn.chain(lightOut).start();
-     */
 
     let fadeOut = new TWEEN.Tween(this.material)
       .easing(TWEEN.Easing.Quadratic.In)
@@ -266,8 +224,8 @@ class Tile {
       u.uvScale.value = new THREE.Vector2(.8 + Math.random() * 0.4, .8 + Math.random() * 0.4);
       return new THREE.ShaderMaterial({
         uniforms: u,
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: VERTEX_SHADER,
+        fragmentShader: FRAGMENT_SHADER,
         transparent: true,
       });
     }
@@ -423,24 +381,22 @@ class Board {
   }
 }
 
-class Platform {
-
-}
-
-function init() {
-  scene = new THREE.Scene();
-
+async function init(rootElement) {
+  domMain = rootElement;
   initDom();
 
-  stats = new Stats();
-  stats.showPanel(0);
+  if (SHOW_FPS) {
+    stats = new Stats();
+    stats.showPanel(0);
+    domMain.appendChild(stats.dom);
+  }
+
+  scene = new THREE.Scene();
 
   initCamera();
   initLights();
   initRenderer();
-  initEvents();
 
-  domMain.appendChild(stats.dom);
   domMain.appendChild(renderer.domElement);
 
   let controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -451,16 +407,16 @@ function init() {
   controls.target.copy(scene.position);
   controls.update();
 
-  initAssets().then(function () {
-    objEach(TEXTURES, (key, t) => {
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    });
-    TEXTURES.powder.repeat.set(1 / 4, 1 / 4);
-    initMesh();
-    start(); // start the viewer logic
-    render(); // start rendering via requestAnimationFrame()
-  });
+  await initAssets();
 
+  objEach(TEXTURES, (key, t) => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  });
+  TEXTURES.powder.repeat.set(1 / 4, 1 / 4);
+
+  initMesh(); // create meshes (decoration & stuff)
+  start(); // start the viewer logic
+  render(); // start rendering via requestAnimationFrame()
 }
 
 function initDom() {
@@ -476,27 +432,28 @@ function initDom() {
 }
 
 function initCamera() {
-  camera = new THREE.PerspectiveCamera(70, domMain.clientWidth / domMain.clientHeight, 1, 10000);
+  const $dom = $(domMain);
+  camera = new THREE.PerspectiveCamera(70, $dom.width() / $dom.height(), 1, 10000);
   camera.position.set(0, 0, 5);
 }
 
 function initRenderer() {
+  const $dom = $(domMain);
   renderer = new THREE.WebGLRenderer({antialias: false});
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(domMain.clientWidth, domMain.clientHeight);
-  renderer.autoClear = false;
+  renderer.setSize($dom.width(), $dom.height());
+  // renderer.autoClear = false;
   renderer.shadowMap.enabled = true;
-
-  let renderScene = new THREE.RenderPass(scene, camera);
-  bloomPass = new THREE.BloomPass(0.7);
-  let copyShader = new THREE.ShaderPass(THREE.CopyShader);
-  copyShader.renderToScreen = true;
-  composer = new THREE.EffectComposer(renderer);
-  composer.setSize(container.clientWidth, container.clientHeight);
-  composer.addPass(renderScene);
-  composer.addPass(bloomPass);
-  composer.addPass(copyShader);
-  composer.reset();
+  // let renderScene = new THREE.RenderPass(scene, camera);
+  // bloomPass = new THREE.BloomPass(0.7);
+  // let copyShader = new THREE.ShaderPass(THREE.CopyShader);
+  // copyShader.renderToScreen = true;
+  // composer = new THREE.EffectComposer(renderer);
+  // composer.setSize(domMain.clientWidth, domMain.clientHeight);
+  // composer.addPass(renderScene);
+  // composer.addPass(bloomPass);
+  // composer.addPass(copyShader);
+  // composer.reset();
 }
 
 function initLights() {
@@ -519,14 +476,13 @@ function initLights() {
   lights.boards = [];
   [0, 1].forEach(idx => {
     let spot = createSpot();
-    spot.intensity = 0;
     spot.position.set(boardSign(idx) * 4.5, 10, 0);
     lights.boards.push(spot);
     scene.add(spot);
   });
 }
 
-function initAssets() {
+async function initAssets() {
   function makePromise(container, loader, key) {
     let path = container[key];
     return new Promise(function (resolve, reject) {
@@ -563,7 +519,6 @@ function initAssets() {
 }
 
 function initMesh() {
-
   // boards
   boards.push(...[new Board("A"), new Board("B")]);
   boards.forEach((board, idx) => {
@@ -604,8 +559,6 @@ function initMesh() {
   table.receiveShadow = true;
   table.position.set(0, -1, -3);
   tableGroup.add(table);
-
-  // TODO: logo & more decoration
 
   // stand
   let standGroup = new THREE.Group();
@@ -662,12 +615,10 @@ function initMesh() {
   candle.rotation.y = Math.random() * Math.PI;
   lights.candle = new THREE.PointLight(0xffffff, 1);
   // FIXME: performance
-  lights.candle.castShadow = true;
+  // lights.candle.castShadow = true;
   lights.candle.position.set(0, 2.2, 0);
   lights.candle.distance = 50;
   lights.candle.decay = 5;
-  lights.candleHelper = new THREE.PointLightHelper(lights.candle);
-  scene.add(lights.candleHelper);
   let candleGroup = new THREE.Group();
   candleGroup.add(candle);
   candleGroup.add(lights.candle);
@@ -685,7 +636,6 @@ function render() {
   let delta = clock.getDelta();
   tick += delta;
   if (tick < 0) tick = 0;
-  // domCoord.textContent = '' + tick;
 
   if (INTERACTIVE && turnIndex !== undefined) {
     raycaster.setFromCamera(mouse, camera);
@@ -725,16 +675,16 @@ function render() {
       tile.group.position.y = TILE_Y - .07 + Math.sin(tick * (.5 + tile.random) + tile.random * Math.PI * 2) / 26;
   }));
 
-  stats.begin();
+  if (SHOW_FPS) stats.begin();
   // TWEEN.update(tick * 1000);
   TWEEN.update();
-  lights.candleHelper.update();
-  renderer.clear();
-  composer.render(delta);
-  // renderer.render(scene, camera);
-  stats.end();
+  // renderer.clear();
+  // composer.render(delta);
+  renderer.render(scene, camera);
+  if (SHOW_FPS) stats.end();
 }
 
+/*
 function initEvents() {
   document.addEventListener('keyup', function (event) {
     event.preventDefault();
@@ -752,17 +702,18 @@ function initEvents() {
     }
   });
 
-  container.addEventListener('mousemove', function (event) {
+  domMain.addEventListener('mousemove', function (event) {
     if (!INTERACTIVE)
       return;
     event.preventDefault();
+    const $dom = $(domMain);
     let x = event.clientX - document.getElementById('container').offsetLeft;
     let y = event.clientY - document.getElementById('container').offsetTop;
-    mouse.x = ( x / domMain.clientWidth ) * 2 - 1;
-    mouse.y = -( y / domMain.clientHeight ) * 2 + 1;
+    mouse.x = (x / $dom.width()) * 2 - 1;
+    mouse.y = -(y / $dom.height()) * 2 + 1;
   });
 
-  container.addEventListener('click', function (event) {
+  domMain.addEventListener('click', function (event) {
     if (!INTERACTIVE)
       return;
     event.preventDefault();
@@ -773,22 +724,20 @@ function initEvents() {
       t2.addToScene();
       tiles.push(t1);
       tiles.push(t2);
-      new TWEEN.Tween(lights.boards[turnIndex % 2])
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        .to({intensity: 1, angle: .5}, 300)
-        .start();
-      new TWEEN.Tween(lights.boards[(turnIndex + 1) % 2])
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        .to({intensity: .4, angle: .48}, 300)
-        .start();
-      // new TWEEN.Tween(camera.position)
-      //   .easing(TWEEN.Easing.Quadratic.InOut)
-      // .to({x: (player * 2 - 1) * 4}, 200)
-      // .start();
-      // camera.position.x = (player * 2 - 1) * 4;
+      if (false) {
+        new TWEEN.Tween(lights.boards[turnIndex % 2])
+          .easing(TWEEN.Easing.Quadratic.InOut)
+          .to({intensity: 1, angle: .5}, 300)
+          .start();
+        new TWEEN.Tween(lights.boards[(turnIndex + 1) % 2])
+          .easing(TWEEN.Easing.Quadratic.InOut)
+          .to({intensity: .4, angle: .48}, 300)
+          .start();
+      }
     }
   });
 }
+*/
 
 function renderTurn(index) {
   console.debug("rendering turn", index);
@@ -813,18 +762,20 @@ function renderTurn(index) {
       p.sample.forEach((material, idx) => samples[pIdx][idx].setType(API_MATERIAL[material]));
   });
 
-  if (ANIMATE) {
-    new TWEEN.Tween(lights.boards[(turnIndex + 1) % 2])
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .to({intensity: 1}, 200)
-      .start();
-    new TWEEN.Tween(lights.boards[(turnIndex) % 2])
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .to({intensity: .4}, 200)
-      .start();
-  } else {
-    lights.boards[(turnIndex + 1) % 2].intensity = 1;
-    lights.boards[(turnIndex) % 2].intensity = .4;
+  if (false/* ANIMATE LIGHTS */) {
+    if (ANIMATE) {
+      new TWEEN.Tween(lights.boards[(turnIndex + 1) % 2])
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .to({intensity: 1}, 200)
+        .start();
+      new TWEEN.Tween(lights.boards[(turnIndex) % 2])
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .to({intensity: .4}, 200)
+        .start();
+    } else {
+      lights.boards[(turnIndex + 1) % 2].intensity = 1;
+      lights.boards[(turnIndex) % 2].intensity = .4;
+    }
   }
 
   function updateBoards() {
@@ -856,6 +807,7 @@ function renderTurn(index) {
   if (!previousTurnData || !ANIMATE) {
     // we don't have the previous state or don't want to animate; just update everything instantly
     updateBoards();
+    turnEnded();
     // exit early
     return;
   }
@@ -869,7 +821,7 @@ function renderTurn(index) {
     new TWEEN.Tween({v: parseInt(dom.find('.gold .value').text())})
       .easing(TWEEN.Easing.Quadratic.Out)
       .to({v: p.score}, 300)
-      .onUpdate(function() {
+      .onUpdate(function () {
         dom.find('.gold .value').text(parseInt(this.v));
       })
       .start();
@@ -990,14 +942,8 @@ function renderTurn(index) {
     if (errors.length) {
       console.assert(false, errors, computedBench, serverBench);
       updateBoards();
-    } else {
-      console.log("OK");
     }
-    if (turnIndex === lastTurn) {
-      animateWinner();
-    } else if (playing) {
-      send('next');
-    }
+    turnEnded();
   }
 
   function animate() {
@@ -1013,19 +959,21 @@ function renderTurn(index) {
   animate();
 }
 
-function start() {
-  // let i = 0;
-  // for (elem of ['gold', 'copper', 'iron', 'mercury', 'lead', 'sulfur']) {
-  //   for (let z = 0; z < 6; z++) {
-  //     let t = new Tile(elem);
-  //     t.setMapOffet(new THREE.Vector2(Math.random(), Math.random()));
-  //     t.setPosition(boardA, {x: i, z: z});
-  //     t.addToScene();
-  //     tiles.push(t);
-  //   }
-  //   i++;
-  // }
+function initSamples(initialSamples) {
+  boards.forEach((board, idx) => {
+    samples[idx] = [];
+    initialSamples.forEach((material, tIdx) => {
+      const tile = new Tile(API_MATERIAL[material]);
+      tile.group.scale.multiplyScalar(.8);
+      tile.group.position.x = -boardSign(idx) * TILE_OFF * (H_BOARD_SIZE + .5);
+      tile.group.position.z = TILE_OFF * tIdx + boardSign(idx) * 2 * TILE_OFF - H_TILE_OFF;
+      board.group.add(tile.group);
+      samples[idx].push(tile);
+    });
+  });
+}
 
+function start() {
   boardTiles = boards.map(e => []);
 
   camera.position.set(0, 10, 3.5);
@@ -1063,8 +1011,6 @@ function start() {
         });
     });
   });
-
-  connect();
 }
 
 function animateWinner() {
@@ -1097,75 +1043,7 @@ function animateWinner() {
   });
 }
 
-function connect() {
-  console.log('trying to connect');
-  socket = new WebSocket('ws://' + window.location.host + '/ws');
-  socket.onopen = () => {
-    backoff = 1;
-    console.log('connected to server');
-    send('hello');
-  };
-  socket.onerror = (e) => {
-    console.warn(e);
-    // check error code, don't reconnect if not needed
-    backoff = Math.min(4, backoff + 1);
-    setTimeout(connect, 1000 * Math.pow(1.5, backoff));
-  };
-  socket.onmessage = (msg) => {
-    msg = JSON.parse(msg.data);
-    console.log('ws >', msg);
-    if (msg.c === 'whatsup') {
-      turnCache = [];
-      canGoBackwards = msg.canGoBackwards;
-      canSeek = msg.canSeek;
-      tvMode = msg.tvMode;
-      firstTurnSamples = msg.firstTurn;
-      if (tvMode)
-        TURN_DURATION /= 2;
-      boards.forEach((board, idx) => {
-        samples[idx] = [];
-        firstTurnSamples.forEach((material, tIdx) => {
-          const tile = new Tile(API_MATERIAL[material]);
-          tile.group.scale.multiplyScalar(.8);
-          tile.group.position.x = -boardSign(idx) * TILE_OFF * (H_BOARD_SIZE + .5);
-          tile.group.position.z = TILE_OFF * tIdx + boardSign(idx) * 2 * TILE_OFF - H_TILE_OFF;
-          board.group.add(tile.group);
-          samples[idx].push(tile);
-        });
-      });
-    } else if (msg.c === 'end') {
-      // TODO: show game end
-    } else if (msg.c === 'turn') {
-      let turnData = msg.state;
-      let [a, b] = turnData.turn;
-      turnIndex = a;
-      lastTurn = b;
-      if (!populated) {
-        // first time we got turn data (not necessarily the first turn)
-        populated = true;
-        const ANIMATE_SAVE = ANIMATE;
-        ANIMATE = false;
-        objEach(turnData.players, (pid, player, playerIdx) => {
-          player.bench.forEach((apiMaterial, idx) => {
-            const material = API_MATERIAL[apiMaterial];
-            if (material === null)
-              return;
-            let tile = boardTiles[playerIdx][idx] = new Tile(material);
-            tile.addToBoard(boards[playerIdx], indexToPosition(idx));
-          });
-        });
-        ANIMATE = ANIMATE_SAVE;
-      }
-      turnCache[turnIndex] = turnData;
-      renderTurn(turnIndex);
-    }
-  };
+function turnEnded() {
+  console.debug("turn end");
+  if(window.END_TURN_CALLBACK) window.END_TURN_CALLBACK();
 }
-
-function send(cmd, data) {
-  let msg = $.extend({c: cmd}, data);
-  console.log('ws <', msg);
-  socket.send(JSON.stringify(msg));
-}
-
-init();
