@@ -101,10 +101,10 @@ Une fois l'échantillon en main, vous devez délicatement le déposer sur votre
   à un élément de même type.
 * Si il n'y a aucun élément identique entre l'échantillon et ce qui est déjà
   posé sur l'établi, l'échantillon peut être posé n'importe où.
-* Si il n'y a pas d'emplacement valide, vous ne pouvez pas poser l'échantillon
-  et il ne vous reste plus qu'à le jeter et assassiner discrètement votre compère
-  qui - n'en doutez pas ! - savait pertinemment quel tour il était en train de
-  vous jouer.
+* Si il n'y a pas d'emplacement valide, vous serez obligés de transmuter une
+  zone pour libérer de la place sur l'établi, et il ne vous reste plus qu'à
+  assassiner discrètement votre compère qui - n'en doutez pas ! - savait
+  pertinemment quel tour il était en train de vous jouer.
 
 Transmuter
 ----------
@@ -178,6 +178,9 @@ pourrez transformer de cases.
 Transmuter une zone de catalyseurs vous donnera également un peu d'or.
 Rien ne vous empêche de catalyser un élément de l'établi d'un autre apprenti,
 tant que celui-ci a le dos tourné...
+
+Si vous n'utilisez pas vos catalyseurs ce tour-ci, en entier, ils
+se volatiseront et il n'en restera rien au tour suivant.
 
 .. raw:: latex
 
