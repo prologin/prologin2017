@@ -18,8 +18,43 @@ en a cinq :
 * Le *plomb*, le *fer* et le *cuivre* sont les trois métaux que vous pouvez
   transmuter en or. Les trois ont le même rendement, mais ne peuvent
   pas être mélangés.
+
+.. raw:: latex
+
+   \begin{figure}[!h]
+     \centering
+     \captionsetup[subfigure]{labelformat=empty}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-lead}
+       \caption{Plomb}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-iron}
+       \caption{Fer}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-copper}
+       \caption{Cuivre}
+     \end{subfigure}
+   \end{figure}
+
 * Le *mercure* et le *soufre* sont les deux éléments volatiles qui permettront
   de catalyser un élément vers un autre élément.
+
+.. raw:: latex
+
+   \begin{figure}[!h]
+     \centering
+     \captionsetup[subfigure]{labelformat=empty}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-mercury}
+       \caption{Mercure}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-sulfur}
+       \caption{Soufre}
+     \end{subfigure}
+   \end{figure}
 
 Échantillon
 ===========
@@ -78,6 +113,55 @@ Lorsque vous possédez une zone d'un certain métal (cuivre, fer ou plomb), vous
 pouvez lancer la *transmutation* en or. Plus cette zone est grande, plus vous
 obtiendrez d'or.
 
+.. raw:: latex
+
+   \begin{figure}[!h]
+     \centering
+     \captionsetup[subfigure]{labelformat=empty}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-lead}
+       \caption{Plomb}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-iron}
+       \caption{Fer}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-copper}
+       \caption{Cuivre}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       $\xrightarrow{\text{transmutation}}$
+       \caption{\newline} % latex hacks are teh shit
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-gold}
+       \caption{Or}
+     \end{subfigure}
+   \end{figure}
+
+   \begin{figure}[!h]
+     \centering
+     \captionsetup[subfigure]{labelformat=empty}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-mercury}
+       \caption{Mercure}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-sulfur}
+       \caption{Soufre}
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       $\xrightarrow{\text{transmutation}}$
+       \caption{\newline} % latex hacks are teh shit
+     \end{subfigure}
+     \begin{subfigure}[b]{2cm}
+       \includegraphics[width=\textwidth]{img/material-catalyst}
+       \caption{Catalyseur}
+     \end{subfigure}
+   \end{figure}
+
+
 Vous pouvez transmuter un unique bloc de métal. Néanmoins, cela revient à
 détruire ce bout d'élément et donc à perdre de l'or - stratégie aussi
 audacieuse que dangereuse.
@@ -94,6 +178,50 @@ pourrez transformer de cases.
 Transmuter une zone de catalyseurs vous donnera également un peu d'or.
 Rien ne vous empêche de catalyser un élément de l'établi d'un autre apprenti,
 tant que celui-ci a le dos tourné...
+
+.. raw:: latex
+
+   \begin{figure}[!h]
+     \centering
+     \captionsetup[subfigure]{labelformat=empty,position=b}
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-lead}
+       \caption{Plomb}
+     \end{subfigure}
+     ~
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-iron}
+       \caption{Fer}
+     \end{subfigure}
+     ~
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-copper}
+       \caption{Cuivre}
+     \end{subfigure}
+     ~
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-sulfur}
+       \caption{Soufre}
+     \end{subfigure}
+     ~
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-mercury}
+       \caption{Mercure}
+     \end{subfigure}
+     \begin{subfigure}[b]{1.5cm}
+     \begin{tikzpicture}
+       % $\xrightarrow{\text{catalyse}}$
+       % \caption{\newline} % latex hacks are teh shit
+       \node[] (image) at (0,0) {\includegraphics[width=.8cm]{img/material-catalyst}};
+       \node[] at (0,.8) {\footnotesize catalyse};
+       \draw[->] (-.7,.5) -- (.7,.5);
+     \end{tikzpicture}
+     \end{subfigure}
+     \begin{subfigure}[b]{1.5cm}
+       \includegraphics[width=\textwidth]{img/material-other}
+       \caption{Élément}
+     \end{subfigure}
+   \end{figure}
 
 Score
 =====
