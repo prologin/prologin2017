@@ -205,7 +205,6 @@ class StechecReader(Reader):
 
     def build_state(self):
         json_dump = self.get_dump().decode()
-        print(json_dump)
         return json.loads(json_dump)
 
 

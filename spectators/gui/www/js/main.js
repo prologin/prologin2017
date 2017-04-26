@@ -19,8 +19,11 @@ let tick = 0;
 let animating = false, playing = true;
 let mouse = new THREE.Vector2();
 let clock = new THREE.Clock(true);
-let raycaster = new THREE.Raycaster();
 let domMain;
+let raycaster;
+
+if (INTERACTIVE)
+  raycaster = new THREE.Raycaster();
 
 const FRAGMENT_SHADER = 'uniform float time;uniform float offset;uniform vec2 resolution;uniform float fogDensity;uniform vec3 fogColor;uniform sampler2D texture1;uniform sampler2D texture2;varying vec2 vUv;void main(void){if(fogDensity>1.){gl_FragColor=texture2D(texture2,vUv);return;}vec2 position=-1.0+2.0*vUv;vec4 noise=texture2D(texture1,vUv);vec2 T1=vUv+vec2(1.5,-1.5)*(time+offset)*0.02;vec2 T2=vUv+vec2(-0.5,2.0)*(time+offset)*0.01;T1.x+=noise.x*2.0;T1.y+=noise.y*2.0;T2.x-=noise.y*0.2;T2.y+=noise.z*0.2;float p=texture2D(texture1,T1*2.0).a;vec4 color=texture2D(texture2,T2*2.0);vec4 temp=color*(vec4(p,p,p,p)*2.0)+(color*color-0.1);if(temp.r>1.0){temp.bg+=clamp(temp.r-2.0,0.0,100.0);}if(temp.g>1.0){temp.rb+=temp.g-1.0;}if(temp.b>1.0){temp.rg+=temp.b-1.0;}gl_FragColor=temp;float depth=10.;const float LOG2=1.442695;float fogFactor=exp2(-fogDensity*fogDensity*depth*depth*LOG2);fogFactor=1.0-clamp(fogFactor,0.0,1.0);gl_FragColor=mix(gl_FragColor,vec4(fogColor,gl_FragColor.w),fogFactor);}';
 const VERTEX_SHADER = 'uniform vec2 uvScale;varying vec2 vUv;void main(){vUv=uvScale*uv;vec4 mvPosition=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*mvPosition;}';
@@ -333,33 +336,23 @@ class Sample {
   }
 
   _setPosition() {
-    if (this.board == null)
+    if (!this.board)
       return;
-    this.t1.setPosition(this.board, this.position);
-    this.t2.setPosition(this.board, this.otherPosition(this.position));
+    this.t1.addToBoard(this.board, this.position);
+    this.t2.addToBoard(this.board, this.otherPosition(this.position));
   }
 
   setPosition(board, pos) {
+    if (this.board) {
+      this.board.group.remove(this.t1.group);
+      this.board.group.remove(this.t2.group);
+    }
     this.board = board;
     this.t1.group.visible = this.t2.group.visible = this.board != null;
     if (this.board == null)
       return;
     this.position = pos;
     this._setPosition();
-  }
-
-  randomOffset() {
-    this.t1.setMapOffet(new THREE.Vector2(Math.random(), Math.random()));
-    this.t2.setMapOffet(new THREE.Vector2(Math.random(), Math.random()));
-  }
-
-  getTiles() {
-    return [this.t1.clone(), this.t2.clone()];
-  }
-
-  addToScene() {
-    this.t1.addToScene();
-    this.t2.addToScene();
   }
 }
 
@@ -528,7 +521,6 @@ function initMesh() {
 
   if (INTERACTIVE) {
     cursorSample = new Sample('copper', 'lead');
-    cursorSample.addToScene();
   }
 
   function createFullMesh(baseName, scale) {
@@ -639,17 +631,17 @@ function render() {
 
   if (INTERACTIVE && turnIndex !== undefined) {
     raycaster.setFromCamera(mouse, camera);
-    let intersect = raycaster.intersectObject(boards[turnIndex % 2].group, true);
+    const board = boards[(turnIndex + 1) % 2];
+    let intersect = raycaster.intersectObject(board.group, true);
     cursorSample.setPosition(null);
     if (intersect.length) {
       intersect = intersect[0];
-      let board = intersect.object.parent.board;
       // get position in board coordinates
       let p = board.group.position.clone();
       p.sub(intersect.point);
       let pos = {
-        x: Math.floor(-p.getComponent(0) / TILE_OFF) + H_BOARD_SIZE,
-        z: Math.floor(-p.getComponent(2) / TILE_OFF) + H_BOARD_SIZE,
+        c: Math.floor(-p.getComponent(0) / TILE_OFF) + H_BOARD_SIZE,
+        r: Math.floor(-p.getComponent(2) / TILE_OFF) + H_BOARD_SIZE,
       };
       // if position is on board
       if (cursorSample.fits(pos)) {
@@ -683,61 +675,6 @@ function render() {
   renderer.render(scene, camera);
   if (SHOW_FPS) stats.end();
 }
-
-/*
-function initEvents() {
-  document.addEventListener('keyup', function (event) {
-    event.preventDefault();
-    console.debug(event.which);
-    if (event.which == 82) {
-      // r
-      if (!INTERACTIVE)
-        return;
-      cursorSample.rotate();
-    } else if (event.which == 32) {
-      // space
-      if (animating)
-        return;
-      send('next');
-    }
-  });
-
-  domMain.addEventListener('mousemove', function (event) {
-    if (!INTERACTIVE)
-      return;
-    event.preventDefault();
-    const $dom = $(domMain);
-    let x = event.clientX - document.getElementById('container').offsetLeft;
-    let y = event.clientY - document.getElementById('container').offsetTop;
-    mouse.x = (x / $dom.width()) * 2 - 1;
-    mouse.y = -(y / $dom.height()) * 2 + 1;
-  });
-
-  domMain.addEventListener('click', function (event) {
-    if (!INTERACTIVE)
-      return;
-    event.preventDefault();
-    if (cursorSample.board != null) {
-      let [t1, t2] = cursorSample.getTiles();
-      cursorSample.randomOffset();
-      t1.addToScene();
-      t2.addToScene();
-      tiles.push(t1);
-      tiles.push(t2);
-      if (false) {
-        new TWEEN.Tween(lights.boards[turnIndex % 2])
-          .easing(TWEEN.Easing.Quadratic.InOut)
-          .to({intensity: 1, angle: .5}, 300)
-          .start();
-        new TWEEN.Tween(lights.boards[(turnIndex + 1) % 2])
-          .easing(TWEEN.Easing.Quadratic.InOut)
-          .to({intensity: .4, angle: .48}, 300)
-          .start();
-      }
-    }
-  });
-}
-*/
 
 function renderTurn(index) {
   console.debug("rendering turn", index);
@@ -1046,4 +983,10 @@ function animateWinner() {
 function turnEnded() {
   console.debug("turn end");
   if(window.END_TURN_CALLBACK) window.END_TURN_CALLBACK();
+}
+
+function placeSample() {
+  if (!INTERACTIVE)
+    return;
+  // TODO
 }

@@ -94,18 +94,37 @@
 <script src="js/network.js"></script>
 <script src="js/main.js"></script>
 <script async>
-    /* todo UI events */
-    END_TURN_CALLBACK = function () {
-      if (turnIndex === lastTurn) {
-        animateWinner();
-      } else if (playing) {
-        send('next');
-      }
-    };
-    (async function () {
-      await init(document.getElementById('container'));
-      connect();
-    })();
+  END_TURN_CALLBACK = function () {
+    if (turnIndex === lastTurn) {
+      animateWinner();
+    } else if (playing) {
+      send('next');
+    }
+  };
+  (async function () {
+    await init(document.getElementById('container'));
+    if (INTERACTIVE) {
+      const $dom = $(domMain);
+      $dom.on('mousemove', e => {
+        e.preventDefault();
+        let x = e.clientX - domMain.offsetLeft;
+        let y = e.clientY - domMain.offsetTop;
+        mouse.x = (x / $dom.width()) * 2 - 1;
+        mouse.y = -(y / $dom.height()) * 2 + 1;
+      }).on('click', e => {
+        e.preventDefault();
+        placeSample();
+      });
+      $('html').on('keyup', e => {
+        e.preventDefault();
+        if (e.which == 'R'.charCodeAt(0)) {
+          // rotate
+          cursorSample.rotate();
+        }
+      });
+    }
+    connect();
+  })();
 </script>
 </body>
 </html>
