@@ -72,16 +72,16 @@ rules::GameState* GameState::copy() const
 
 int GameState::transmute_gold_scoreval(int area)
 {
-    if (area <= 0)
+    if (area <= 1)
         return -3;
-    return (area - 1) * (area - 1);
+    return (area - 2) * (area - 2);
 }
 
 int GameState::transmute_catalyst_scoreval(int area)
 {
-    if (area <= 0)
+    if (area <= 1)
         return -3;
-    return area - 1;
+    return area - 2;
 }
 
 int GameState::transmute_catalyst_outcome(int area)
