@@ -41,10 +41,13 @@ public:
     int get_internal_id() const { return internal_id_; }
 
     /// Increase the score player (or decrease if a negative value is given)
-    void increase_score(int by) { player_->score += by; }
+    void increase_score(int by) { score_ += by; }
 
     /// Get this player's score (floor of total collected plasma)
-    int get_score() const { return player_->score; }
+    int get_score() const { return score_; }
+
+    /// Syncronize player's score at end of turn
+    void synchronize_score() { player_->score = score_; }
 
     /// Get this player's name
     const std::string& get_name() const { return player_->name; }
@@ -65,6 +68,7 @@ private:
     rules::Player_sptr player_;        ///< Encapsulated stechec implementation
     std::vector<action_hist> actions_; ///< Actions taken during last turn
     int internal_id_;                  ///< Id of player in GameState arrays
+    int score_;                        ///< Player's score
 };
 
 class GameState : public rules::GameState
@@ -172,6 +176,7 @@ public:
     void hist_add_catalyze(position pos, unsigned target_apprentice_id,
                            case_type new_type, unsigned apprentice_id);
     void reset_history(unsigned apprentice_id);
+    void synchronize_score(unsigned apprentice_id);
 
     const std::vector<action_hist>& get_history(unsigned apprentice_id) const;
 

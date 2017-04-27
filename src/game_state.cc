@@ -33,7 +33,7 @@ Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
     , internal_id_(internal_id)
 {
     assert(player_);
-    player_->score = 0;
+    score_ = 0;
 }
 
 constexpr echantillon GameState::default_sample;
@@ -362,6 +362,12 @@ void GameState::reset_history(unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     apprentices_.at(apprentice_id).reset_actions();
+}
+
+void GameState::synchronize_score(unsigned apprentice_id)
+{
+    assert(apprentices_.count(apprentice_id) != 0);
+    apprentices_.at(apprentice_id).synchronize_score();
 }
 
 const std::vector<action_hist>&
