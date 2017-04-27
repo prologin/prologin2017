@@ -12,7 +12,7 @@ Chaque apprenti a son propre établi.
 Élément
 =======
 
-Les éléments sont les matières premières mis à votre disposition. Il y
+Les éléments sont les matières premières mises à votre disposition. Il y
 en a cinq :
 
 * Le *plomb*, le *fer* et le *cuivre* sont les trois métaux que vous pouvez
@@ -59,7 +59,7 @@ en a cinq :
 Échantillon
 ===========
 
-Un échantillon est une paire d'éléments. Ils peuvent être composés de deux
+Un échantillon est une paire d'éléments. Il peut être composé de deux
 éléments identiques ou distincts.
 
 
@@ -77,9 +77,9 @@ Actions
 Donner un échantillon
 ---------------------
 
-Pour inculper la solidarité et exacerber l'entraîde entre ses apprentis, il est
-demandé à tous les apprentis de se rendre service et de ne jamais se servir
-soit-même dans la réserve.
+Pour inculper la solidarité et exacerber l'entraide entre les apprentis, il
+leur est demandé de se rendre service et de ne jamais se servir
+soi-même dans la réserve.
 
 À chaque tour N, les deux apprentis créent un échantillon pour leur adversaire,
 échantillon qui sera posé au tour N+1. Si vous oubliez de créer cet
