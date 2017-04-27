@@ -411,6 +411,16 @@ extern "C" std::vector<position> api_positions_region(position pos,
     return api->positions_region(pos, id_apprenti);
 }
 
+/// Détermine si le placement d’un échantillon est valide.
+extern "C" bool
+api_placement_possible_echantillon(echantillon echantillon_a_placer,
+                                   position pos1, position pos2,
+                                   int id_apprenti)
+{
+    return api->placement_possible_echantillon(echantillon_a_placer, pos1, pos2,
+                                               id_apprenti);
+}
+
 /// Renvoie la liste des placements possibles pour un échantillon donné sur
 /// l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur.
 extern "C" std::vector<position_echantillon>
@@ -515,7 +525,7 @@ extern "C" echantillon api_echantillon_defaut_premier_tour()
 /// Affiche l'état actuel des deux établis dans la console.
 extern "C" void api_afficher_etablis()
 {
-  api->afficher_etablis();
+    api->afficher_etablis();
 }
 
 /// Affiche le contenu d'une valeur de type case_type

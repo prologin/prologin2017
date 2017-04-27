@@ -98,7 +98,7 @@ erreur Api::donner_echantillon(echantillon echantillon_donne)
     return OK;
 }
 
-/// Renvoie le type d’une case donnée.
+/// Renvoie le type d’une case donnée, ou 0 si la case est invaide.
 case_type Api::type_case(position pos, int id_apprenti)
 {
     if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
@@ -107,7 +107,8 @@ case_type Api::type_case(position pos, int id_apprenti)
     return game_state_->get_cell_type(pos, id_apprenti);
 }
 
-/// Indique si une case donnée est vide ou contient un élément.
+/// Indique si une case donnée est vide ou contient un élément. Renvoie faux en
+/// cas d'erreur.
 bool Api::est_vide(position pos, int id_apprenti)
 {
     if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
@@ -116,7 +117,8 @@ bool Api::est_vide(position pos, int id_apprenti)
     return type_case(pos, id_apprenti) == VIDE;
 }
 
-/// Renvoie la propriété de l’élément sur une case donnée.
+/// Renvoie la propriété de l’élément sur une case donnée. Un élément invalide
+/// n'a pas de propriété.
 element_propriete Api::propriete_case(position pos, int id_apprenti)
 {
     if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
@@ -126,12 +128,13 @@ element_propriete Api::propriete_case(position pos, int id_apprenti)
 }
 
 /// Renvoie la propriété d’un type de case donné.
-element_propriete Api::propriete_case_type(case_type type)
+element_propriete Api::propriete_case_type(case_type ctype)
 {
-    return game_state_->get_element_property(type);
+    return game_state_->get_element_property(ctype);
 }
 
-/// Renvoie la taille de la région à laquelle appartient un élément.
+/// Renvoie la taille de la région à laquelle appartient un élément. Renvoie -1
+/// si la position est invalide.
 int Api::taille_region(position pos, int id_apprenti)
 {
     if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
@@ -141,7 +144,7 @@ int Api::taille_region(position pos, int id_apprenti)
 }
 
 /// Renvoie la liste des positions des cases composant la région à laquelle
-/// appartient un élément donné.
+/// appartient un élément donné. Renvoie une liste vide en cas d'erreur.
 std::vector<position> Api::positions_region(position pos, int id_apprenti)
 {
     if (!in_board(pos) || !game_state_->valid_player(id_apprenti))
@@ -150,8 +153,23 @@ std::vector<position> Api::positions_region(position pos, int id_apprenti)
     return game_state_->get_region(pos, id_apprenti);
 }
 
+/// Détermine si le placement d’un échantillon est valide.
+bool Api::placement_possible_echantillon(echantillon echantillon_a_placer,
+                                         position pos1, position pos2,
+                                         int id_apprenti)
+{
+    if (echantillon_a_placer.element1 == VIDE ||
+        echantillon_a_placer.element2 == VIDE || !in_board(pos1) ||
+        !in_board(pos2) || !game_state_->valid_player(id_apprenti))
+    {
+        return false;
+    }
+    return game_state_->is_valid_sample_position(echantillon_a_placer, pos1,
+                                                 pos2, id_apprenti);
+}
+
 /// Renvoie la liste des placements possibles pour un échantillon donné sur
-/// l’établi d’un apprenti donné
+/// l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur.
 std::vector<position_echantillon>
 Api::placements_possible_echantillon(echantillon echantillon_a_placer,
                                      int id_apprenti)

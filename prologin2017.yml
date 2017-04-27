@@ -216,6 +216,19 @@ function:
       - [id_apprenti, int, "Apprenti choisi"]
 
   -
+    fct_name: placement_possible_echantillon
+    fct_summary: Détermine si le placement d’un échantillon est valide.
+    fct_ret_type: bool
+    fct_arg:
+      - [echantillon_a_placer, echantillon, "Échantillon à placer"]
+      - [pos1, position, "Case du terrain où doit être posé
+                          le premier élément de l’échantillon"]
+      - [pos2, position, "Case du terrain où doit être posé
+                          le second élément de l’échantillon"]
+      - [id_apprenti, int, "Apprenti possédant l’établi où poser
+                            l’échantillon"]
+
+  -
     fct_name: placements_possible_echantillon
     fct_summary: Renvoie la liste des placements possibles pour un échantillon
                  donné sur l’établi d’un apprenti donné. Renvoie une liste vide

@@ -74,27 +74,35 @@ public:
     /// Définit l’échantillon que l’adversaire recevra à son prochain tour.
     erreur donner_echantillon(echantillon echantillon_donne);
 
-    /// Renvoie le type d’une case donnée.
+    /// Renvoie le type d’une case donnée, ou 0 si la case est invaide.
     case_type type_case(position pos, int id_apprenti);
 
-    /// Indique si une case donnée est vide ou contient un élément.
+    /// Indique si une case donnée est vide ou contient un élément. Renvoie faux
+    /// en cas d'erreur.
     bool est_vide(position pos, int id_apprenti);
 
-    /// Renvoie la propriété de l’élément sur une case donnée.
+    /// Renvoie la propriété de l’élément sur une case donnée. Un élément
+    /// invalide n'a pas de propriété.
     element_propriete propriete_case(position pos, int id_apprenti);
 
     /// Renvoie la propriété d’un type de case donné.
-    element_propriete propriete_case_type(case_type type);
+    element_propriete propriete_case_type(case_type ctype);
 
-    /// Renvoie la taille de la région à laquelle appartient un élément.
+    /// Renvoie la taille de la région à laquelle appartient un élément. Renvoie
+    /// -1 si la position est invalide.
     int taille_region(position pos, int id_apprenti);
 
     /// Renvoie la liste des positions des cases composant la région à laquelle
-    /// appartient un élément donné.
+    /// appartient un élément donné. Renvoie une liste vide en cas d'erreur.
     std::vector<position> positions_region(position pos, int id_apprenti);
 
+    /// Détermine si le placement d’un échantillon est valide.
+    bool placement_possible_echantillon(echantillon echantillon_a_placer,
+                                        position pos1, position pos2,
+                                        int id_apprenti);
+
     /// Renvoie la liste des placements possibles pour un échantillon donné sur
-    /// l’établi d’un apprenti donné
+    /// l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur.
     std::vector<position_echantillon>
     placements_possible_echantillon(echantillon echantillon_a_placer,
                                     int id_apprenti);
