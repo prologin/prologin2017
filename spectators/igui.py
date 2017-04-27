@@ -1,34 +1,32 @@
 # coding: utf-8
 
-from api import *
 import tkinter as tk
 import tkinter.font as tkFont
+
+from api import *
 
 root = tk.Tk()
 CASE_SIZE = 40
 
+
 def case_to_str(case):
-    text = "?"
-    if case == case_type.VIDE:
-        text = " "
-    elif case == case_type.FER:
-        text = "F"
-    elif case == case_type.CUIVRE:
-        text = "C"
-    elif case == case_type.MERCURE:
-        text = "M"
-    elif case == case_type.PLOMB:
-        text = "P"
-    elif case == case_type.SOUFRE:
-        text = "S"
-    return text
+    return {
+        case_type.VIDE: " ",
+        case_type.FER: "F",
+        case_type.CUIVRE: "C",
+        case_type.MERCURE: "M",
+        case_type.PLOMB: "P",
+        case_type.SOUFRE: "S",
+    }.get(case, "?")
+
 
 def postion_from_mouse(event):
     x = event.x // CASE_SIZE
     y = event.y // CASE_SIZE
     return (x, y)
 
-class Application(tk.Frame): # pylint: disable=too-many-ancestors
+
+class Application(tk.Frame):  # pylint: disable=too-many-ancestors
     def __init__(self, master=None):
         super().__init__(master)
         self.pack()
@@ -41,8 +39,8 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
 
         self.me = {}
         self.other = {}
-        self.sample = (case_type.VIDE,case_type.VIDE)
-        self.next_sample = (case_type.VIDE,case_type.VIDE)
+        self.sample = (case_type.VIDE, case_type.VIDE)
+        self.next_sample = (case_type.VIDE, case_type.VIDE)
 
         self.last_selected = (-1, -1)
         self.placed = False
@@ -59,7 +57,7 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
         self.canvas.bind('<Motion>', self.motion)
         self.canvas_next.bind("<Button-1>", self.select_next_sample)
 
-    def update(self, pull_api = True):
+    def update(self, pull_api=True):
         if pull_api:
             me = moi()
             other = adversaire()
@@ -82,16 +80,18 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
             x, y = self.last_selected
             offset = 1 if wb == 0 else 1 + (TAILLE_ETABLI + 1) * CASE_SIZE
             self.canvas.create_rectangle(
-                    offset + x * CASE_SIZE, offset + y * CASE_SIZE,
-                    offset + (x + 1) * CASE_SIZE, offset + (y + 1) * CASE_SIZE,
-                    fill="#AAAAAA")
+                offset + x * CASE_SIZE, offset + y * CASE_SIZE,
+                offset + (x + 1) * CASE_SIZE, offset + (y + 1) * CASE_SIZE,
+                fill="#AAAAAA")
             if not self.placed and placement_possible_echantillon(self.sample, (x, y),
-                    (x + self.direction[0], y + self.direction[1]), moi()):
-                self.canvas.create_text((offset + (x+0.5)*CASE_SIZE + 5,
-                    (y+0.5)*CASE_SIZE + 5), text=case_to_str(self.sample[0]), font=helv, fill="blue")
-                self.canvas.create_text((offset + (x + self.direction[0] + 0.5)*CASE_SIZE + 5,
-                    (y + self.direction[1] + 0.5)*CASE_SIZE + 5),
-                    text=case_to_str(self.sample[1]), font=helv, fill="blue")
+                                                                  (x + self.direction[0], y + self.direction[1]),
+                                                                  moi()):
+                self.canvas.create_text((offset + (x + 0.5) * CASE_SIZE + 5,
+                                         (y + 0.5) * CASE_SIZE + 5), text=case_to_str(self.sample[0]), font=helv,
+                                        fill="blue")
+                self.canvas.create_text((offset + (x + self.direction[0] + 0.5) * CASE_SIZE + 5,
+                                         (y + self.direction[1] + 0.5) * CASE_SIZE + 5),
+                                        text=case_to_str(self.sample[1]), font=helv, fill="blue")
         for i in range(0, TAILLE_ETABLI + 1):
             for offset in (1, 1 + (TAILLE_ETABLI + 1) * CASE_SIZE):
                 self.canvas.create_line(offset + i * CASE_SIZE,
@@ -104,29 +104,29 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
             for pos, case in d.items():
                 if case == case_type.VIDE:
                     continue
-                self.canvas.create_text((offset + (pos[0]+0.5)*CASE_SIZE + 5,
-                    (pos[1]+0.5)*CASE_SIZE + 5), text=case_to_str(case), font=helv)
+                self.canvas.create_text((offset + (pos[0] + 0.5) * CASE_SIZE + 5,
+                                         (pos[1] + 0.5) * CASE_SIZE + 5), text=case_to_str(case), font=helv)
         helv16 = tkFont.Font(family='Helvetica', size=16)
         self.canvas.create_text(0, CASE_SIZE * (TAILLE_ETABLI),
-                text="Score : {}".format(self.my_score), font=helv16, anchor="nw")
+                                text="Score : {}".format(self.my_score), font=helv16, anchor="nw")
         self.canvas.create_text((TAILLE_ETABLI + 1) * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI),
-                text="Score : {}".format(self.other_score), font=helv16, anchor="nw")
+                                text="Score : {}".format(self.other_score), font=helv16, anchor="nw")
         self.canvas.create_text(0, CASE_SIZE * (TAILLE_ETABLI + 0.8),
-                text="Échantillon du tour :", font=helv16, anchor="nw")
+                                text="Échantillon du tour :", font=helv16, anchor="nw")
         self.canvas.create_text((TAILLE_ETABLI + 1) * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI + 0.8),
-                text="Prochain échantillon :", font=helv16, anchor="nw")
+                                text="Prochain échantillon :", font=helv16, anchor="nw")
         color = "#AAAAAA" if self.placed else "black"
         self.canvas_next.create_text(CASE_SIZE, CASE_SIZE,
-                text=case_to_str(self.sample[0]), font=helv, anchor="nw", fill=color)
+                                     text=case_to_str(self.sample[0]), font=helv, anchor="nw", fill=color)
         self.canvas_next.create_text((1 + self.direction[0]) * CASE_SIZE, (1 + self.direction[1]) * CASE_SIZE,
-                text=case_to_str(self.sample[1]), font=helv, anchor="nw", fill=color)
+                                     text=case_to_str(self.sample[1]), font=helv, anchor="nw", fill=color)
         color = "black"
         if self.next_sample[0] not in self.sample and self.next_sample[1] not in self.sample:
             color = "red"
         self.canvas_next.create_text((TAILLE_ETABLI + 1) * CASE_SIZE, 0,
-                text=case_to_str(self.next_sample[0]), font=helv, anchor="nw", fill=color)
+                                     text=case_to_str(self.next_sample[0]), font=helv, anchor="nw", fill=color)
         self.canvas_next.create_text((TAILLE_ETABLI + 2) * CASE_SIZE, 0,
-                text=case_to_str(self.next_sample[1]), font=helv, anchor="nw", fill=color)
+                                     text=case_to_str(self.next_sample[1]), font=helv, anchor="nw", fill=color)
 
     def end(self, event):
         donner_echantillon(self.next_sample)
@@ -168,7 +168,7 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
             else:
                 self.direction = (-1, 0)
             self.update(False)
-        elif x >= TAILLE_ETABLI + 1 and x < TAILLE_ETABLI + 3:
+        elif TAILLE_ETABLI + 1 <= x < TAILLE_ETABLI + 3:
             x -= TAILLE_ETABLI + 1
             l = list(case_type)
             v = l[(l.index(self.next_sample[x]) % (len(l) - 1)) + 1]
@@ -178,12 +178,15 @@ class Application(tk.Frame): # pylint: disable=too-many-ancestors
                 self.next_sample = (self.next_sample[0], v)
             self.update(False)
 
+
 app = Application(master=root)
+
 
 # Fonction appelée au début de la partie.
 def partie_init():
     # Place ton code ici
     pass
+
 
 # Fonction appelée à chaque tour.
 def jouer_tour():
@@ -191,6 +194,7 @@ def jouer_tour():
     app.next_sample = echantillon_tour()
     app.update()
     app.mainloop()
+
 
 # Fonction appelée à la fin de la partie.
 def partie_fin():
