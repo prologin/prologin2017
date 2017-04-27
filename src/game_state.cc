@@ -70,23 +70,27 @@ rules::GameState* GameState::copy() const
     return new GameState(*this);
 }
 
-int GameState::transmute_gold_scoreval(int area) {
+int GameState::transmute_gold_scoreval(int area)
+{
     if (area <= 0)
         return -3;
     return (area - 1) * (area - 1);
 }
 
-int GameState::transmute_catalyst_scoreval(int area) {
+int GameState::transmute_catalyst_scoreval(int area)
+{
     if (area <= 0)
         return -3;
     return area - 1;
 }
 
-int GameState::transmute_catalyst_outcome(int area) {
+int GameState::transmute_catalyst_outcome(int area)
+{
     return area / 2;
 }
 
-bool GameState::valid_player(unsigned apprentice_id) const {
+bool GameState::valid_player(unsigned apprentice_id) const
+{
     return apprentices_.count(apprentice_id) != 0;
 }
 
@@ -116,7 +120,8 @@ void GameState::increase_score(unsigned apprentice_id, int by)
     apprentices_.at(apprentice_id).increase_score(by);
 }
 
-void GameState::place_element(case_type element, position pos, unsigned apprentice_id)
+void GameState::place_element(case_type element, position pos,
+                              unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     int id = apprentices_.at(apprentice_id).get_internal_id();
@@ -235,19 +240,21 @@ case_type GameState::get_cell_type(position pos, unsigned apprentice_id) const
     return workbenches_[id][pos.ligne][pos.colonne];
 }
 
-element_propriete GameState::get_element_property(case_type element) {
-    switch(element) {
-        case PLOMB:
-        case FER:
-        case CUIVRE:
-            return TRANSMUTABLE_OR;
+element_propriete GameState::get_element_property(case_type element)
+{
+    switch (element)
+    {
+    case PLOMB:
+    case FER:
+    case CUIVRE:
+        return TRANSMUTABLE_OR;
 
-        case SOUFRE:
-        case MERCURE:
-            return TRANSMUTABLE_CATALYSEUR;
+    case SOUFRE:
+    case MERCURE:
+        return TRANSMUTABLE_CATALYSEUR;
 
-        default:
-            return AUCUNE;
+    default:
+        return AUCUNE;
     }
 }
 
