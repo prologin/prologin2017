@@ -177,6 +177,8 @@ public:
 
     static constexpr echantillon default_sample = {PLOMB, FER};
 
+    /// Output all data contained by the gamestate on cout, for debug
+    void print_state_debug() const;
 private:
     std::unordered_map<unsigned, Apprentice> apprentices_;
     std::array<unsigned, 2> apprentices_ids_;

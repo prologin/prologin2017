@@ -443,3 +443,65 @@ void GameState::change_workbench_case(position pos, case_type to,
                                      internal_apprentice_id);
     }
 }
+
+void GameState::print_state_debug() const
+{
+    std::cout << "===========  Printing game state" << std::endl;
+    static const char letter[] = {'.', 'P', 'F', 'C', 'S', 'M'};
+    for (int id : apprentices_ids_)
+    {
+        auto& apprentice = apprentices_.at(id);
+        std::cout << "Player " << id << " (score " << apprentice.get_score()
+                  << ") did:" << std::endl;
+        for (auto& action : apprentice.get_actions())
+        {
+            switch (action.atype)
+            {
+            case ACTION_PLACER:
+                std::cout << "Place at " << action.pos1.ligne << ", "
+                          << action.pos1.colonne << " and " << action.pos2.ligne
+                          << ", " << action.pos2.colonne << std::endl;
+                break;
+            case ACTION_TRANSMUTER:
+                std::cout << "Transmute at " << action.pos1.ligne << ", "
+                          << action.pos1.colonne << std::endl;
+                break;
+            case ACTION_CATALYSER:
+                std::cout << "Catalyze at " << action.pos1.ligne << ", "
+                          << action.pos1.colonne << " ("
+                          << (action.id_apprenti == id ? "himself" : "other")
+                          << ") to " << letter[action.nouvelle_case]
+                          << std::endl;
+                break;
+            default:
+                std::cout << "Unknown action " << action.atype << std::endl;
+            }
+        }
+    }
+    for (int l = 0; l < TAILLE_ETABLI; ++l)
+    {
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+            std::cout << letter[workbenches_[0][l][c]] << " ";
+        std::cout << " |  ";
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+            std::cout << letter[workbenches_[1][l][c]] << " ";
+        std::cout << std::endl;
+    }
+    for (int l = 0; l < TAILLE_ETABLI; ++l)
+    {
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+            printf("%2d ", connected_components_[0][l][c]);
+        std::cout << " |  ";
+        for (int c = 0; c < TAILLE_ETABLI; ++c)
+            printf("%2d ", connected_components_[1][l][c]);
+        std::cout << std::endl;
+    }
+    std::cout << "turn " << turn_ << ", " << catalysts_
+              << " catalyst(s), sample placed: " << (sample_placed_ ? "y" : "n")
+              << ", sample given: " << (sample_placed_ ? "y" : "n")
+              << std::endl;
+    std::cout << "sample: " << letter[sample_.element1] << ", "
+              << letter[sample_.element2]
+              << ", next: " << letter[next_sample_.element1] << ", "
+              << letter[next_sample_.element2] << std::endl;
+}
