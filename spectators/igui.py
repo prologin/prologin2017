@@ -52,6 +52,7 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
 
         master.bind('n', self.end)
         master.bind('u', self.undo)
+        master.bind('r', self.rotate)
         self.canvas.bind("<Button-1>", self.add_sample)
         self.canvas.bind("<Button-3>", self.activate)
         self.canvas.bind('<Motion>', self.motion)
@@ -156,18 +157,21 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
             self.last_selected = selected
             self.update(False)
 
+    def rotate(self, event):
+        if self.direction[0] == -1:
+            self.direction = (0, -1)
+        elif self.direction[1] == -1:
+            self.direction = (1, 0)
+        elif self.direction[0] == 1:
+            self.direction = (0, 1)
+        else:
+            self.direction = (-1, 0)
+        self.update(False)
+
     def select_next_sample(self, event):
         x = event.x // CASE_SIZE
         if x < 3:
-            if self.direction[0] == -1:
-                self.direction = (0, -1)
-            elif self.direction[1] == -1:
-                self.direction = (1, 0)
-            elif self.direction[0] == 1:
-                self.direction = (0, 1)
-            else:
-                self.direction = (-1, 0)
-            self.update(False)
+            self.rotate(event)
         elif TAILLE_ETABLI + 1 <= x < TAILLE_ETABLI + 3:
             x -= TAILLE_ETABLI + 1
             l = list(case_type)
