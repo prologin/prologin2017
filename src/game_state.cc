@@ -86,7 +86,9 @@ int GameState::transmute_catalyst_scoreval(int area)
 
 int GameState::transmute_catalyst_outcome(int area)
 {
-    return area / 2;
+    if (area <= 2)
+        return 0;
+    return (area - 1) / 2;
 }
 
 bool GameState::valid_player(unsigned apprentice_id) const
