@@ -1,0 +1,8 @@
+apidoc.tex
+finale.tex
+useapi.tex
+subject.pdf
+*.aux
+*.idx
+*.log
+*.toc
