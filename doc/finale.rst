@@ -67,6 +67,7 @@ Déroulement d'une partie
 ------------------------
 
 Une partie dure 150 tours. Chaque apprenti jouera donc 75 tours chacun.
+
 Le vainqueur sera désigné comme étant l'apprenti ayant amassé le plus d'or pendant la partie.
 
 ---------------------
@@ -87,7 +88,7 @@ Pour inculper la solidarité et exacerber l'entraide entre les apprentis, il
 leur est demandé de se rendre service et de ne jamais se servir
 soi-même dans la réserve.
 
-À chaque tour N, les deux apprentis créent un échantillon pour leur adversaire,
+À chaque tour N, un apprenti crée un échantillon pour son adversaire,
 échantillon qui sera posé au tour N+1. Si vous oubliez de créer cet
 échantillon, votre adversaire recevra un échantillon identique à celui qu'il a
 lui-même créé au tour précédent.
@@ -103,6 +104,8 @@ Poser un échantillon
 Une fois l'échantillon en main, vous devez délicatement le déposer sur votre
 établi.
 
+* Les deux éléments composant l'échantillon doivent êtres placés sur des
+  emplacements adjacents.
 * Un élément au moins de l'échantillon doit être posé à un emplacement adjacent
   à un élément de même type.
 * Si il n'y a aucun élément identique entre l'échantillon et ce qui est déjà
@@ -115,9 +118,13 @@ Une fois l'échantillon en main, vous devez délicatement le déposer sur votre
 Transmuter
 ----------
 
-Lorsque vous possédez une zone d'un certain métal (cuivre, fer ou plomb), vous
-pouvez lancer la *transmutation* en or. Plus cette zone est grande, plus vous
-obtiendrez d'or.
+Lorsque vous possédez une zone d'un certain élément, vous pouvez lancer une
+*transmutation*.
+
+Les métaux (cuivre, fer ou plomb) sont sujets à une
+transmutation *forte* qui produit beaucoup d'or. Le mercure et le soufre sont
+quand eux sujets à une transmutation *faible* qui produit principalement des
+catalyseurs, ainsi qu'une quantité faible d'or.
 
 .. raw:: latex
 
@@ -165,8 +172,22 @@ obtiendrez d'or.
        \includegraphics[width=\textwidth]{img/material-catalyst}
        \caption{Catalyseur}
      \end{subfigure}
+     \begin{subfigure}[b]{0.4cm}
+       $+$
+       \caption{\newline} % latex hacks are teh shit
+     \end{subfigure}
+     \begin{subfigure}[b]{0.5cm}
+       \includegraphics[width=\textwidth]{img/material-gold}
+       \caption{Or}
+     \end{subfigure}
    \end{figure}
 
+
+Une zone est une région de cases adjacentes contenant le même élément.
+Plus cette zone est grande, plus vous obtiendrez d'or (ou de catalyseurs).
+Une zone peut être définie uniquement par une case en faisant partie, puisque
+toutes les cases adjacentes du même type (et récursivement) en feront alors
+partie.
 
 Vous pouvez transmuter un unique bloc de métal. Néanmoins, cela revient à
 détruire ce bout d'élément et donc à perdre de l'or - stratégie aussi
