@@ -1,0 +1,1029 @@
+
+
+%
+% This file was generated using gen/make_tex.rtex
+% Do not modify unless you are absolutely sure of what you are doing
+%
+
+
+
+\noindent \begin{tabular}{lp{11cm}}
+\textbf{Constante:} & TAILLE\_ETABLI \\
+\textbf{Valeur:} & 6 \\
+\textbf{Description:} & Taille de l’établi de travail (longueur et largeur) \\
+\end{tabular}
+\vspace{0.2cm} \\
+
+
+
+\noindent \begin{tabular}{lp{11cm}}
+\textbf{Constante:} & NB\_TOURS \\
+\textbf{Valeur:} & 150 \\
+\textbf{Description:} & Nombre de tours à jouer avant la fin de l’affrontement \\
+\end{tabular}
+\vspace{0.2cm} \\
+
+
+
+\noindent \begin{tabular}{lp{11cm}}
+\textbf{Constante:} & NB\_TYPE\_CASES \\
+\textbf{Valeur:} & 6 \\
+\textbf{Description:} & Taille de l’énumération ``case\_type`` \\
+\end{tabular}
+\vspace{0.2cm} \\
+
+
+
+
+
+\functitle{case\_type} \\
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Types de cases \\
+Valeurs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{VIDE}~: & Case vide \\
+    
+        \textsl{PLOMB}~: & Plomb ; transmutable en or \\
+    
+        \textsl{FER}~: & Fer ; transmutable en or \\
+    
+        \textsl{CUIVRE}~: & Cuivre ; transmutable en or \\
+    
+        \textsl{SOUFRE}~: & Soufre ; transmutable en catalyseur \\
+    
+        \textsl{MERCURE}~: & Mercure ; transmutable en catalyseur \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{element\_propriete} \\
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Types de propriétés des éléments \\
+Valeurs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{AUCUNE}~: & Les cases vides ne contiennent pas d’élément, et n’ont donc aucune propriété \\
+    
+        \textsl{TRANSMUTABLE\_OR}~: & Élement transmutable en or \\
+    
+        \textsl{TRANSMUTABLE\_CATALYSEUR}~: & Élément transmutable en catalyseur \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{erreur} \\
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Erreurs possibles \\
+Valeurs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{OK}~: & L’action a été exécutée avec succès \\
+    
+        \textsl{POSITION\_INVALIDE}~: & La position spécifiée n’est pas sur l’établi \\
+    
+        \textsl{PLACEMENT\_INVALIDE}~: & Les deux positions ne correspondent pas à des cases adjacentes \\
+    
+        \textsl{PLACEMENT\_IMPOSSIBLE}~: & Les cases ciblées ne sont pas vides \\
+    
+        \textsl{PLACEMENT\_INCORRECT}~: & Un des deux éléments de l'échantillon doit être placé adjacent à un élément du même type déjà présent sur l'établi \\
+    
+        \textsl{CASE\_VIDE}~: & La case ciblée est vide \\
+    
+        \textsl{ECHANTILLON\_INCOMPLET}~: & L’échantillon doit contenir deux éléments. \\
+    
+        \textsl{ECHANTILLON\_INVALIDE}~: & L’échantillon doit contenir au moins un des éléments de l’échantillon reçu auparavant \\
+    
+        \textsl{AUCUN\_CATALYSEUR}~: & Aucun catalyseur disponible \\
+    
+        \textsl{CATALYSE\_INVALIDE}~: & L'élément de destination ne peut pas être vide. \\
+    
+        \textsl{DEJA\_POSE}~: & L’échantillon a déjà été posé ce tour-ci \\
+    
+        \textsl{DEJA\_DONNE}~: & L’échantillon a déjà été donné ce tour-ci \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{action\_type} \\
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Types d’actions \\
+Valeurs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{ACTION\_PLACER}~: & Action ``placer\_echantillon`` \\
+    
+        \textsl{ACTION\_TRANSMUTER}~: & Action ``transmuter`` \\
+    
+        \textsl{ACTION\_CATALYSER}~: & Action ``catalyser`` \\
+    
+        \textsl{ACTION\_DONNER\_ECHANTILLON}~: & Action ``donner\_echantillon`` \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+
+
+\functitle{position}
+
+\begin{lst-c++}
+struct position {
+    int ligne;
+    int colonne;
+};
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Position sur la carte, donnée par deux coordonnées \\
+Champs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{ligne}~: & Coordonnée : ligne \\
+    
+        \textsl{colonne}~: & Coordonnée : colonne \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{echantillon}
+
+\begin{lst-c++}
+struct echantillon {
+    case_type element1;
+    case_type element2;
+};
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Échantillon, défini par deux types d’éléments \\
+Champs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{element1}~: & Élément 1 \\
+    
+        \textsl{element2}~: & Élément 2 \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{position\_echantillon}
+
+\begin{lst-c++}
+struct position_echantillon {
+    position pos1;
+    position pos2;
+};
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Position d’un échantillon, donnée par deux positions adjacentes \\
+Champs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{pos1}~: & Position de l’élément 1 de l’échantillon \\
+    
+        \textsl{pos2}~: & Position de l’élément 2 de l’échantillon \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+\functitle{action\_hist}
+
+\begin{lst-c++}
+struct action_hist {
+    action_type atype;
+    position pos1;
+    position pos2;
+    int id_apprenti;
+    case_type nouvelle_case;
+};
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Action représentée dans l’historique. L’action ``placer\_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id\_apprenti`` et ``nouvelle\_case``. L’action ``donner\_echantillon`` n’est pas représentée dans l’historique, car ``echantillon\_tour`` donne l’information. \\
+Champs~: &
+\small
+\begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
+    
+        \textsl{atype}~: & Type de l’action \\
+    
+        \textsl{pos1}~: & Position, pour les actions placer (1er élément), transmuter et catalyser \\
+    
+        \textsl{pos2}~: & Position, pour l’action placer (2e élément) \\
+    
+        \textsl{id\_apprenti}~: & ID de l’apprenti, pour l’action catalyser \\
+    
+        \textsl{nouvelle\_case}~: & Élément pour l’action catalyser \\
+    
+\end{tabular} \\
+\end{tabular}
+
+
+
+
+\begin{minipage}{\linewidth}
+\functitle{placer\_echantillon}
+
+\begin{lst-c++}
+erreur placer_echantillon(position pos1, position pos2)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Place l’échantillon du tour sur l’établi, avec les coordonnées de deux cases adjacentes. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos1}~: & Case du terrain où doit être posé le premier élément de l’échantillon \\
+      
+    
+      
+        \textsl{pos2}~: & Case du terrain où doit être posé le second élément de l’échantillon \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{transmuter}
+
+\begin{lst-c++}
+erreur transmuter(position pos)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Provoque la transformation chimique de l’élément à la case ciblée, ainsi que tous les éléments adjacents du même type, ceux du même type adjacents à ces derniers, etc. Ils disparaissent alors tous dans leur transmutation en or ou en catalyseur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case de l’établi dont la région doit être activée \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{catalyser}
+
+\begin{lst-c++}
+erreur catalyser(position pos, int id_apprenti, case_type terrain)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Utilise un catalyseur sur la case ciblée de l'apprenti indiqué. Transforme l’ancien élément en l’élément indiqué. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case de l’élément qui doit être transmuté \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Identifiant de l’apprenti dont l’élément est ciblé \\
+      
+    
+      
+        \textsl{terrain}~: & Type d’élément qui doit remplacer l’ancien \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{donner\_echantillon}
+
+\begin{lst-c++}
+erreur donner_echantillon(echantillon echantillon_donne)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Définit l’échantillon que l’adversaire recevra à son prochain tour. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{echantillon\_donne}~: & Échantillon que l’adversaire recevra à son prochain tour \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{type\_case}
+
+\begin{lst-c++}
+case_type type_case(position pos, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie le type d’une case donnée, ou 0 si la case est invaide. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case choisie \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti choisi \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{est\_vide}
+
+\begin{lst-c++}
+bool est_vide(position pos, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique si une case donnée est vide ou contient un élément. Renvoie faux en cas d'erreur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case choisie \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti choisi \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{propriete\_case}
+
+\begin{lst-c++}
+element_propriete propriete_case(position pos, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la propriété de l’élément sur une case donnée. Un élément invalide n'a pas de propriété. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case choisie \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti choisi \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{propriete\_case\_type}
+
+\begin{lst-c++}
+element_propriete propriete_case_type(case_type ctype)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la propriété d’un type de case donné. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{ctype}~: & Type de case \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{taille\_region}
+
+\begin{lst-c++}
+int taille_region(position pos, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la taille de la région à laquelle appartient un élément. Renvoie -1 si la position est invalide. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case choisie \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti choisi \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{positions\_region}
+
+\begin{lst-c++}
+position array positions_region(position pos, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la liste des positions des cases composant la région à laquelle appartient un élément donné. Renvoie une liste vide en cas d'erreur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{pos}~: & Case choisie \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti choisi \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{placement\_possible\_echantillon}
+
+\begin{lst-c++}
+bool placement_possible_echantillon(echantillon echantillon_a_placer,
+                                        position pos1, position pos2, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Détermine si le placement d’un échantillon est valide. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{echantillon\_a\_placer}~: & Échantillon à placer \\
+      
+    
+      
+        \textsl{pos1}~: & Case du terrain où doit être posé le premier élément\\ &de l’échantillon \\
+      
+    
+      
+        \textsl{pos2}~: & Case du terrain où doit être posé le second élément de\\ &l’échantillon \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti possédant l’établi où poser l’échantillon \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{placements\_possible\_echantillon}
+
+\begin{lst-c++}
+position_echantillon array placements_possible_echantillon(
+        echantillon echantillon_a_placer, int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la liste des placements possibles pour un échantillon donné sur l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{echantillon\_a\_placer}~: & Échantillon à placer \\
+      
+    
+      
+        \textsl{id\_apprenti}~: & Apprenti possédant l’établi où poser l’échantillon \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{historique}
+
+\begin{lst-c++}
+action_hist array historique()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la liste des actions jouées par l’adversaire pendant son tour, dans l’ordre chronologique. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{moi}
+
+\begin{lst-c++}
+int moi()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie votre numéro d’apprenti. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{adversaire}
+
+\begin{lst-c++}
+int adversaire()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie le numéro d’apprenti de votre adversaire. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{score}
+
+\begin{lst-c++}
+int score(int id_apprenti)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la quantité d’or amassée par l’apprenti désigné par le numéro ``id\_apprenti``. Renvoie 0 si ``id\_apprenti`` est invalide (attention, le score d’un apprenti valide peut aussi être 0). \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{id\_apprenti}~: & Identifiant de l’apprenti \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{tour\_actuel}
+
+\begin{lst-c++}
+int tour_actuel()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie le numéro du tour actuel. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{annuler}
+
+\begin{lst-c++}
+bool annuler()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Annule la dernière action. Renvoie ``false`` quand il n’y a pas d’action à annuler ce tour-ci. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{nombre\_catalyseurs}
+
+\begin{lst-c++}
+int nombre_catalyseurs()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique le nombre de catalyseurs en votre possession. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{echantillon\_tour}
+
+\begin{lst-c++}
+echantillon echantillon_tour()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique l’échantillon reçu pour ce tour. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{a\_pose\_echantillon}
+
+\begin{lst-c++}
+bool a_pose_echantillon()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique si l’échantillon reçu pour ce tour a déjà été posé. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{a\_donne\_echantillon}
+
+\begin{lst-c++}
+bool a_donne_echantillon()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique si un échantillon a déjà été donné ce tour. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{quantite\_transmutation\_or}
+
+\begin{lst-c++}
+int quantite_transmutation_or(int taille_region)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la quantité d’or (et donc le score) obtenue par la transmutation de ``taille\_region`` éléments transmutables en or. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{taille\_region}~: & Nombre d’éléments d’une région à transmuter \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{quantite\_transmutation\_catalyseur}
+
+\begin{lst-c++}
+int quantite_transmutation_catalyseur(int taille_region)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la quantité de catalyseurs obtenue par la transmutation de ``taille\_region`` éléments transmutables en catalyseur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{taille\_region}~: & Nombre d’éléments d’une région à transmuter \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{quantite\_transmutation\_catalyseur\_or}
+
+\begin{lst-c++}
+int quantite_transmutation_catalyseur_or(int taille_region)
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Renvoie la quantité d’or obtenue par la transmutation de ``taille\_region`` éléments transmutables en catalyseur. \\
+
+
+Parametres~: &
+\begin{tabular}[t]{@{\extracolsep{0pt}}ll}
+    
+    
+      
+        \textsl{taille\_region}~: & Nombre d’éléments d’une région à transmuter \\
+      
+    
+  \end{tabular} \\
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{echantillon\_defaut\_premier\_tour}
+
+\begin{lst-c++}
+echantillon echantillon_defaut_premier_tour()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Indique l’échantillon par défaut lors du premier tour \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\functitle{afficher\_etablis}
+
+\begin{lst-c++}
+void afficher_etablis()
+\end{lst-c++}
+
+\noindent
+\begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
+Description~: & Affiche l'état actuel des deux établis dans la console. \\
+
+
+
+
+
+
+
+\end{tabular} \\[0.3cm]
+\end{minipage}
+
+
