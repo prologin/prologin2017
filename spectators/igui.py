@@ -23,7 +23,11 @@ def case_to_str(case):
 def postion_from_mouse(event):
     x = event.x // CASE_SIZE
     y = event.y // CASE_SIZE
-    return (x, y)
+    w = 0
+    if x >= TAILLE_ETABLI + 1:
+        x -= TAILLE_ETABLI + 1
+        w = 1
+    return (x, y, w)
 
 
 class Application(tk.Frame):  # pylint: disable=too-many-ancestors
@@ -44,7 +48,7 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
         self.sample = (case_type.VIDE, case_type.VIDE)
         self.next_sample = (case_type.VIDE, case_type.VIDE)
 
-        self.last_selected = (-1, -1)
+        self.last_selected = (-1, -1, -1)
         self.placed = False
         self.my_score = 0
         self.other_score = 0
@@ -81,18 +85,18 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
 
     def draw_grid(self):
         helv = tkFont.Font(family='Helvetica', size=int(CASE_SIZE * 0.8), weight='bold')
-        if self.last_selected != (-1, -1):
-            wb = 0
-            x, y = self.last_selected
+        if self.last_selected != (-1, -1, -1):
+            x, y, wb = self.last_selected
             offset = 1 if wb == 0 else 1 + (TAILLE_ETABLI + 1) * CASE_SIZE
             color = "#AAAAAA" if self.catalyzers == 0 else "yellow"
-            self.canvas.create_rectangle(
-                offset + x * CASE_SIZE, offset + y * CASE_SIZE,
-                offset + (x + 1) * CASE_SIZE, offset + (y + 1) * CASE_SIZE,
-                fill=color)
+            if wb == 0 or self.catalyzers > 0:
+                self.canvas.create_rectangle(
+                    offset + x * CASE_SIZE, 1 + y * CASE_SIZE,
+                    offset + (x + 1) * CASE_SIZE, 1 + (y + 1) * CASE_SIZE,
+                    fill=color)
             if not self.placed and placement_possible_echantillon(self.sample, (x, y),
                                                                   (x + self.direction[0], y + self.direction[1]),
-                                                                  moi()):
+                                                                  moi()) and wb == 0:
                 self.canvas.create_text((offset + (x + 0.5) * CASE_SIZE + 5,
                                          (y + 0.5) * CASE_SIZE + 5), text=case_to_str(self.sample[0]), font=helv,
                                         fill="blue")
@@ -146,7 +150,7 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
 
     def end(self, event):
         donner_echantillon(self.next_sample)
-        self.last_selected = (-1, -1)
+        self.last_selected = (-1, -1, -1)
         root.quit()
 
     def undo(self, event):
@@ -154,23 +158,25 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
         self.update()
 
     def add_sample(self, event):
-        x, y = postion_from_mouse(event)
-        placer_echantillon((x, y), (x + self.direction[0], y + self.direction[1]))
-        self.update()
+        x, y, w = postion_from_mouse(event)
+        if w == 0:
+            placer_echantillon((x, y), (x + self.direction[0], y + self.direction[1]))
+            self.update()
 
     def activate(self, event):
-        x, y = postion_from_mouse(event)
+        x, y, w = postion_from_mouse(event)
         if self.catalyzers == 0:
-            transmuter((x, y))
+            if w == 0:
+                transmuter((x, y))
         else:
-            catalyser((x, y), moi(), self.catalyze_to)
+            catalyser((x, y), moi() if w == 0 else adversaire(), self.catalyze_to)
         self.update()
 
     def motion(self, event):
         selected = postion_from_mouse(event)
-        x, y = selected
+        x, y, w = selected
         if not (x >= 0 and y >= 0 and x < TAILLE_ETABLI and y < TAILLE_ETABLI):
-            selected = (-1, -1)
+            selected = (-1, -1, -1)
         if selected != self.last_selected:
             self.last_selected = selected
             self.update(False)
