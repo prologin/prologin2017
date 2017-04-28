@@ -67,8 +67,12 @@ Déroulement d'une partie
 ------------------------
 
 Une partie dure 150 tours. Chaque apprenti jouera donc 75 tours chacun.
-Initialement les deux établis sont vides. Le premier apprenti, choisi au hasard, disposera d'un échantillon par défaut composé de plomb et de fer.
-Le vainqueur sera désigné comme étant l'apprenti ayant amassé le plus d'or pendant la partie.
+
+Initialement les deux établis sont vides. Le premier apprenti, choisi au
+hasard, disposera d'un échantillon par défaut composé de plomb et de fer.
+
+Le vainqueur sera désigné comme étant l'apprenti ayant amassé le plus d'or
+pendant la partie.
 
 ---------------------
 Déroulement d'un tour
