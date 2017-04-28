@@ -9,7 +9,7 @@ constant:
 
   -
     cst_name: NB_TOURS
-    cst_val: 100
+    cst_val: 150
     cst_comment: Nombre de tours à jouer avant la fin de l’affrontement
 
   -

@@ -26,7 +26,7 @@
 #define TAILLE_ETABLI 6
 
 /// Nombre de tours à jouer avant la fin de l’affrontement
-#define NB_TOURS 100
+#define NB_TOURS 150
 
 /// Taille de l’énumération ``case_type``
 #define NB_TYPE_CASES 6
