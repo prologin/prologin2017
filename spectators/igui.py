@@ -32,9 +32,11 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
         self.pack()
 
         size = (TAILLE_ETABLI * CASE_SIZE) * 2 + CASE_SIZE + 2
-        self.canvas = tk.Canvas(self, height=size / 2 + CASE_SIZE, width=size)
+        self.canvas = tk.Canvas(self, height=size / 2 + CASE_SIZE,
+                width=size + TAILLE_ETABLI * CASE_SIZE)
         self.canvas.pack()
-        self.canvas_next = tk.Canvas(self, height=4 * CASE_SIZE, width=size)
+        self.canvas_next = tk.Canvas(self, height=4 * CASE_SIZE,
+                width=size + TAILLE_ETABLI * CASE_SIZE)
         self.canvas_next.pack(side=tk.BOTTOM)
 
         self.me = {}
@@ -47,6 +49,8 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
         self.my_score = 0
         self.other_score = 0
         self.direction = (1, 0)
+        self.catalyze_to = case_type.PLOMB
+        self.catalyzers = 0
 
         self.draw_grid()
 
@@ -70,6 +74,7 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
             self.placed = a_pose_echantillon()
             self.my_score = score(me)
             self.other_score = score(other)
+            self.catalyzers = nombre_catalyseurs()
         self.canvas.delete("all")
         self.canvas_next.delete("all")
         self.draw_grid()
@@ -80,10 +85,11 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
             wb = 0
             x, y = self.last_selected
             offset = 1 if wb == 0 else 1 + (TAILLE_ETABLI + 1) * CASE_SIZE
+            color = "#AAAAAA" if self.catalyzers == 0 else "yellow"
             self.canvas.create_rectangle(
                 offset + x * CASE_SIZE, offset + y * CASE_SIZE,
                 offset + (x + 1) * CASE_SIZE, offset + (y + 1) * CASE_SIZE,
-                fill="#AAAAAA")
+                fill=color)
             if not self.placed and placement_possible_echantillon(self.sample, (x, y),
                                                                   (x + self.direction[0], y + self.direction[1]),
                                                                   moi()):
@@ -108,14 +114,20 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
                 self.canvas.create_text((offset + (pos[0] + 0.5) * CASE_SIZE + 5,
                                          (pos[1] + 0.5) * CASE_SIZE + 5), text=case_to_str(case), font=helv)
         helv16 = tkFont.Font(family='Helvetica', size=16)
+        self.canvas.create_text((TAILLE_ETABLI + 1) * 2 * CASE_SIZE, 20,
+                                text="Tour : {}".format(tour_actuel()), font=helv16, anchor="nw")
         self.canvas.create_text(0, CASE_SIZE * (TAILLE_ETABLI),
                                 text="Score : {}".format(self.my_score), font=helv16, anchor="nw")
         self.canvas.create_text((TAILLE_ETABLI + 1) * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI),
                                 text="Score : {}".format(self.other_score), font=helv16, anchor="nw")
+        self.canvas.create_text((TAILLE_ETABLI * 2 + 2) * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI),
+                                text="Catalyseurs : {}".format(self.catalyzers), font=helv16, anchor="nw")
         self.canvas.create_text(0, CASE_SIZE * (TAILLE_ETABLI + 0.8),
                                 text="Échantillon du tour :", font=helv16, anchor="nw")
         self.canvas.create_text((TAILLE_ETABLI + 1) * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI + 0.8),
                                 text="Prochain échantillon :", font=helv16, anchor="nw")
+        self.canvas.create_text((TAILLE_ETABLI + 1) * 2 * CASE_SIZE, CASE_SIZE * (TAILLE_ETABLI + 0.8),
+                                text="Calalyser en :", font=helv16, anchor="nw")
         color = "#AAAAAA" if self.placed else "black"
         self.canvas_next.create_text(CASE_SIZE, CASE_SIZE,
                                      text=case_to_str(self.sample[0]), font=helv, anchor="nw", fill=color)
@@ -128,6 +140,9 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
                                      text=case_to_str(self.next_sample[0]), font=helv, anchor="nw", fill=color)
         self.canvas_next.create_text((TAILLE_ETABLI + 2) * CASE_SIZE, 0,
                                      text=case_to_str(self.next_sample[1]), font=helv, anchor="nw", fill=color)
+        color = "black" if self.catalyzers > 0 else "#AAAAAA"
+        self.canvas_next.create_text((TAILLE_ETABLI + 1) * 2 * CASE_SIZE, 0,
+                                     text=case_to_str(self.catalyze_to), font=helv, anchor="nw", fill=color)
 
     def end(self, event):
         donner_echantillon(self.next_sample)
@@ -145,7 +160,10 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
 
     def activate(self, event):
         x, y = postion_from_mouse(event)
-        transmuter((x, y))
+        if self.catalyzers == 0:
+            transmuter((x, y))
+        else:
+            catalyser((x, y), moi(), self.catalyze_to)
         self.update()
 
     def motion(self, event):
@@ -180,6 +198,10 @@ class Application(tk.Frame):  # pylint: disable=too-many-ancestors
                 self.next_sample = (v, self.next_sample[1])
             else:
                 self.next_sample = (self.next_sample[0], v)
+            self.update(False)
+        elif (TAILLE_ETABLI + 1) * 2 <= x < (TAILLE_ETABLI + 2) * 2:
+            l = list(case_type)
+            self.catalyze_to = l[(l.index(self.catalyze_to) % (len(l) - 1)) + 1]
             self.update(False)
 
 
