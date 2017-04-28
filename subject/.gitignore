@@ -2,7 +2,11 @@ apidoc.tex
 finale.tex
 useapi.tex
 subject.pdf
+slides.pdf
 *.aux
 *.idx
 *.log
 *.toc
+*.nav
+*.out
+*.snm
