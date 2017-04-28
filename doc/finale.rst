@@ -62,6 +62,12 @@ en a cinq :
 Un échantillon est une paire d'éléments. Il peut être composé de deux
 éléments identiques ou distincts.
 
+------------------------
+Déroulement d'une partie
+------------------------
+
+Une partie dure 150 tours. Chaque apprenti jouera donc 75 tours chacun.
+Le vainqueur sera désigné comme étant l'apprenti ayant amassé le plus d'or pendant la partie.
 
 ---------------------
 Déroulement d'un tour
