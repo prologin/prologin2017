@@ -119,6 +119,9 @@ Une fois l'échantillon en main, vous devez délicatement le déposer sur votre
   assassiner discrètement votre compère qui - n'en doutez pas ! - savait
   pertinemment quel tour il était en train de vous jouer.
 
+Si vous ne posez pas d'échantillon durant le tour, l'intégralité de votre
+plateau sera vidé à la fin de votre tour, alors n'oubliez pas !
+
 Transmuter
 ----------
 
