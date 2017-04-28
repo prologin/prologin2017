@@ -116,7 +116,8 @@
         \begin{itemize}
             \item On ne se sert pas soi-même dans la réserve!
             \item On apporte un échantillon à son camarade
-            \item À son tour, on choisi l'échantillon qu'aura l'autre au sien
+            \item Au tour $N$, choisi l'échantillon du tour $N + 1$ de
+                l'adversaire
         \end{itemize}
     \end{block}
     \begin{block}{Contraintes}
@@ -131,7 +132,7 @@
 
 \begin{frame}
     \frametitle{Transmutation}
-    \begin{block}{Voie sèche}
+    \begin{block}{Transmutation forte}
         Transforme \textbf{cuivre}, \textbf{fer} ou \textbf{plomb}, en or.
         \\
         \begin{tabular}{ccccc}
@@ -143,7 +144,7 @@
             Plomb & Fer & Cuivre & & Or
         \end{tabular}
     \end{block}
-    \begin{block}{Catalysation}
+    \begin{block}{Transmutation faible}
         Transforme \textbf{soufre} ou \textbf{mercure} en catalyseur
         \\
         \begin{tabular}{cccccc}
@@ -165,21 +166,22 @@
         \begin{itemize}
             \item Tout une zone d'éléments du même type adjacent.
             \item Impossible de sélectionner une sous-zone
+            \item Disparaît après transmutation
         \end{itemize}
     \end{block}
     \begin{block}{Points}
         Une zone de taille $t$ rapporte $-3$ d'or si $t = 1$, sinon:
         \begin{itemize}
-            \item voie sèche: $\lfloor \frac{t^2}4 \rfloor - 1$ d'or
-            \item catalysation: $t - 2$ d'or et
+            \item forte: $\lfloor \frac{t^2}4 \rfloor - 1$ d'or
+            \item faible: $t - 2$ d'or et
                 $\lfloor \frac{t-1}2 \rfloor$ catalyseurs
         \end{itemize}
         \begin{tabular}{l|c|c|c|c|c|c|c|c|c|c|c}
             Taille & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & ..\\
             \hline
-            Or voie sèche   & -3 & 0 & 1 & 3 & 5 & 8 & 11 & 15 & 19 & 24 & ..\\
+            Or (forte)   & -3 & 0 & 1 & 3 & 5 & 8 & 11 & 15 & 19 & 24 & ..\\
             \hline
-            Or catalysation & -3 & 0 & 1 & 2 & 3 & 4 & 5  & 6  & 7  & 8  & ..\\
+            Or (faible)  & -3 & 0 & 1 & 2 & 3 & 4 & 5  & 6  & 7  & 8  & ..\\
             \hline
             Catalyseurs     & 0  & 0 & 1 & 1 & 2 & 2 & 3  & 3  & 4  & 4  & ..
         \end{tabular}
@@ -221,6 +223,7 @@
         \end{itemize}
     \end{block}
     \begin{block}{Actions}
+        Les actions possibles sont (sans ordre):
         \begin{itemize}
             \item Poser son échantillon: 1 fois, \textbf{obligatoire}
             \item Donner un échantillon pour l'adversaire: 1 fois
