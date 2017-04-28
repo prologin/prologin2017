@@ -197,6 +197,15 @@ Vous pouvez transmuter un unique bloc de métal. Néanmoins, cela revient à
 détruire ce bout d'élément et donc à perdre de l'or - stratégie aussi
 audacieuse que dangereuse.
 
+.. raw:: latex
+
+   Une transformation forte d'une zone de taille $t$ fait perdre $3$ d'or si
+   $t = 1$, sinon elle en fait gagner $\lfloor \frac{t^2}4 \rfloor - 1$.
+
+   Une transformation faible d'une zone de taille $t$ fait perdre $3$ d'or si
+   $t = 1$, sinon elle en fait gagner $t-2$, et fait gagner
+   $\lfloor \frac{t-1}2 \rfloor$ catalyseurs.
+
 +-------------+----+----+----+----+----+----+----+----+----+----+----+
 | Taille      | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | .. |
 +=============+====+====+====+====+====+====+====+====+====+====+====+
