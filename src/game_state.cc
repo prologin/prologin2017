@@ -74,7 +74,7 @@ int GameState::transmute_gold_scoreval(int area)
 {
     if (area <= 1)
         return -3;
-    return (area - 2) * (area - 2);
+    return area * area / 4 - 1;
 }
 
 int GameState::transmute_catalyst_scoreval(int area)
