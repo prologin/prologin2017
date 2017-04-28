@@ -179,7 +179,6 @@ public:
     void hist_add_catalyze(position pos, unsigned target_apprentice_id,
                            case_type new_type, unsigned apprentice_id);
     void reset_history(unsigned apprentice_id);
-    void synchronize_score(unsigned apprentice_id);
 
     const std::vector<action_hist>& get_history(unsigned apprentice_id) const;
 

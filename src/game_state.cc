@@ -107,10 +107,12 @@ void GameState::reset_turn_state()
 
 void GameState::end_turn(unsigned apprentice_id)
 {
+    assert(apprentices_.count(apprentice_id) != 0);
+    apprentices_.at(apprentice_id).synchronize_score();
+
     // Check that the player placed their sample
     if(!is_sample_placed())
     {
-        assert(apprentices_.count(apprentice_id) != 0);
         int id = apprentices_.at(apprentice_id).get_internal_id();
         wipe_workbench(id);
     }
@@ -375,12 +377,6 @@ void GameState::reset_history(unsigned apprentice_id)
 {
     assert(apprentices_.count(apprentice_id) != 0);
     apprentices_.at(apprentice_id).reset_actions();
-}
-
-void GameState::synchronize_score(unsigned apprentice_id)
-{
-    assert(apprentices_.count(apprentice_id) != 0);
-    apprentices_.at(apprentice_id).synchronize_score();
 }
 
 const std::vector<action_hist>&
