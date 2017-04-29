@@ -22,7 +22,9 @@
 int ActionDonnerEchantillon::check(const GameState* st) const
 {
     if (echantillon_donne_.element1 == VIDE ||
-        echantillon_donne_.element2 == VIDE)
+        echantillon_donne_.element2 == VIDE ||
+        echantillon_donne_.element1 > MERCURE  ||
+        echantillon_donne_.element2 > MERCURE)
         return ECHANTILLON_INCOMPLET;
 
     if (st->was_sample_given())

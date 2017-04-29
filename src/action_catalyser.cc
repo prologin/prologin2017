@@ -28,7 +28,7 @@ int ActionCatalyser::check(const GameState* st) const
     if (!in_board(pos_))
         return POSITION_INVALIDE;
 
-    if (terrain_ == VIDE)
+    if (terrain_ == VIDE || terrain_ > MERCURE)
         return CATALYSE_INVALIDE;
 
     case_type old_cell = st->get_cell_type(pos_, id_apprenti_);
