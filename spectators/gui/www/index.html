@@ -27,7 +27,9 @@
             display: block;
             color: white;
         }
-
+	#instr {
+	    padding: 1em 2em;
+	}
         .player {
             position: absolute;
             width: 50%;
@@ -75,6 +77,10 @@
     <div id="players">
     </div>
 </div>
+<div id="instr">
+  <p><code>SPACE</code> pour avancer automatiquement.</p>
+  <p><code>N</code> pour avancer manuellement.</p>
+</div>
 
 <script src="js/lib/jquery.min.js"></script>
 <script src="js/lib/three.min.js"></script>
@@ -94,6 +100,7 @@
 <script src="js/network.js"></script>
 <script src="js/main.js"></script>
 <script async>
+  var playing = false;
   END_TURN_CALLBACK = function () {
     if (turnIndex === lastTurn) {
       animateWinner();
@@ -115,14 +122,21 @@
         e.preventDefault();
         placeSample();
       });
-      $('html').on('keyup', e => {
-        e.preventDefault();
-        if (e.which == 'R'.charCodeAt(0)) {
-          // rotate
-          cursorSample.rotate();
-        }
-      });
     }
+    $('body').on('keyup', e => {
+      e.preventDefault();
+      if (INTERACTIVE && e.which == 'R'.charCodeAt(0)) {
+        // rotate
+        cursorSample.rotate();
+      } else if (e.which == 'N'.charCodeAt(0) && !animating) {
+        // next (right arrow)
+        send('next');
+      } else if (e.which == 32) {
+        // space: toggle autoplay
+        playing = !playing;
+	if (playing) send('next'); 
+      }
+    });
     connect();
   })();
 </script>

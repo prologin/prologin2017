@@ -16,7 +16,7 @@ let lights = {}, books = {};
 let boardTiles;
 let backoff = 1;
 let tick = 0;
-let animating = false, playing = true;
+let animating = false;
 let mouse = new THREE.Vector2();
 let clock = new THREE.Clock(true);
 let domMain;
@@ -772,6 +772,7 @@ function renderTurn(index) {
   console.assert(playerIdx != undefined);
 
   const board = boardTiles[playerIdx];
+  let actions = [];
 
   if (!player.history.length) {
     const d = .7;
@@ -780,11 +781,10 @@ function renderTurn(index) {
       .easing(TWEEN.Easing.Quadratic.Out)
       .to({x: [x - d, x + d, x - d, x]}, 400)
       .start();
+    actions.push(() => 400);
   }
 
   // unroll history
-  let actions = [];
-
   for (const hist of player.history) {
     if (hist.type == 'ACTION_PLACER') {
       actions.push(() => {
