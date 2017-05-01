@@ -10,7 +10,6 @@ import subprocess
 from aiohttp import web
 import aiohttp
 
-import api
 from state import Reader
 
 logger = logging.Logger(__name__)
@@ -63,8 +62,7 @@ class Server:
         cmd = data['c']
         logging.debug("received WS message: %s", data)
         if cmd == 'hello':
-            first_turn = [api.case_type(type).name
-                          for type in api.echantillon_defaut_premier_tour()]
+            first_turn = ["PLOMB", "FER"]
             self.send('whatsup',
                       firstTurn=first_turn,
                       canSeek=self.state_reader.can_seek(),
