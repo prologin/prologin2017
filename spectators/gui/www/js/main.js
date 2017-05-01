@@ -688,7 +688,7 @@ function renderTurn(index) {
       catalysts[pIdx] += value;
     else
       catalysts[pIdx] = value;
-    $('#player-' + pIdx).find('.catalyst .value').text(value);
+    $('#player-' + pIdx).find('.catalyst .value').text(catalysts[pIdx]);
   }
 
   objEach(turnData.players, (pid, p, pIdx) => {
@@ -828,7 +828,7 @@ function renderTurn(index) {
           if (transmuted.indexOf(idx) != -1)
             return;
           // out of bounds
-          if (!(0 <= idx && idx < BOARD_SIZE * BOARD_SIZE))
+          if (!(0 <= pos.c && pos.c < BOARD_SIZE && 0 <= pos.r && pos.r < BOARD_SIZE))
             return;
           const tile = board[idx];
           if (!tile)
@@ -859,7 +859,7 @@ function renderTurn(index) {
           targetMaterial = API_MATERIAL[hist.new_type],
           pos = hist.pos;
         console.assert(targetMaterial != 'sulfur' && targetMaterial != 'gold');
-        boardTiles[targetPlayerIdx][positionToIndex(pos)].morphTo(targetMaterial);
+        boardTiles[targetPlayerIdx][positionToIndex(pos)].morphTo(targetMaterial, 0);
         setCatalyst(playerIdx, -1, true);
         return 300;
       });
