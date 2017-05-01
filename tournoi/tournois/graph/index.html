@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Classements</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div style="height: 1000px" id="container"></div>
+    <script src="highcharts.js"></script>
+    <script src="exporting.js"></script>
+    <script src="jquery.js"></script>
+    <script type="text/javascript">
+$.getJSON("data.json", function(json) {
+Highcharts.chart('container', {
+    title: {
+        text: 'Tournois intermédiaires'
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            pointStart: 1
+        }
+    },
+    height: 1000,
+    credits: false,
+    series: json
+});
+});
+
+    </script>
+  </body>
+</html>
