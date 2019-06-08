@@ -2,9 +2,9 @@
 
 _url=git@github.com/prologin
 pkgname=prologin2017
-pkgrel=1
-pkgver=r167
-pkgdesc="Stechec2 game: ${pkgver}"
+pkgrel=2
+pkgver=git
+pkgdesc="Stechec2 game: ${pkgname}"
 arch=('x86_64')
 url="http://prologin.org/"
 license=('GPL')
