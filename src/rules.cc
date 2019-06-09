@@ -91,7 +91,7 @@ void Rules::at_player_start(rules::ClientMessenger_sptr)
     {
         sandbox_.execute(champion_partie_init_);
     }
-    catch (utils::SandboxTimeout)
+    catch (utils::SandboxTimeout&)
     {
         FATAL("player_start: timeout");
     }
@@ -108,7 +108,7 @@ void Rules::at_player_end(rules::ClientMessenger_sptr)
     {
         sandbox_.execute(champion_partie_fin_);
     }
-    catch (utils::SandboxTimeout)
+    catch (utils::SandboxTimeout&)
     {
         FATAL("player_end: timeout");
     }
@@ -125,7 +125,7 @@ void Rules::player_turn()
     {
         sandbox_.execute(champion_jouer_tour_);
     }
-    catch (utils::SandboxTimeout)
+    catch (utils::SandboxTimeout&)
     {
         FATAL("player_turn: timeout");
     }
