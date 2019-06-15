@@ -20,9 +20,9 @@
 #include "actions.hh"
 #include "position.hh"
 
-int ActionCatalyser::check(const GameState* st) const
+int ActionCatalyser::check(const GameState& st) const
 {
-    if (st->get_catalysts_number() <= 0)
+    if (st.get_catalysts_number() <= 0)
         return AUCUN_CATALYSEUR;
 
     if (!in_board(pos_))
@@ -31,7 +31,7 @@ int ActionCatalyser::check(const GameState* st) const
     if (terrain_ == VIDE || terrain_ > MERCURE)
         return CATALYSE_INVALIDE;
 
-    case_type old_cell = st->get_cell_type(pos_, id_apprenti_);
+    case_type old_cell = st.get_cell_type(pos_, id_apprenti_);
     if (old_cell == VIDE)
         return CASE_VIDE;
 

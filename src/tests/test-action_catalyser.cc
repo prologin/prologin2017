@@ -11,7 +11,7 @@ TEST_F(ActionTest, Catalyser_NoCatalyst)
 
     {
         ActionCatalyser act({1, 1}, PLAYER_2, MERCURE, PLAYER_1);
-        EXPECT_EQ(AUCUN_CATALYSEUR, act.check(gs_));
+        EXPECT_EQ(AUCUN_CATALYSEUR, act.check(*gs_));
     }
 }
 
@@ -21,7 +21,7 @@ TEST_F(ActionTest, Catalyser_InvalidPosition)
 
     {
         ActionCatalyser act({-1, -1}, PLAYER_2, MERCURE, PLAYER_1);
-        EXPECT_EQ(POSITION_INVALIDE, act.check(gs_));
+        EXPECT_EQ(POSITION_INVALIDE, act.check(*gs_));
     }
 }
 
@@ -33,7 +33,7 @@ TEST_F(ActionTest, Catalyser_Ok)
 
     {
         ActionCatalyser act({1, 1}, PLAYER_2, MERCURE, PLAYER_1);
-        EXPECT_EQ(OK, act.check(gs_));
+        EXPECT_EQ(OK, act.check(*gs_));
     }
 }
 
@@ -45,11 +45,11 @@ TEST_F(ActionTest, Catalyser_EmptyCell)
 
     {
         ActionCatalyser act({2, 2}, PLAYER_2, MERCURE, PLAYER_1);
-        EXPECT_EQ(CASE_VIDE, act.check(gs_));
+        EXPECT_EQ(CASE_VIDE, act.check(*gs_));
     }
 
     {
         ActionCatalyser act({1, 1}, PLAYER_1, MERCURE, PLAYER_1);
-        EXPECT_EQ(CASE_VIDE, act.check(gs_));
+        EXPECT_EQ(CASE_VIDE, act.check(*gs_));
     }
 }

@@ -20,12 +20,12 @@
 #include "actions.hh"
 #include "position.hh"
 
-int ActionTransmuter::check(const GameState* st) const
+int ActionTransmuter::check(const GameState& st) const
 {
     if (!in_board(pos_))
         return POSITION_INVALIDE;
 
-    if (st->get_cell_type(pos_, player_id_) == VIDE)
+    if (st.get_cell_type(pos_, player_id_) == VIDE)
         return CASE_VIDE;
 
     return OK;

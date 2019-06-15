@@ -65,7 +65,7 @@ GameState::GameState(rules::Players_sptr players)
     reset_turn_state();
 }
 
-rules::GameState* GameState::copy() const
+GameState* GameState::copy() const
 {
     return new GameState(*this);
 }

@@ -19,18 +19,18 @@
 
 #include "actions.hh"
 
-int ActionDonnerEchantillon::check(const GameState* st) const
+int ActionDonnerEchantillon::check(const GameState& st) const
 {
     if (echantillon_donne_.element1 == VIDE ||
         echantillon_donne_.element2 == VIDE ||
-        echantillon_donne_.element1 > MERCURE  ||
+        echantillon_donne_.element1 > MERCURE ||
         echantillon_donne_.element2 > MERCURE)
         return ECHANTILLON_INCOMPLET;
 
-    if (st->was_sample_given())
+    if (st.was_sample_given())
         return DEJA_DONNE;
 
-    const echantillon& received = st->current_sample();
+    const echantillon& received = st.current_sample();
     if (received.element1 != echantillon_donne_.element1 &&
         received.element1 != echantillon_donne_.element2 &&
         received.element2 != echantillon_donne_.element1 &&
