@@ -17,8 +17,8 @@
 ** along with Prologin2017.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "rules.hh"
 #include "actions.hh"
+#include "rules.hh"
 
 Rules::Rules(const rules::Options opt)
     : TurnBasedRules(opt)
@@ -43,26 +43,18 @@ Rules::Rules(const rules::Options opt)
 
 void Rules::register_actions()
 {
-    api_->actions()->register_action(ID_ACTION_PLACER_ECHANTILLON,
-                                     []() -> rules::IAction*
-                                     {
-                                         return new ActionPlacerEchantillon();
-                                     });
-    api_->actions()->register_action(ID_ACTION_TRANSMUTER,
-                                     []() -> rules::IAction*
-                                     {
-                                         return new ActionTransmuter();
-                                     });
-    api_->actions()->register_action(ID_ACTION_CATALYSER,
-                                     []() -> rules::IAction*
-                                     {
-                                         return new ActionCatalyser();
-                                     });
-    api_->actions()->register_action(ID_ACTION_DONNER_ECHANTILLON,
-                                     []() -> rules::IAction*
-                                     {
-                                         return new ActionDonnerEchantillon();
-                                     });
+    api_->actions()->register_action(
+        ID_ACTION_PLACER_ECHANTILLON,
+        []() -> rules::IAction* { return new ActionPlacerEchantillon(); });
+    api_->actions()->register_action(
+        ID_ACTION_TRANSMUTER,
+        []() -> rules::IAction* { return new ActionTransmuter(); });
+    api_->actions()->register_action(
+        ID_ACTION_CATALYSER,
+        []() -> rules::IAction* { return new ActionCatalyser(); });
+    api_->actions()->register_action(
+        ID_ACTION_DONNER_ECHANTILLON,
+        []() -> rules::IAction* { return new ActionDonnerEchantillon(); });
 }
 
 rules::Actions* Rules::get_actions()

@@ -28,9 +28,9 @@ enum action_id
     ID_ACTION_DONNER_ECHANTILLON
 };
 
-#include "action_placer_echantillon.hh"
-#include "action_transmuter.hh"
 #include "action_catalyser.hh"
 #include "action_donner_echantillon.hh"
+#include "action_placer_echantillon.hh"
+#include "action_transmuter.hh"
 
 #endif // !ACTIONS_HH

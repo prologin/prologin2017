@@ -1,16 +1,16 @@
 #ifndef TEST_HELPERS_HH
 #define TEST_HELPERS_HH
 
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 #include <gtest/gtest.h>
 
 #include "../api.hh"
 #include "../constant.hh"
 #include "../game_state.hh"
-#include "../rules.hh"
 #include "../position.hh"
+#include "../rules.hh"
 
 static rules::Players_sptr make_players(int id1, int id2)
 {

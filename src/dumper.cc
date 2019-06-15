@@ -155,7 +155,7 @@ static std::ostream& operator<<(std::ostream& ss, action_type act)
 
 static std::ostream& operator<<(std::ostream& ss, const case_type& ctype)
 {
-ss << "\"";
+    ss << "\"";
     switch (ctype)
     {
     case VIDE:
@@ -191,7 +191,7 @@ static void dump_bench(std::ostream& ss, const GameState& st, unsigned id)
         {
             position pos{row, col};
             ss << st.get_cell_type(pos, id);
-            if (!(row == TAILLE_ETABLI -1 && col == TAILLE_ETABLI - 1))
+            if (!(row == TAILLE_ETABLI - 1 && col == TAILLE_ETABLI - 1))
                 ss << ", ";
         }
     }
@@ -206,7 +206,8 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
     ss << "[";
     for (const auto& action : history)
     {
-        ss << sep; sep = COMMA;
+        ss << sep;
+        sep = COMMA;
         ss << "{\"type\": " << action.atype << ", ";
 
         switch (action.atype)
@@ -241,7 +242,8 @@ static void dump_players(std::ostream& ss, const GameState& st)
     ss << "{";
     for (const auto& player_entry : players)
     {
-        ss << sep; sep = COMMA;
+        ss << sep;
+        sep = COMMA;
 
         int id = player_entry.first;
         const auto& player = player_entry.second;

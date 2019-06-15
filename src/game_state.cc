@@ -111,7 +111,7 @@ void GameState::end_turn(unsigned apprentice_id)
     apprentices_.at(apprentice_id).synchronize_score();
 
     // Check that the player placed their sample
-    if(!is_sample_placed())
+    if (!is_sample_placed())
     {
         int id = apprentices_.at(apprentice_id).get_internal_id();
         wipe_workbench(id);
@@ -238,11 +238,9 @@ bool GameState::has_elements(echantillon sample,
                              const Workbench& workbench) const
 {
     return std::any_of(
-        workbench.begin(), workbench.end(), [sample](const auto& line)
-        {
+        workbench.begin(), workbench.end(), [sample](const auto& line) {
             return std::any_of(
-                line.begin(), line.end(), [sample](case_type type)
-                {
+                line.begin(), line.end(), [sample](case_type type) {
                     return type == sample.element1 || type == sample.element2;
                 });
         });
@@ -314,8 +312,7 @@ GameState::possible_sample_positions(echantillon sample,
     bool has_elems = has_elements(sample, workbench);
 
     std::vector<position_echantillon> positions;
-    auto try_pos = [&](position p1, position p2)
-    {
+    auto try_pos = [&](position p1, position p2) {
         if (is_valid_sample_position(sample, p1, p2, workbench, has_elems))
             positions.emplace_back(position_echantillon{p1, p2});
     };
@@ -428,7 +425,8 @@ void GameState::wipe_workbench(unsigned internal_apprentice_id)
 
     auto& workbench = workbenches_.at(internal_apprentice_id);
     auto& ccs = connected_components_.at(internal_apprentice_id);
-    for(unsigned row = 0; row < TAILLE_ETABLI; ++row) {
+    for (unsigned row = 0; row < TAILLE_ETABLI; ++row)
+    {
         workbench[row].fill(VIDE);
         ccs[row].fill(CONNECTED_COMPONENT_OF_EMPTY);
     }

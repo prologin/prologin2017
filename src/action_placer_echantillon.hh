@@ -23,8 +23,8 @@
 #include <rules/action.hh>
 
 #include "actions.hh"
-#include "game_state.hh"
 #include "constant.hh"
+#include "game_state.hh"
 
 class ActionPlacerEchantillon : public rules::Action<GameState>
 {
