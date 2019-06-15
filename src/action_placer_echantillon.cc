@@ -20,24 +20,24 @@
 #include "actions.hh"
 #include "position.hh"
 
-int ActionPlacerEchantillon::check(const GameState* st) const
+int ActionPlacerEchantillon::check(const GameState& st) const
 {
-    if(st->is_sample_placed())
+    if (st.is_sample_placed())
         return DEJA_POSE;
 
-    if(!in_board(pos1_) || !in_board(pos2_))
+    if (!in_board(pos1_) || !in_board(pos2_))
         return POSITION_INVALIDE;
 
-    if(distance(pos1_, pos2_) != 1)
+    if (distance(pos1_, pos2_) != 1)
         return PLACEMENT_INVALIDE;
 
-    if (st->get_cell_type(pos1_, player_id_) != VIDE ||
-        st->get_cell_type(pos2_, player_id_) != VIDE)
+    if (st.get_cell_type(pos1_, player_id_) != VIDE ||
+        st.get_cell_type(pos2_, player_id_) != VIDE)
         return PLACEMENT_IMPOSSIBLE;
 
-    const echantillon& sample = st->current_sample();
+    const echantillon& sample = st.current_sample();
 
-    if(!st->is_valid_sample_position(sample, pos1_, pos2_, player_id_))
+    if (!st.is_valid_sample_position(sample, pos1_, pos2_, player_id_))
         return PLACEMENT_INCORRECT;
 
     return OK;

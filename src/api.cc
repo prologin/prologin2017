@@ -27,75 +27,10 @@
 // global used in interface.cc
 Api* api;
 
-Api::Api(GameState* game_state, rules::Player_sptr player)
-    : game_state_(game_state)
-    , player_(player)
+Api::Api(std::unique_ptr<GameState> game_state, rules::Player_sptr player)
+    : rules::Api<GameState, erreur>(std::move(game_state), player)
 {
     api = this;
-}
-
-/// Place l’échantillon du tour sur l’établi, avec les coordonnées de deux cases
-/// adjacentes.
-erreur Api::placer_echantillon(position pos1, position pos2)
-{
-    rules::IAction_sptr action(
-        new ActionPlacerEchantillon(pos1, pos2, player_->id));
-
-    erreur err;
-    if ((err = static_cast<erreur>(action->check(game_state_))) != OK)
-        return err;
-
-    actions_.add(action);
-    game_state_set(action->apply(game_state_));
-    return OK;
-}
-
-/// Provoque la transformation chimique de l’élément à la case ciblée, ainsi que
-/// tous les éléments adjacents du même type, ceux du même type adjacents à ces
-/// derniers, etc. Ils disparaissent alors tous dans leur transmutation en or ou
-/// en catalyseur.
-erreur Api::transmuter(position pos)
-{
-    rules::IAction_sptr action(new ActionTransmuter(pos, player_->id));
-
-    erreur err;
-    if ((err = static_cast<erreur>(action->check(game_state_))) != OK)
-        return err;
-
-    actions_.add(action);
-    game_state_set(action->apply(game_state_));
-    return OK;
-}
-
-/// Utilise un catalyseur sur la case ciblée de l'apprenti indiqué. Transforme
-/// l’ancien élément en l’élément indiqué.
-erreur Api::catalyser(position pos, int id_apprenti, case_type terrain)
-{
-    rules::IAction_sptr action(
-        new ActionCatalyser(pos, id_apprenti, terrain, player_->id));
-
-    erreur err;
-    if ((err = static_cast<erreur>(action->check(game_state_))) != OK)
-        return err;
-
-    actions_.add(action);
-    game_state_set(action->apply(game_state_));
-    return OK;
-}
-
-/// Définit l’échantillon que l’adversaire recevra à son prochain tour.
-erreur Api::donner_echantillon(echantillon echantillon_donne)
-{
-    rules::IAction_sptr action(
-        new ActionDonnerEchantillon(echantillon_donne, player_->id));
-
-    erreur err;
-    if ((err = static_cast<erreur>(action->check(game_state_))) != OK)
-        return err;
-
-    actions_.add(action);
-    game_state_set(action->apply(game_state_));
-    return OK;
 }
 
 /// Renvoie le type d’une case donnée, ou 0 si la case est invaide.
@@ -225,10 +160,10 @@ int Api::tour_actuel()
 /// annuler ce tour-ci.
 bool Api::annuler()
 {
-    if (!game_state_->can_cancel())
+    if (!game_state_.can_cancel())
         return false;
     actions_.cancel();
-    game_state_ = rules::cancel(game_state_);
+    game_state_.cancel();
     return true;
 }
 
@@ -298,5 +233,5 @@ echantillon Api::echantillon_defaut_premier_tour()
 /// Affiche l'état actuel des deux établis dans la console.
 void Api::afficher_etablis()
 {
-    print_workbenches(game_state_, std::cout);
+    print_workbenches(game_state(), std::cout);
 }

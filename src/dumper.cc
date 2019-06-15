@@ -292,7 +292,7 @@ static void dump_stream(std::ostream& ss, const GameState& st)
 
 void Rules::dump_state(std::ostream& ss)
 {
-    dump_stream(ss, *api_->game_state());
+    dump_stream(ss, api_->game_state());
 }
 
 // from api.cc
@@ -304,7 +304,7 @@ extern "C" const char* dump_state_json()
     // return values by free-ing them.
     static std::string s;
     std::ostringstream ss;
-    dump_stream(ss, *api->game_state());
+    dump_stream(ss, api->game_state());
     s = ss.str();
     return s.c_str();
 }

@@ -5,6 +5,6 @@
 
 #include "game_state.hh"
 
-void print_workbenches(const GameState* game_state, std::ostream& stream);
+void print_workbenches(const GameState& game_state, std::ostream& stream);
 
 #endif /* !UTILS_HH_ */

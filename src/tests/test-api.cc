@@ -25,9 +25,9 @@ TEST_F(ApiTest, Api_TypeCase)
 {
     // EXPECT_EQ(VIDE, players[0].api->type_case({-1, -1}, players[0].id));
     EXPECT_EQ(VIDE, players[0].api->type_case({1, 1}, players[0].id));
-    gs_->set_next_sample({MERCURE, PLOMB});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, PLOMB});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
     EXPECT_EQ(MERCURE, players[0].api->type_case({1, 1}, players[0].id));
     EXPECT_EQ(PLOMB, players[0].api->type_case({1, 2}, players[0].id));
     EXPECT_EQ(VIDE, players[0].api->type_case({1, 2}, players[1].id));
@@ -37,9 +37,9 @@ TEST_F(ApiTest, Api_EstVide)
 {
     // EXPECT_TRUE(players[0].api->est_vide({-1, -1}, players[0].id));
     EXPECT_TRUE(players[0].api->est_vide({1, 1}, players[0].id));
-    gs_->set_next_sample({MERCURE, PLOMB});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, PLOMB});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
     EXPECT_FALSE(players[0].api->est_vide({1, 1}, players[0].id));
     EXPECT_FALSE(players[0].api->est_vide({1, 2}, players[0].id));
     EXPECT_TRUE(players[0].api->est_vide({1, 2}, players[1].id));
@@ -49,9 +49,9 @@ TEST_F(ApiTest, Api_ProprieteCase)
 {
     // EXPECT_TRUE(players[0].api->propriete_case({-1, -1}, players[0].id));
     EXPECT_EQ(AUCUNE, players[0].api->propriete_case({1, 1}, players[0].id));
-    gs_->set_next_sample({MERCURE, PLOMB});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, PLOMB});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
     EXPECT_EQ(TRANSMUTABLE_CATALYSEUR,
               players[0].api->propriete_case({1, 1}, players[0].id));
     EXPECT_EQ(TRANSMUTABLE_OR,
@@ -75,21 +75,21 @@ TEST_F(ApiTest, Api_TailleRegion)
 {
     EXPECT_EQ(0, players[0].api->taille_region({1, 1}, players[0].id));
 
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
     EXPECT_EQ(2, players[0].api->taille_region({1, 1}, players[0].id));
     EXPECT_EQ(2, players[0].api->taille_region({1, 2}, players[0].id));
 
-    gs_->set_next_sample({CUIVRE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({2, 1}, {2, 2}, players[0].id);
+    gs()->set_next_sample({CUIVRE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({2, 1}, {2, 2}, players[0].id);
     EXPECT_EQ(1, players[0].api->taille_region({2, 1}, players[0].id));
     EXPECT_EQ(3, players[0].api->taille_region({1, 1}, players[0].id));
 
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({3, 2}, {4, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({3, 2}, {4, 2}, players[0].id);
     EXPECT_EQ(5, players[0].api->taille_region({4, 2}, players[0].id));
 }
 
@@ -98,15 +98,15 @@ TEST_F(ApiTest, Api_PositionRegion)
     EXPECT_EQ(0u,
               players[0].api->positions_region({1, 1}, players[0].id).size());
 
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
-    gs_->set_next_sample({CUIVRE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({2, 1}, {2, 2}, players[0].id);
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({3, 2}, {4, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({CUIVRE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({2, 1}, {2, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({3, 2}, {4, 2}, players[0].id);
 
     {
         auto pos = players[0].api->positions_region({2, 1}, players[0].id);
@@ -145,43 +145,50 @@ TEST_F(ApiTest, Api_PositionRegion)
 //
 TEST_F(ApiTest, Api_PlacementsPossibleEchantillon)
 {
-    EXPECT_EQ(2 * 2 * 5 * 6u, players[0]
-                                  .api->placements_possible_echantillon(
-                                            {FER, PLOMB}, players[0].id)
-                                  .size());
+    EXPECT_EQ(
+        2 * 2 * 5 * 6u,
+        players[0]
+            .api->placements_possible_echantillon({FER, PLOMB}, players[0].id)
+            .size());
 
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({1, 1}, {1, 2}, players[0].id);
-    gs_->set_next_sample({CUIVRE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({2, 1}, {2, 2}, players[0].id);
-    gs_->set_next_sample({MERCURE, MERCURE});
-    gs_->reset_turn_state();
-    gs_->place_sample({3, 2}, {4, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({1, 1}, {1, 2}, players[0].id);
+    gs()->set_next_sample({CUIVRE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({2, 1}, {2, 2}, players[0].id);
+    gs()->set_next_sample({MERCURE, MERCURE});
+    gs()->reset_turn_state();
+    gs()->place_sample({3, 2}, {4, 2}, players[0].id);
 
     EXPECT_EQ(40u, players[0]
-                       .api->placements_possible_echantillon({MERCURE, MERCURE},
-                                                             players[0].id)
+                       .api
+                       ->placements_possible_echantillon({MERCURE, MERCURE},
+                                                         players[0].id)
                        .size());
     EXPECT_EQ(27u, players[0]
-                       .api->placements_possible_echantillon({MERCURE, CUIVRE},
-                                                             players[0].id)
+                       .api
+                       ->placements_possible_echantillon({MERCURE, CUIVRE},
+                                                         players[0].id)
                        .size());
     EXPECT_EQ(27u, players[0]
-                       .api->placements_possible_echantillon({CUIVRE, MERCURE},
-                                                             players[0].id)
+                       .api
+                       ->placements_possible_echantillon({CUIVRE, MERCURE},
+                                                         players[0].id)
                        .size());
     EXPECT_EQ(8u, players[0]
-                      .api->placements_possible_echantillon({CUIVRE, CUIVRE},
-                                                            players[0].id)
+                      .api
+                      ->placements_possible_echantillon({CUIVRE, CUIVRE},
+                                                        players[0].id)
                       .size());
-    EXPECT_EQ(84u, players[0]
-                       .api->placements_possible_echantillon({FER, PLOMB},
-                                                             players[0].id)
-                       .size());
-    EXPECT_EQ(4u, players[0]
-                      .api->placements_possible_echantillon({FER, CUIVRE},
-                                                            players[0].id)
-                      .size());
+    EXPECT_EQ(
+        84u,
+        players[0]
+            .api->placements_possible_echantillon({FER, PLOMB}, players[0].id)
+            .size());
+    EXPECT_EQ(
+        4u,
+        players[0]
+            .api->placements_possible_echantillon({FER, CUIVRE}, players[0].id)
+            .size());
 }

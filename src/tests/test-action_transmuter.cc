@@ -8,7 +8,7 @@ TEST_F(ActionTest, Transmuter_InvalidPosition)
 {
     {
         ActionTransmuter act({-1, -1}, PLAYER_1);
-        EXPECT_EQ(POSITION_INVALIDE, act.check(gs_));
+        EXPECT_EQ(POSITION_INVALIDE, act.check(*gs_));
     }
 }
 
@@ -16,7 +16,7 @@ TEST_F(ActionTest, Transmuter_NoElement)
 {
     {
         ActionTransmuter act({2, 2}, PLAYER_1);
-        EXPECT_EQ(CASE_VIDE, act.check(gs_));
+        EXPECT_EQ(CASE_VIDE, act.check(*gs_));
     }
 }
 
@@ -26,6 +26,6 @@ TEST_F(ActionTest, Transmuter_Ok)
 
     {
         ActionTransmuter act({1, 1}, PLAYER_1);
-        EXPECT_EQ(OK, act.check(gs_));
+        EXPECT_EQ(OK, act.check(*gs_));
     }
 }

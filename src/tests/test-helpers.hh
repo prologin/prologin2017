@@ -28,15 +28,10 @@ protected:
     virtual void SetUp()
     {
         utils::Logger::get().level() = utils::Logger::DEBUG_LEVEL;
-        gs_ = new GameState(make_players(PLAYER_1, PLAYER_2));
+        gs_.reset(new GameState(make_players(PLAYER_1, PLAYER_2)));
     }
 
-    virtual void TearDown()
-    {
-        delete gs_;
-    }
-
-    GameState* gs_;
+    std::unique_ptr<GameState> gs_;
 
     const int PLAYER_1 = 42;
     const int PLAYER_2 = 1337;
@@ -52,26 +47,22 @@ protected:
         int player_id_2 = 42;
         utils::Logger::get().level() = utils::Logger::DEBUG_LEVEL;
         auto players_ptr = make_players(player_id_1, player_id_2);
-        gs_ = new GameState(make_players(player_id_1, player_id_2));
+        auto gs =
+            std::make_unique<GameState>(make_players(player_id_1, player_id_2));
         players[0].id = player_id_1;
-        players[0].api = new Api(gs_, players_ptr->players[0]);
+        players[0].api.reset(new Api(std::unique_ptr<GameState>(gs->copy()),
+                                     players_ptr->players[0]));
         players[1].id = player_id_2;
-        players[1].api = new Api(gs_, players_ptr->players[1]);
+        players[1].api.reset(new Api(std::unique_ptr<GameState>(gs->copy()),
+                                     players_ptr->players[1]));
     }
 
-    virtual void TearDown()
-    {
-        delete players[0].api;
-        delete players[1].api;
-        delete gs_;
-    }
-
-    GameState* gs_;
+    GameState* gs() { return &players[0].api->game_state(); }
 
     struct Player
     {
         int id;
-        Api* api;
+        std::unique_ptr<Api> api;
     };
     std::array<Player, 2> players;
 };

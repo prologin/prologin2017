@@ -21,58 +21,41 @@
 #define API_HH_
 
 #include <vector>
+
+#include <rules/actions.hh>
+#include <rules/api.hh>
 #include <rules/game-state.hh>
 #include <rules/player.hh>
-#include <rules/actions.hh>
 
-#include "game_state.hh"
+#include "actions.hh"
 #include "constant.hh"
+#include "game_state.hh"
 
 /*!
 ** The methods of this class are exported through 'interface.cc'
 ** to be called by the clients
 */
-class Api
+class Api final : public rules::Api<GameState, erreur>
 {
-
 public:
-    Api(GameState* game_state, rules::Player_sptr player);
-    virtual ~Api() {}
+    Api(std::unique_ptr<GameState> game_state, rules::Player_sptr player);
 
-    const rules::Player_sptr player() const { return player_; }
-    void player_set(rules::Player_sptr player) { player_ = player; }
-
-    rules::Actions* actions() { return &actions_; }
-
-    const GameState* game_state() const { return game_state_; }
-    GameState* game_state() { return game_state_; }
-    void game_state_set(rules::GameState* gs)
-    {
-        game_state_ = dynamic_cast<GameState*>(gs);
-    }
-
-private:
-    GameState* game_state_;
-    rules::Player_sptr player_;
-    rules::Actions actions_;
-
-public:
     /// Place l’échantillon du tour sur l’établi, avec les coordonnées de deux
     /// cases adjacentes.
-    erreur placer_echantillon(position pos1, position pos2);
+    ApiActionFunc<ActionPlacerEchantillon> placer_echantillon{this};
 
     /// Provoque la transformation chimique de l’élément à la case ciblée, ainsi
     /// que tous les éléments adjacents du même type, ceux du même type
     /// adjacents à ces derniers, etc. Ils disparaissent alors tous dans leur
     /// transmutation en or ou en catalyseur.
-    erreur transmuter(position pos);
+    ApiActionFunc<ActionTransmuter> transmuter{this};
 
     /// Utilise un catalyseur sur la case ciblée de l'apprenti indiqué.
     /// Transforme l’ancien élément en l’élément indiqué.
-    erreur catalyser(position pos, int id_apprenti, case_type terrain);
+    ApiActionFunc<ActionCatalyser> catalyser{this};
 
     /// Définit l’échantillon que l’adversaire recevra à son prochain tour.
-    erreur donner_echantillon(echantillon echantillon_donne);
+    ApiActionFunc<ActionDonnerEchantillon> donner_echantillon{this};
 
     /// Renvoie le type d’une case donnée, ou 0 si la case est invaide.
     case_type type_case(position pos, int id_apprenti);
