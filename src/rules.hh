@@ -22,14 +22,14 @@
 
 #include <memory>
 
-#include <utils/dll.hh>
-#include <utils/sandbox.hh>
-#include <rules/options.hh>
+#include <rules/actions.hh>
 #include <rules/client-messenger.hh>
-#include <rules/server-messenger.hh>
+#include <rules/options.hh>
 #include <rules/player.hh>
 #include <rules/rules.hh>
-#include <rules/actions.hh>
+#include <rules/server-messenger.hh>
+#include <utils/dll.hh>
+#include <utils/sandbox.hh>
 
 #include "api.hh"
 
@@ -44,7 +44,7 @@ public:
     virtual ~Rules() {}
 
     rules::Actions* get_actions() override;
-    void apply_action(const rules::IAction_sptr& action) override;
+    void apply_action(const rules::IAction& action) override;
     bool is_finished() override;
 
     void at_player_start(rules::ClientMessenger_sptr) override;

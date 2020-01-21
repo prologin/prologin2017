@@ -43,18 +43,18 @@ Rules::Rules(const rules::Options opt)
 
 void Rules::register_actions()
 {
-    api_->actions()->register_action(
-        ID_ACTION_PLACER_ECHANTILLON,
-        []() -> rules::IAction* { return new ActionPlacerEchantillon(); });
-    api_->actions()->register_action(
-        ID_ACTION_TRANSMUTER,
-        []() -> rules::IAction* { return new ActionTransmuter(); });
-    api_->actions()->register_action(
-        ID_ACTION_CATALYSER,
-        []() -> rules::IAction* { return new ActionCatalyser(); });
-    api_->actions()->register_action(
-        ID_ACTION_DONNER_ECHANTILLON,
-        []() -> rules::IAction* { return new ActionDonnerEchantillon(); });
+    api_->actions()->register_action(ID_ACTION_PLACER_ECHANTILLON, []() {
+        return std::make_unique<ActionPlacerEchantillon>();
+    });
+    api_->actions()->register_action(ID_ACTION_TRANSMUTER, []() {
+        return std::make_unique<ActionTransmuter>();
+    });
+    api_->actions()->register_action(ID_ACTION_CATALYSER, []() {
+        return std::make_unique<ActionCatalyser>();
+    });
+    api_->actions()->register_action(ID_ACTION_DONNER_ECHANTILLON, []() {
+        return std::make_unique<ActionDonnerEchantillon>();
+    });
 }
 
 rules::Actions* Rules::get_actions()
@@ -62,7 +62,7 @@ rules::Actions* Rules::get_actions()
     return api_->actions();
 }
 
-void Rules::apply_action(const rules::IAction_sptr& action)
+void Rules::apply_action(const rules::IAction& action)
 {
     // When receiving an action, the API should have already checked that it
     // is valid. We recheck that for the current gamestate here to avoid weird
@@ -73,7 +73,7 @@ void Rules::apply_action(const rules::IAction_sptr& action)
     if (err)
         FATAL("Synchronization error: received action %d from player %d, but "
               "check() on current gamestate returned %d.",
-              action->id(), action->player_id(), err);
+              action.id(), action.player_id(), err);
     api_->game_state_apply(action);
 }
 
