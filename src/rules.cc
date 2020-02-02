@@ -17,8 +17,8 @@
 ** along with Prologin2017.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "actions.hh"
 #include "rules.hh"
+#include "actions.hh"
 
 Rules::Rules(const rules::Options opt)
     : TurnBasedRules(opt)

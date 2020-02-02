@@ -51,7 +51,7 @@ template <> struct hash<case_type>
         return hash<int>()(static_cast<int>(v));
     }
 };
-}
+} // namespace std
 
 /// Types de propriétés des éléments
 typedef enum element_propriete
@@ -71,7 +71,7 @@ template <> struct hash<element_propriete>
         return hash<int>()(static_cast<int>(v));
     }
 };
-}
+} // namespace std
 
 /// Erreurs possibles
 typedef enum erreur
@@ -103,7 +103,7 @@ template <> struct hash<erreur>
         return hash<int>()(static_cast<int>(v));
     }
 };
-}
+} // namespace std
 
 /// Types d’actions
 typedef enum action_type
@@ -123,7 +123,7 @@ template <> struct hash<action_type>
         return hash<int>()(static_cast<int>(v));
     }
 };
-}
+} // namespace std
 
 /// Position sur la carte, donnée par deux coordonnées
 typedef struct position
