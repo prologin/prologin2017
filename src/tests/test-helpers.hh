@@ -12,14 +12,13 @@
 #include "../position.hh"
 #include "../rules.hh"
 
-static rules::Players_sptr make_players(int id1, int id2)
+static rules::Players make_players(int id1, int id2)
 {
     /* Create two players (no spectator).  */
-    return rules::Players_sptr(
-        new rules::Players{std::vector<rules::Player_sptr>{
-            rules::Player_sptr(new rules::Player(id1, rules::PLAYER)),
-            rules::Player_sptr(new rules::Player(id2, rules::PLAYER)),
-        }});
+    rules::Players players;
+    players.add(std::make_shared<rules::Player>(id1, rules::PLAYER));
+    players.add(std::make_shared<rules::Player>(id2, rules::PLAYER));
+    return players;
 }
 
 class ActionTest : public ::testing::Test
@@ -46,15 +45,15 @@ protected:
         int player_id_1 = 1337;
         int player_id_2 = 42;
         utils::Logger::get().level() = utils::Logger::DEBUG_LEVEL;
-        auto players_ptr = make_players(player_id_1, player_id_2);
+        auto gs_players = make_players(player_id_1, player_id_2);
         auto gs =
             std::make_unique<GameState>(make_players(player_id_1, player_id_2));
         players[0].id = player_id_1;
         players[0].api.reset(new Api(std::unique_ptr<GameState>(gs->copy()),
-                                     players_ptr->players[0]));
+                                     gs_players[0]));
         players[1].id = player_id_2;
         players[1].api.reset(new Api(std::unique_ptr<GameState>(gs->copy()),
-                                     players_ptr->players[1]));
+                                     gs_players[1]));
     }
 
     GameState* gs() { return &players[0].api->game_state(); }

@@ -29,13 +29,13 @@
 #include <array>
 #include <unordered_map>
 
-/// Information about a player; encapsulate its rules::Player_sptr
+/// Information about a player; encapsulate its std::shared_ptr<rules::Player>
 class Apprentice
 {
 public:
-    /// Constructor from the rules::Player_sptr to encapsulate
+    /// Constructor from the rules::Player to encapsulate
     /// `internal_id` is the 0 or 1 position in arrays
-    Apprentice(rules::Player_sptr player, int internal_id);
+    Apprentice(std::shared_ptr<rules::Player> player, int internal_id);
 
     /// Id of player in GameState arrays
     int get_internal_id() const { return internal_id_; }
@@ -65,7 +65,8 @@ public:
     void add_action(action_hist action) { actions_.push_back(action); }
 
 private:
-    rules::Player_sptr player_;        ///< Encapsulated stechec implementation
+    std::shared_ptr<rules::Player>
+        player_;                       ///< Encapsulated stechec implementation
     std::vector<action_hist> actions_; ///< Actions taken during last turn
     int internal_id_;                  ///< Id of player in GameState arrays
     int score_;                        ///< Player's score
@@ -74,7 +75,7 @@ private:
 class GameState : public rules::GameState
 {
 public:
-    GameState(rules::Players_sptr players);
+    GameState(const rules::Players& players);
     GameState* copy() const override;
 
     void increment_turn() { turn_++; }

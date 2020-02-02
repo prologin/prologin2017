@@ -38,7 +38,8 @@
 class Api final : public rules::Api<GameState, erreur>
 {
 public:
-    Api(std::unique_ptr<GameState> game_state, rules::Player_sptr player);
+    Api(std::unique_ptr<GameState> game_state,
+        std::shared_ptr<rules::Player> player);
 
     /// Place l’échantillon du tour sur l’établi, avec les coordonnées de deux
     /// cases adjacentes.

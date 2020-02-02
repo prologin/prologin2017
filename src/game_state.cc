@@ -28,7 +28,7 @@
 static constexpr int CONNECTED_COMPONENT_OF_EMPTY = -1;
 static const position offsets[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
+Apprentice::Apprentice(std::shared_ptr<rules::Player> player, int internal_id)
     : player_(std::move(player))
     , internal_id_(internal_id)
 {
@@ -38,16 +38,17 @@ Apprentice::Apprentice(rules::Player_sptr player, int internal_id)
 
 constexpr echantillon GameState::default_sample;
 
-GameState::GameState(rules::Players_sptr players)
+GameState::GameState(const rules::Players& players)
     : rules::GameState()
 {
     unsigned pi = 0;
-    for (auto& p : players->players)
+    for (auto& player : players)
     {
-        if (p->type == rules::PLAYER)
+        if (player->type == rules::PLAYER)
         {
-            apprentices_.emplace(std::make_pair(p->id, Apprentice(p, pi)));
-            apprentices_ids_[pi++] = p->id;
+            apprentices_.emplace(
+                std::make_pair(player->id, Apprentice(player, pi)));
+            apprentices_ids_[pi++] = player->id;
         }
     }
 
