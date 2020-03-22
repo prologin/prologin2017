@@ -1,24 +1,6 @@
-/*
-** This file is part of Prologin2017, a rules library for stechec2.
-**
-** Copyright (c) 2017 Association Prologin <info@prologin.org>
-**
-** Prologin2017 is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** Prologin2017 is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Prologin2017.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#ifndef CONSTANT_HH_
-#define CONSTANT_HH_
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (c) 2012 Association Prologin <association@prologin.org>
+#pragma once
 
 #include <functional> // needed for std::hash
 
@@ -147,18 +129,16 @@ typedef struct position_echantillon
 } position_echantillon;
 
 /// Action représentée dans l’historique. L’action ``placer_echantillon``
-/// utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``.
-/// L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et
-/// ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée
+/// utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise
+/// ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti``
+/// et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée
 /// dans l’historique, car ``echantillon_tour`` donne l’information.
 typedef struct action_hist
 {
     action_type atype; /* <- Type de l’action */
-    position pos1;     /* <- Position, pour les actions placer (1er élément),
+    position poshist1; /* <- Position, pour les actions placer (1er élément),
                           transmuter et catalyser */
-    position pos2;     /* <- Position, pour l’action placer (2e élément) */
+    position poshist2; /* <- Position, pour l’action placer (2e élément) */
     int id_apprenti;   /* <- ID de l’apprenti, pour l’action catalyser */
     case_type nouvelle_case; /* <- Élément pour l’action catalyser */
 } action_hist;
-
-#endif // !CONSTANT_HH_

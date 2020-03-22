@@ -95,18 +95,19 @@ struct:
   -
     str_name: action_hist
     str_summary: Action représentée dans l’historique.
-                 L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``.
-                 L’action ``transmuter`` utilise ``pos1``.
-                 L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et
-                 ``nouvelle_case``.
+                 L’action ``placer_echantillon`` utilise ``poshist1`` et
+                 ``poshist2``.
+                 L’action ``transmuter`` utilise ``poshist1``.
+                 L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti``
+                 et ``nouvelle_case``.
                  L’action ``donner_echantillon`` n’est pas représentée dans
                  l’historique, car ``echantillon_tour`` donne l’information.
     str_tuple: no
     str_field:
       - [atype, action_type, "Type de l’action"]
-      - [pos1, position, "Position, pour les actions placer (1er élément),
+      - [poshist1, position, "Position, pour les actions placer (1er élément),
                           transmuter et catalyser"]
-      - [pos2, position, "Position, pour l’action placer (2e élément)"]
+      - [poshist2, position, "Position, pour l’action placer (2e élément)"]
       - [id_apprenti, int, "ID de l’apprenti, pour l’action catalyser"]
       - [nouvelle_case, case_type, "Élément pour l’action catalyser"]
 

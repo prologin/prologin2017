@@ -88,7 +88,7 @@ bool lang2cxx<PyObject*, bool>(PyObject* in)
 template <>
 std::string lang2cxx<PyObject*, std::string>(PyObject* in)
 {
-  char * out = PyUnicode_AsUTF8(in);
+  const char * out = PyUnicode_AsUTF8(in);
   if (PyErr_Occurred())
     {
       throw 42;
@@ -269,14 +269,14 @@ position_echantillon lang2cxx<PyObject*, position_echantillon>(PyObject* in)
   return out;
 }
 
-/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
+/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
 template <>
 PyObject* cxx2lang<PyObject*, action_hist>(action_hist in)
 {
   PyObject* tuple = PyTuple_New(5);
   PyTuple_SET_ITEM(tuple, 0, (cxx2lang<PyObject*, action_type>(in.atype)));
-  PyTuple_SET_ITEM(tuple, 1, (cxx2lang<PyObject*, position>(in.pos1)));
-  PyTuple_SET_ITEM(tuple, 2, (cxx2lang<PyObject*, position>(in.pos2)));
+  PyTuple_SET_ITEM(tuple, 1, (cxx2lang<PyObject*, position>(in.poshist1)));
+  PyTuple_SET_ITEM(tuple, 2, (cxx2lang<PyObject*, position>(in.poshist2)));
   PyTuple_SET_ITEM(tuple, 3, (cxx2lang<PyObject*, int>(in.id_apprenti)));
   PyTuple_SET_ITEM(tuple, 4, (cxx2lang<PyObject*, case_type>(in.nouvelle_case)));
   PyObject* name = PyUnicode_FromString("action_hist");
@@ -303,12 +303,12 @@ action_hist lang2cxx<PyObject*, action_hist>(PyObject* in)
   i = cxx2lang<PyObject*, int>(1);
   i = PyObject_GetItem(in, i);
   if (i == NULL) throw 42;
-  out.pos1 = lang2cxx<PyObject*, position>(i);
+  out.poshist1 = lang2cxx<PyObject*, position>(i);
   Py_DECREF(i);
   i = cxx2lang<PyObject*, int>(2);
   i = PyObject_GetItem(in, i);
   if (i == NULL) throw 42;
-  out.pos2 = lang2cxx<PyObject*, position>(i);
+  out.poshist2 = lang2cxx<PyObject*, position>(i);
   Py_DECREF(i);
   i = cxx2lang<PyObject*, int>(3);
   i = PyObject_GetItem(in, i);
@@ -458,6 +458,22 @@ PyObject* a1;
   }
     try {
 return cxx2lang_array(api_positions_region(lang2cxx<PyObject*, position>(a0), lang2cxx<PyObject*, int>(a1)));
+  } catch (...) { return NULL; }
+}
+
+/// Détermine si le placement d’un échantillon est valide.
+static PyObject* p_placement_possible_echantillon(PyObject* self, PyObject* args)
+{
+  (void)self;
+PyObject* a0;
+PyObject* a1;
+PyObject* a2;
+PyObject* a3;
+  if (!PyArg_ParseTuple(args, "OOOO", &a0, &a1, &a2, &a3)) {
+    return NULL;
+  }
+    try {
+return cxx2lang<PyObject*, bool>(api_placement_possible_echantillon(lang2cxx<PyObject*, echantillon>(a0), lang2cxx<PyObject*, position>(a1), lang2cxx<PyObject*, position>(a2), lang2cxx<PyObject*, int>(a3)));
   } catch (...) { return NULL; }
 }
 
@@ -647,6 +663,20 @@ return cxx2lang<PyObject*, echantillon>(api_echantillon_defaut_premier_tour());
   } catch (...) { return NULL; }
 }
 
+/// Affiche l'état actuel des deux établis dans la console.
+static PyObject* p_afficher_etablis(PyObject* self, PyObject* args)
+{
+  (void)self;
+  if (!PyArg_ParseTuple(args, "")) {
+    return NULL;
+  }
+    try {
+api_afficher_etablis();
+  Py_INCREF(Py_None);
+  return Py_None;
+  } catch (...) { return NULL; }
+}
+
 /// Affiche le contenu d'une valeur de type case_type
 static PyObject* p_afficher_case_type(PyObject* self, PyObject* args)
 {
@@ -772,7 +802,7 @@ api_afficher_action_hist(lang2cxx<PyObject*, action_hist>(a0));
 ** Api functions to register.
 */
 static PyMethodDef api_callback[] = {
-  {"placer_echantillon", p_placer_echantillon, METH_VARARGS, "placer_echantillon"},  {"transmuter", p_transmuter, METH_VARARGS, "transmuter"},  {"catalyser", p_catalyser, METH_VARARGS, "catalyser"},  {"donner_echantillon", p_donner_echantillon, METH_VARARGS, "donner_echantillon"},  {"type_case", p_type_case, METH_VARARGS, "type_case"},  {"est_vide", p_est_vide, METH_VARARGS, "est_vide"},  {"propriete_case", p_propriete_case, METH_VARARGS, "propriete_case"},  {"propriete_case_type", p_propriete_case_type, METH_VARARGS, "propriete_case_type"},  {"taille_region", p_taille_region, METH_VARARGS, "taille_region"},  {"positions_region", p_positions_region, METH_VARARGS, "positions_region"},  {"placements_possible_echantillon", p_placements_possible_echantillon, METH_VARARGS, "placements_possible_echantillon"},  {"historique", p_historique, METH_VARARGS, "historique"},  {"moi", p_moi, METH_VARARGS, "moi"},  {"adversaire", p_adversaire, METH_VARARGS, "adversaire"},  {"score", p_score, METH_VARARGS, "score"},  {"tour_actuel", p_tour_actuel, METH_VARARGS, "tour_actuel"},  {"annuler", p_annuler, METH_VARARGS, "annuler"},  {"nombre_catalyseurs", p_nombre_catalyseurs, METH_VARARGS, "nombre_catalyseurs"},  {"echantillon_tour", p_echantillon_tour, METH_VARARGS, "echantillon_tour"},  {"a_pose_echantillon", p_a_pose_echantillon, METH_VARARGS, "a_pose_echantillon"},  {"a_donne_echantillon", p_a_donne_echantillon, METH_VARARGS, "a_donne_echantillon"},  {"quantite_transmutation_or", p_quantite_transmutation_or, METH_VARARGS, "quantite_transmutation_or"},  {"quantite_transmutation_catalyseur", p_quantite_transmutation_catalyseur, METH_VARARGS, "quantite_transmutation_catalyseur"},  {"quantite_transmutation_catalyseur_or", p_quantite_transmutation_catalyseur_or, METH_VARARGS, "quantite_transmutation_catalyseur_or"},  {"echantillon_defaut_premier_tour", p_echantillon_defaut_premier_tour, METH_VARARGS, "echantillon_defaut_premier_tour"},  {"afficher_case_type", p_afficher_case_type, METH_VARARGS, "afficher_case_type"},  {"afficher_element_propriete", p_afficher_element_propriete, METH_VARARGS, "afficher_element_propriete"},  {"afficher_erreur", p_afficher_erreur, METH_VARARGS, "afficher_erreur"},  {"afficher_action_type", p_afficher_action_type, METH_VARARGS, "afficher_action_type"},  {"afficher_position", p_afficher_position, METH_VARARGS, "afficher_position"},  {"afficher_echantillon", p_afficher_echantillon, METH_VARARGS, "afficher_echantillon"},  {"afficher_position_echantillon", p_afficher_position_echantillon, METH_VARARGS, "afficher_position_echantillon"},  {"afficher_action_hist", p_afficher_action_hist, METH_VARARGS, "afficher_action_hist"},  {NULL, NULL, 0, NULL}
+  {"placer_echantillon", p_placer_echantillon, METH_VARARGS, "placer_echantillon"},  {"transmuter", p_transmuter, METH_VARARGS, "transmuter"},  {"catalyser", p_catalyser, METH_VARARGS, "catalyser"},  {"donner_echantillon", p_donner_echantillon, METH_VARARGS, "donner_echantillon"},  {"type_case", p_type_case, METH_VARARGS, "type_case"},  {"est_vide", p_est_vide, METH_VARARGS, "est_vide"},  {"propriete_case", p_propriete_case, METH_VARARGS, "propriete_case"},  {"propriete_case_type", p_propriete_case_type, METH_VARARGS, "propriete_case_type"},  {"taille_region", p_taille_region, METH_VARARGS, "taille_region"},  {"positions_region", p_positions_region, METH_VARARGS, "positions_region"},  {"placement_possible_echantillon", p_placement_possible_echantillon, METH_VARARGS, "placement_possible_echantillon"},  {"placements_possible_echantillon", p_placements_possible_echantillon, METH_VARARGS, "placements_possible_echantillon"},  {"historique", p_historique, METH_VARARGS, "historique"},  {"moi", p_moi, METH_VARARGS, "moi"},  {"adversaire", p_adversaire, METH_VARARGS, "adversaire"},  {"score", p_score, METH_VARARGS, "score"},  {"tour_actuel", p_tour_actuel, METH_VARARGS, "tour_actuel"},  {"annuler", p_annuler, METH_VARARGS, "annuler"},  {"nombre_catalyseurs", p_nombre_catalyseurs, METH_VARARGS, "nombre_catalyseurs"},  {"echantillon_tour", p_echantillon_tour, METH_VARARGS, "echantillon_tour"},  {"a_pose_echantillon", p_a_pose_echantillon, METH_VARARGS, "a_pose_echantillon"},  {"a_donne_echantillon", p_a_donne_echantillon, METH_VARARGS, "a_donne_echantillon"},  {"quantite_transmutation_or", p_quantite_transmutation_or, METH_VARARGS, "quantite_transmutation_or"},  {"quantite_transmutation_catalyseur", p_quantite_transmutation_catalyseur, METH_VARARGS, "quantite_transmutation_catalyseur"},  {"quantite_transmutation_catalyseur_or", p_quantite_transmutation_catalyseur_or, METH_VARARGS, "quantite_transmutation_catalyseur_or"},  {"echantillon_defaut_premier_tour", p_echantillon_defaut_premier_tour, METH_VARARGS, "echantillon_defaut_premier_tour"},  {"afficher_etablis", p_afficher_etablis, METH_VARARGS, "afficher_etablis"},  {"afficher_case_type", p_afficher_case_type, METH_VARARGS, "afficher_case_type"},  {"afficher_element_propriete", p_afficher_element_propriete, METH_VARARGS, "afficher_element_propriete"},  {"afficher_erreur", p_afficher_erreur, METH_VARARGS, "afficher_erreur"},  {"afficher_action_type", p_afficher_action_type, METH_VARARGS, "afficher_action_type"},  {"afficher_position", p_afficher_position, METH_VARARGS, "afficher_position"},  {"afficher_echantillon", p_afficher_echantillon, METH_VARARGS, "afficher_echantillon"},  {"afficher_position_echantillon", p_afficher_position_echantillon, METH_VARARGS, "afficher_position_echantillon"},  {"afficher_action_hist", p_afficher_action_hist, METH_VARARGS, "afficher_action_hist"},  {NULL, NULL, 0, NULL}
 };
 
 PyMODINIT_FUNC PyInit__api()

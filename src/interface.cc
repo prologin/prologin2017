@@ -1,22 +1,5 @@
-/*
-** This file is part of Prologin2017, a rules library for stechec2.
-**
-** Copyright (c) 2017 Association Prologin <info@prologin.org>
-**
-** Prologin2017 is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** Prologin2017 is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Prologin2017.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (c) 2012 Association Prologin <association@prologin.org>
 #include "api.hh"
 
 #include <iostream>
@@ -307,16 +290,16 @@ std::string convert_to_string(std::vector<position_echantillon> in)
 std::string convert_to_string(action_hist in)
 {
     std::string atype = convert_to_string(in.atype);
-    std::string pos1 = convert_to_string(in.pos1);
-    std::string pos2 = convert_to_string(in.pos2);
+    std::string poshist1 = convert_to_string(in.poshist1);
+    std::string poshist2 = convert_to_string(in.poshist2);
     std::string id_apprenti = convert_to_string(in.id_apprenti);
     std::string nouvelle_case = convert_to_string(in.nouvelle_case);
     std::string out = "{";
     out += "atype:" + atype;
     out += ", ";
-    out += "pos1:" + pos1;
+    out += "poshist1:" + poshist1;
     out += ", ";
-    out += "pos2:" + pos2;
+    out += "poshist2:" + poshist2;
     out += ", ";
     out += "id_apprenti:" + id_apprenti;
     out += ", ";
@@ -713,11 +696,11 @@ std::ostream& operator<<(std::ostream& os, action_hist v)
     os << "atype"
        << "=" << v.atype;
     os << ", ";
-    os << "pos1"
-       << "=" << v.pos1;
+    os << "poshist1"
+       << "=" << v.poshist1;
     os << ", ";
-    os << "pos2"
-       << "=" << v.pos2;
+    os << "poshist2"
+       << "=" << v.poshist2;
     os << ", ";
     os << "id_apprenti"
        << "=" << v.id_apprenti;

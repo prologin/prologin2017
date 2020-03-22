@@ -220,8 +220,8 @@ Champs~: &
 \begin{lst-c++}
 struct action_hist {
     action_type atype;
-    position pos1;
-    position pos2;
+    position poshist1;
+    position poshist2;
     int id_apprenti;
     case_type nouvelle_case;
 };
@@ -229,16 +229,16 @@ struct action_hist {
 
 \noindent
 \begin{tabular}[t]{@{\extracolsep{0pt}}>{\bfseries}lp{10cm}}
-Description~: & Action représentée dans l’historique. L’action ``placer\_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id\_apprenti`` et ``nouvelle\_case``. L’action ``donner\_echantillon`` n’est pas représentée dans l’historique, car ``echantillon\_tour`` donne l’information. \\
+Description~: & Action représentée dans l’historique. L’action ``placer\_echantillon`` utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id\_apprenti`` et ``nouvelle\_case``. L’action ``donner\_echantillon`` n’est pas représentée dans l’historique, car ``echantillon\_tour`` donne l’information. \\
 Champs~: &
 \small
 \begin{tabular}[t]{@{\extracolsep{0pt}}lp{7cm}}
     
         \textsl{atype}~: & Type de l’action \\
     
-        \textsl{pos1}~: & Position, pour les actions placer (1er élément), transmuter et catalyser \\
+        \textsl{poshist1}~: & Position, pour les actions placer (1er élément), transmuter et catalyser \\
     
-        \textsl{pos2}~: & Position, pour l’action placer (2e élément) \\
+        \textsl{poshist2}~: & Position, pour l’action placer (2e élément) \\
     
         \textsl{id\_apprenti}~: & ID de l’apprenti, pour l’action catalyser \\
     

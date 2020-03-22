@@ -213,14 +213,14 @@ static void dump_history(std::ostream& ss, const GameState& st, unsigned id)
         switch (action.atype)
         {
         case ACTION_PLACER:
-            ss << "\"pos1\": " << action.pos1 << ", "
-               << "\"pos2\": " << action.pos2;
+            ss << "\"pos1\": " << action.poshist1 << ", "
+               << "\"pos2\": " << action.poshist2;
             break;
         case ACTION_TRANSMUTER:
-            ss << "\"pos\": " << action.pos1;
+            ss << "\"pos\": " << action.poshist1;
             break;
         case ACTION_CATALYSER:
-            ss << "\"pos\": " << action.pos1 << ", "
+            ss << "\"pos\": " << action.poshist1 << ", "
                << "\"apprentice_id\": " << action.id_apprenti << ", "
                << "\"new_type\": " << action.nouvelle_case;
             break;

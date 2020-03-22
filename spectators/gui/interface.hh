@@ -107,11 +107,11 @@ typedef struct position_echantillon {
 } position_echantillon;
 
 
-/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
+/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
 typedef struct action_hist {
   action_type atype;  /* <- Type de l’action */
-  position pos1;  /* <- Position, pour les actions placer (1er élément), transmuter et catalyser */
-  position pos2;  /* <- Position, pour l’action placer (2e élément) */
+  position poshist1;  /* <- Position, pour les actions placer (1er élément), transmuter et catalyser */
+  position poshist2;  /* <- Position, pour l’action placer (2e élément) */
   int id_apprenti;  /* <- ID de l’apprenti, pour l’action catalyser */
   case_type nouvelle_case;  /* <- Élément pour l’action catalyser */
 } action_hist;
@@ -149,6 +149,9 @@ int api_taille_region(position pos, int id_apprenti);
 
 /// Renvoie la liste des positions des cases composant la région à laquelle appartient un élément donné. Renvoie une liste vide en cas d'erreur.
 std::vector<position> api_positions_region(position pos, int id_apprenti);
+
+/// Détermine si le placement d’un échantillon est valide.
+bool api_placement_possible_echantillon(echantillon echantillon_a_placer, position pos1, position pos2, int id_apprenti);
 
 /// Renvoie la liste des placements possibles pour un échantillon donné sur l’établi d’un apprenti donné. Renvoie une liste vide en cas d'erreur.
 std::vector<position_echantillon> api_placements_possible_echantillon(echantillon echantillon_a_placer, int id_apprenti);
@@ -194,6 +197,9 @@ int api_quantite_transmutation_catalyseur_or(int taille_region);
 
 /// Indique l’échantillon par défaut lors du premier tour
 echantillon api_echantillon_defaut_premier_tour();
+
+/// Affiche l'état actuel des deux établis dans la console.
+void api_afficher_etablis();
 
 /// Affiche le contenu d'une valeur de type case_type
 void api_afficher_case_type(case_type v);

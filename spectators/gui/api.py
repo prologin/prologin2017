@@ -5,7 +5,7 @@ from _api import *
 TAILLE_ETABLI = 6
 
 # Nombre de tours à jouer avant la fin de l’affrontement
-NB_TOURS = 100
+NB_TOURS = 150
 
 # Taille de l’énumération ``case_type``
 NB_TYPE_CASES = 6
@@ -62,11 +62,11 @@ from collections import namedtuple
 
 # Position d’un échantillon, donnée par deux positions adjacentes
 
-# Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
+# Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
 action_hist = namedtuple("action_hist",
     'atype ' # <- Type de l’action
-    'pos1 ' # <- Position, pour les actions placer (1er élément), transmuter et catalyser
-    'pos2 ' # <- Position, pour l’action placer (2e élément)
+    'poshist1 ' # <- Position, pour les actions placer (1er élément), transmuter et catalyser
+    'poshist2 ' # <- Position, pour l’action placer (2e élément)
     'id_apprenti ' # <- ID de l’apprenti, pour l’action catalyser
     'nouvelle_case ' # <- Élément pour l’action catalyser
 )

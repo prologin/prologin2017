@@ -15,7 +15,7 @@
 # define TAILLE_ETABLI             6
 
 /// Nombre de tours à jouer avant la fin de l’affrontement
-# define NB_TOURS                  100
+# define NB_TOURS                  150
 
 /// Taille de l’énumération ``case_type``
 # define NB_TYPE_CASES             6
@@ -118,11 +118,11 @@ typedef struct position_echantillon {
 } position_echantillon;
 
 
-/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``pos1`` et ``pos2``. L’action ``transmuter`` utilise ``pos1``. L’action ``catalyser`` utilise ``pos1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
+/// Action représentée dans l’historique. L’action ``placer_echantillon`` utilise ``poshist1`` et ``poshist2``. L’action ``transmuter`` utilise ``poshist1``. L’action ``catalyser`` utilise ``poshist1``, ``id_apprenti`` et ``nouvelle_case``. L’action ``donner_echantillon`` n’est pas représentée dans l’historique, car ``echantillon_tour`` donne l’information.
 typedef struct action_hist {
   action_type atype;  /* <- Type de l’action */
-  position pos1;  /* <- Position, pour les actions placer (1er élément), transmuter et catalyser */
-  position pos2;  /* <- Position, pour l’action placer (2e élément) */
+  position poshist1;  /* <- Position, pour les actions placer (1er élément), transmuter et catalyser */
+  position poshist2;  /* <- Position, pour l’action placer (2e élément) */
   int id_apprenti;  /* <- ID de l’apprenti, pour l’action catalyser */
   case_type nouvelle_case;  /* <- Élément pour l’action catalyser */
 } action_hist;
@@ -205,6 +205,14 @@ extern "C" std::vector<position> api_positions_region(position pos, int id_appre
 static inline std::vector<position> positions_region(position pos, int id_apprenti)
 {
   return api_positions_region(pos, id_apprenti);
+}
+
+
+/// Détermine si le placement d’un échantillon est valide.
+extern "C" bool api_placement_possible_echantillon(echantillon echantillon_a_placer, position pos1, position pos2, int id_apprenti);
+static inline bool placement_possible_echantillon(echantillon echantillon_a_placer, position pos1, position pos2, int id_apprenti)
+{
+  return api_placement_possible_echantillon(echantillon_a_placer, pos1, pos2, id_apprenti);
 }
 
 
@@ -407,7 +415,7 @@ namespace std {
   template <typename T>
   struct hash<std::vector<T>>
   {
-    std::size_t operator()(const std::vector<T>& v)
+    std::size_t operator()(const std::vector<T>& v) const
     {
       std::size_t res = v.size();
       for (const auto& e : v)
@@ -449,7 +457,7 @@ namespace std {
   template <>
   struct hash<position>
   {
-    std::size_t operator()(const position& s)
+    std::size_t operator()(const position& s) const
     {
       std::size_t res = 0;
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<int>()(s.ligne);
@@ -491,7 +499,7 @@ namespace std {
   template <>
   struct hash<echantillon>
   {
-    std::size_t operator()(const echantillon& s)
+    std::size_t operator()(const echantillon& s) const
     {
       std::size_t res = 0;
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<case_type>()(s.element1);
@@ -533,7 +541,7 @@ namespace std {
   template <>
   struct hash<position_echantillon>
   {
-    std::size_t operator()(const position_echantillon& s)
+    std::size_t operator()(const position_echantillon& s) const
     {
       std::size_t res = 0;
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<position>()(s.pos1);
@@ -545,8 +553,8 @@ namespace std {
 
 inline bool operator==(const action_hist& a, const action_hist& b) {
   if (a.atype != b.atype) return false;
-  if (a.pos1 != b.pos1) return false;
-  if (a.pos2 != b.pos2) return false;
+  if (a.poshist1 != b.poshist1) return false;
+  if (a.poshist2 != b.poshist2) return false;
   if (a.id_apprenti != b.id_apprenti) return false;
   if (a.nouvelle_case != b.nouvelle_case) return false;
   return true;
@@ -554,8 +562,8 @@ inline bool operator==(const action_hist& a, const action_hist& b) {
 
 inline bool operator!=(const action_hist& a, const action_hist& b) {
   if (a.atype != b.atype) return true;
-  if (a.pos1 != b.pos1) return true;
-  if (a.pos2 != b.pos2) return true;
+  if (a.poshist1 != b.poshist1) return true;
+  if (a.poshist2 != b.poshist2) return true;
   if (a.id_apprenti != b.id_apprenti) return true;
   if (a.nouvelle_case != b.nouvelle_case) return true;
   return false;
@@ -564,10 +572,10 @@ inline bool operator!=(const action_hist& a, const action_hist& b) {
 inline bool operator<(const action_hist& a, const action_hist& b) {
   if (a.atype < b.atype) return true;
   if (a.atype > b.atype) return false;
-  if (a.pos1 < b.pos1) return true;
-  if (a.pos1 > b.pos1) return false;
-  if (a.pos2 < b.pos2) return true;
-  if (a.pos2 > b.pos2) return false;
+  if (a.poshist1 < b.poshist1) return true;
+  if (a.poshist1 > b.poshist1) return false;
+  if (a.poshist2 < b.poshist2) return true;
+  if (a.poshist2 > b.poshist2) return false;
   if (a.id_apprenti < b.id_apprenti) return true;
   if (a.id_apprenti > b.id_apprenti) return false;
   if (a.nouvelle_case < b.nouvelle_case) return true;
@@ -578,10 +586,10 @@ inline bool operator<(const action_hist& a, const action_hist& b) {
 inline bool operator>(const action_hist& a, const action_hist& b) {
   if (a.atype > b.atype) return true;
   if (a.atype < b.atype) return false;
-  if (a.pos1 > b.pos1) return true;
-  if (a.pos1 < b.pos1) return false;
-  if (a.pos2 > b.pos2) return true;
-  if (a.pos2 < b.pos2) return false;
+  if (a.poshist1 > b.poshist1) return true;
+  if (a.poshist1 < b.poshist1) return false;
+  if (a.poshist2 > b.poshist2) return true;
+  if (a.poshist2 < b.poshist2) return false;
   if (a.id_apprenti > b.id_apprenti) return true;
   if (a.id_apprenti < b.id_apprenti) return false;
   if (a.nouvelle_case > b.nouvelle_case) return true;
@@ -593,12 +601,12 @@ namespace std {
   template <>
   struct hash<action_hist>
   {
-    std::size_t operator()(const action_hist& s)
+    std::size_t operator()(const action_hist& s) const
     {
       std::size_t res = 0;
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<action_type>()(s.atype);
-      res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<position>()(s.pos1);
-      res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<position>()(s.pos2);
+      res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<position>()(s.poshist1);
+      res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<position>()(s.poshist2);
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<int>()(s.id_apprenti);
       res ^= 0x9e3779b9 + (res << 6) + (res >> 2) + std::hash<case_type>()(s.nouvelle_case);
       return res;

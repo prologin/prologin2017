@@ -345,8 +345,8 @@ void GameState::hist_add_place(position pos1, position pos2,
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
     a.atype = ACTION_PLACER;
-    a.pos1 = pos1;
-    a.pos2 = pos2;
+    a.poshist1 = pos1;
+    a.poshist2 = pos2;
     apprentices_.at(apprentice_id).add_action(a);
 }
 
@@ -355,7 +355,7 @@ void GameState::hist_add_transmute(position pos, unsigned apprentice_id)
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
     a.atype = ACTION_TRANSMUTER;
-    a.pos1 = pos;
+    a.poshist1 = pos;
     apprentices_.at(apprentice_id).add_action(a);
 }
 
@@ -365,7 +365,7 @@ void GameState::hist_add_catalyze(position pos, unsigned target_apprentice_id,
     assert(apprentices_.count(apprentice_id) != 0);
     action_hist a;
     a.atype = ACTION_CATALYSER;
-    a.pos1 = pos;
+    a.poshist1 = pos;
     a.id_apprenti = target_apprentice_id;
     a.nouvelle_case = new_type;
     apprentices_.at(apprentice_id).add_action(a);
@@ -485,17 +485,17 @@ void GameState::print_state_debug() const
             switch (action.atype)
             {
             case ACTION_PLACER:
-                std::cout << "Place at " << action.pos1.ligne << ", "
-                          << action.pos1.colonne << " and " << action.pos2.ligne
-                          << ", " << action.pos2.colonne << std::endl;
+                std::cout << "Place at " << action.poshist1.ligne << ", "
+                          << action.poshist1.colonne << " and " << action.poshist2.ligne
+                          << ", " << action.poshist2.colonne << std::endl;
                 break;
             case ACTION_TRANSMUTER:
-                std::cout << "Transmute at " << action.pos1.ligne << ", "
-                          << action.pos1.colonne << std::endl;
+                std::cout << "Transmute at " << action.poshist1.ligne << ", "
+                          << action.poshist1.colonne << std::endl;
                 break;
             case ACTION_CATALYSER:
-                std::cout << "Catalyze at " << action.pos1.ligne << ", "
-                          << action.pos1.colonne << " ("
+                std::cout << "Catalyze at " << action.poshist1.ligne << ", "
+                          << action.poshist1.colonne << " ("
                           << (action.id_apprenti == id ? "himself" : "other")
                           << ") to " << letter[action.nouvelle_case]
                           << std::endl;
