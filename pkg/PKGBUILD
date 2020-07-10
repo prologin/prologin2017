@@ -8,7 +8,7 @@ pkgdesc="Stechec2 game: ${pkgname}"
 arch=('x86_64')
 url="http://prologin.org/"
 license=('GPL')
-depends=('stechec2' 'gflags' 'zeromq' 'ocaml' 'python-yaml' 'ruby')
+depends=('stechec2' 'gflags' 'zeromq' 'python-yaml')
 makedepends=('git')
 source=("git+ssh://${_url}/stechec2"
         "git+ssh://${_url}/${pkgname}")
@@ -34,10 +34,4 @@ build() {
 package() {
     cd stechec2
     ./waf.py install --destdir="$pkgdir"
-
-    yaml_file="$srcdir/$pkgname/$pkgname.yml"
-    stechec2-generator player "$yaml_file" \
-	"$pkgdir/usr/share/stechec2/$pkgname/player"
-    stechec2-generator server "$yaml_file" \
-	"$pkgdir/usr/share/stechec2/$pkgname/makefiles"
 }
