@@ -121,7 +121,7 @@ class Server:
             try:
                 # subprocess.check_call([prog, '--app=' + url])
                 browser = asyncio.create_subprocess_exec(prog, '--app=' + url)
-                logging.error("Opening %s with %s", url, prog)
+                logging.info("Opening %s with %s", url, prog)
                 self.loop.run_until_complete(browser)
                 break
             except FileNotFoundError:
