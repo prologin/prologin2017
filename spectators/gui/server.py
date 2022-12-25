@@ -43,7 +43,7 @@ class Server:
         await self.ws.prepare(request)
         async for msg in self.ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
-                self.handle_message(msg)
+                await self.handle_message(msg)
 
         return self.ws
 
@@ -51,60 +51,60 @@ class Server:
         if self.ws.prepared and not self.ws.closed:
             await self.ws.close(code=999, message="Server shutdown")
 
-    def send(self, cmd, **kwargs):
+    async def send(self, cmd, **kwargs):
         msg = {}
         msg.update(kwargs)
         msg['c'] = cmd
-        self.ws.send_str(json.dumps(msg))
+        await self.ws.send_str(json.dumps(msg))
 
-    def handle_message(self, msg):
+    async def handle_message(self, msg):
         data = json.loads(msg.data)
         cmd = data['c']
         logging.debug("received WS message: %s", data)
         if cmd == 'hello':
             first_turn = ["PLOMB", "FER"]
-            self.send('whatsup',
+            await self.send('whatsup',
                       firstTurn=first_turn,
                       canSeek=self.state_reader.can_seek(),
                       canGoBackwards=self.state_reader.can_go_backwards(),
                       tvMode=self.tv_mode)
-            self.go_next()
+            await self.go_next()
             return
         if cmd == 'next':
-            self.go_next()
+            await self.go_next()
             return
         if cmd == 'previous':
-            self.go_previous()
+            await self.go_previous()
             return
         if cmd == 'seek':
-            self.go_seek(data['index'])
+            await self.go_seek(data['index'])
             return
 
     def start(self):
         self.run_thread.start()
 
-    def go_next(self):
+    async def go_next(self):
         self.state = self.state_reader.get_next_state()
         if self.state:
-            self.send('turn', state=self.state)
+            await self.send('turn', state=self.state)
             self.state_reader.go_next()
         if self.tv_mode and self.state_reader.is_ended():
-            self.end_game()
+            await self.end_game()
 
-    def go_previous(self):
+    async def go_previous(self):
         self.state_reader.go_previous()
         self.state = self.state_reader.get_next_state()
         if self.state:
-            self.send('turn', state=self.state)
+            await self.send('turn', state=self.state)
 
-    def go_seek(self, index):
+    async def go_seek(self, index):
         self.state_reader.go_seek(index)
         self.state = self.state_reader.get_next_state()
         if self.state:
-            self.send('turn', state=self.state)
+            await self.send('turn', state=self.state)
 
     def run_forever(self):
-        # asyncio.set_event_loop(self.loop)
+        asyncio.set_event_loop(self.loop)
         handler = self.app.make_handler()
         host = '127.0.0.1'
         port = random.randint(9000, 9999)
@@ -119,10 +119,10 @@ class Server:
         url = 'http://{}:{}/www/index.html'.format(host, port)
         for prog in ('chromium', 'google-chrome', 'chromium-browser'):
             try:
-                subprocess.check_call([prog, '--app=' + url])
-                # browser = asyncio.create_subprocess_exec(prog, '--app=' + url)
-                # logging.info("Opening %s with %s", url, prog)
-                # self.loop.run_until_complete(browser)
+                # subprocess.check_call([prog, '--app=' + url])
+                browser = asyncio.create_subprocess_exec(prog, '--app=' + url)
+                logging.error("Opening %s with %s", url, prog)
+                self.loop.run_until_complete(browser)
                 break
             except FileNotFoundError:
                 pass
